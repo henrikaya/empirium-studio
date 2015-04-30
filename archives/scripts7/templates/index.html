@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />			
+		<link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet" type="text/css" />
+		<title>
+		Empirium Studio
+		</title>
+		<style>
+			body {
+				margin: auto;
+				padding: 0;
+				background-color: #000000;
+			}
+		</style>
+		<script	src="{{ url_for('static', filename='pixi.js') }}"></script>
+	</head>
+	<body>	
+		<script	src="{{ url_for('static', filename='map.js') }}"></script>
+		<script	src="{{ url_for('static', filename='auth.js') }}"></script>
+
+		<div class="input-container" id="input-container"> 
+		<center>
+		<p id="input-title">Empirium Studio</p>
+		<form name="form-connexion" id="form-connexion" action="javascript:alert('toto')">
+			<INPUT class="input" id="player" name="player" autofocus="autofocus" placeholder="Joueur" autocomplete="off"><br>
+			<INPUT class="input" id="pass" name="pass" type=PASSWORD placeholder="Mot de passe"><br>
+			<INPUT class="input" id="input-connexion" name="input-connexion" type=submit value='Connexion'>
+		</form>
+		</center>
+		</div>
+
+	</body>
+</html>

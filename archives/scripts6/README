@@ -1,0 +1,11 @@
+05/04/15
+
+Début des travaux sur l'IHM utilisateur :
+
+	- ébauche d'une carte zoomable
+	- interface d'authentification
+	- ébauche d'une complétion automatique de nom de joueur (avec
+	  dialogue avec le serveur)
+
+Tous le code javascript est contenu dans la page html. La réorganisation
+plus propre du code est faite en scripts7.

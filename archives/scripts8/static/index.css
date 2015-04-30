@@ -1,0 +1,64 @@
+body {
+  overflow: hidden;
+  //background-color: #455a6f;
+  background-color: #455a6f;
+}
+
+#auth-container{
+  padding: 25px;
+  border-radius: 2px;
+  background-color: #ecf0f1;
+  //background-image:linear-gradient(white, #7f8c8d);
+  //-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  //-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+
+}
+
+#indication{
+	font-family: "Century Gothic";
+	font-size: 14px;;
+}
+
+.ui-autocomplete {
+
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  float: left;
+  display: none;
+  min-width: 160px;
+  _width: 160px;
+  padding: 4px 0;
+  margin: 2px 0 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+ 
+  .ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+ 
+    &.ui-state-hover, &.ui-state-active {
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #0088cc;
+      border-radius: 0px;
+      background-image: none;
+    }
+  }
+}
+
+.ui-helper-hidden-accessible { display:none; }

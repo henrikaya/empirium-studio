@@ -1,0 +1,101 @@
+body {
+	overflow: hidden
+}
+
+.input-container
+{
+	border-width: 2px;
+ 	border-style: solid;
+ 	border-color: #e6e6e6;
+	width: 255;
+	height: 668;
+	float: right;
+        top:0;
+	left:0;
+	background-color: #f0f0f0;
+	z-index:1;
+	position:relative;
+}
+
+#input-title
+{
+	color: black;
+	font-size: 22;
+	font-family: "Verdana", sans-serif;
+}
+
+.input
+{
+	color: grey;
+	width: 15em;
+	height: 3em;
+	font-family: "Verdana", sans-serif;
+	position:relative;
+	top:8;
+}
+
+#input-connexion
+{
+	background-color: #4b8efa;
+	color: white;
+	font-weight: bold;
+	border-style: solid;
+	border-color: #1050ff;
+	border-width: 1px;
+	border-radius: 2px;
+	position:relative;
+	top:12;
+}
+
+#completeDiv
+{
+	color: #cccccc;
+  	border-right: #cccccc 1px solid;
+  	border-left: #cccccc 1px solid;
+  	border-top: #cccccc 1px solid;
+  	border-bottom: #cccccc 1px solid;
+  	z-index:1;
+  	padding-right:0;
+  	padding-left:0;
+  	padding-top:0;
+  	padding-bottom:0;
+  	visibility:visible;
+  	position:absolute;
+}
+
+.AutoCompleteDivListeStyle
+{
+	font-size:11px;
+	font-family: Verdana,sans-serif;
+	word-wrap: break-words;
+}
+
+.AutoCompleteDiv
+{
+	display: block;
+	padding-left: 3;
+	padding-right: 3;
+	height: 16px;
+	overflow: hidden;
+	color: #999999;
+	background-color: white;
+	height: 3em;
+	line-height: 3em;
+	border-bottom: #dddddd 1px solid;
+}
+
+.AutoCompleteDivAct
+{
+	display: block;
+	padding-left: 3;
+	padding-right: 3;
+	height: 16px;
+	overflow: hidden;
+	color: #999999;
+	background-color: #eeeeff;
+	height: 3em;
+	line-height: 3em;
+	border-bottom: #dddddd 1px solid;
+
+}
+

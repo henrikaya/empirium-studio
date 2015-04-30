@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI - Free Bootstrap Framework and Theme</title>
+    <meta name="description" content="Flat UI Kit Free is a Twitter Bootstrap Framework design and Theme, this responsive framework includes a PSD and HTML version."/>
+
+    <meta name="viewport" content="width=1000, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="{{ url_for('static', filename='Flat-UI/dist/css/vendor/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <!--<link href="{{ url_for('static', filename='Flat-UI/dist/css/flat-ui.css') }}" rel="stylesheet">-->
+    <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="Flat-UI/img/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="dist/js/vendor/html5shiv.js"></script>
+      <script src="dist/js/vendor/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div id="mycontainer">
+	 
+		<div id="barre-menu"><!-- class="col-md-2 col-sm-2 col-xs-2">-->
+			<!--<div id="icon-map" style="width: 100%; height: 100px;" class="row no-gutter"></div>-->
+			<div class="row no-gutter"><img id="icon-map" src="{{ url_for('static', filename='images/map-grey.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-alliance" src="{{ url_for('static', filename='images/alliance2-grey.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-stats" src="{{ url_for('static', filename='images/stats2-grey.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-exit" src="{{ url_for('static', filename='images/exit2-grey.svg') }}"></div>
+		</div>
+
+		<img id="loading" src="{{ url_for('static', filename='images/loading3.gif') }}">
+	 
+		<div id="main-screen"><!-- class="col-md-10 col-sm-10 col-xs-10">-->
+			<div id="auth-container"><!-- class="col-md-offset-4 col-md-3 col-sm-offset-4 col-sm-4 col-xs-offset-2 col-xs-8">-->
+			
+				<div class="row demo-row">
+						<p id="indication">Entrez vos identifiants Empirium pour vous connecter.<br><br></p>
+				</div>
+				<div class="row demo-row">
+					  <div class="form-group">
+						<input id="player" type="text" value="" placeholder="Joueur" autofocus="autofocus" class="form-control"/>
+					  </div>
+				</div>
+				<div class="row demo-row">
+					  <div class="form-group">
+						<input id="password" type="password" value="" placeholder="Mot de passe" class="form-control" />
+					  </div>
+				</div>
+				<div class="row demo-row">
+					  <button id="button-connection" class="btn btn-block btn-default btn-primary">Connexion</a>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+
+    <script src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery-ui/jquery-ui.min.js') }}"></script>
+    <!--<script src="{{ url_for('static', filename='jquery-svg/jquery.svg.min.js') }}"></script>-->
+    <script src="{{ url_for('static', filename='pixi.js') }}"></script>
+    <script src="{{ url_for('static', filename='Flat-UI/dist/js/flat-ui.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='Flat-UI/docs/assets/js/application.js') }}"></script>
+    <script src="{{ url_for('static', filename='md5.js') }}"></script>
+    <script src="{{ url_for('static', filename='model.js') }}"></script>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+
+  </body>
+</html>

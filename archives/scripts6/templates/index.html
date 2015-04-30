@@ -1,0 +1,422 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />			
+		<link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet" type="text/css" />
+		<title>
+		Empirium Studio
+		</title>
+		<style>
+			body {
+				margin: auto;
+				padding: 0;
+				background-color: #000000;
+				//width:500px;
+			}
+		</style>
+		<script	src="{{ url_for('static', filename='pixi.js') }}"></script>
+	</head>
+	<body>
+
+		<script>
+
+		// calcule le décalage à gauche
+		function calculateOffsetLeft(r){
+  			return calculateOffset(r,"offsetLeft")
+		}
+ 
+		// calcule le décalage vertical
+		function calculateOffsetTop(r){
+  			return calculateOffset(r,"offsetTop")
+		}
+ 
+		function calculateOffset(r,attr){
+  			var kb=0;
+  			while(r){
+    				kb+=r[attr];
+    				r=r.offsetParent
+  			}
+  			return kb
+		}
+
+		function setStylePourElement(c,name){
+  			c.className=name;
+		}
+
+		//insère une règle avec son nom
+		function insereCSS(nom,regle){
+  			if (document.styleSheets) {
+    				var I=document.styleSheets[0];
+    				if(I.addRule){ // méthode IE
+      					I.addRule(nom,regle)
+    				} else if(I.insertRule){ // méthode DOM
+      					I.insertRule(nom+" { "+regle+" }",I.cssRules.length)
+    				}
+  			}
+		}
+		
+		function initStyle() {
+
+  			var AutoCompleteDivListeStyle="font-size: 13px; font-family: arial,sans-serif; word-wrap:break-word; ";
+  			var AutoCompleteDivStyle="display: block; padding-left: 3; padding-right: 3; height: 16px; overflow: hidden; background-color: white;";
+  			var AutoCompleteDivActStyle="background-color: #3366cc; color: white ! important; ";
+  			insereCSS(".AutoCompleteDivListeStyle",AutoCompleteDivListeStyle);
+  			insereCSS(".AutoCompleteDiv",AutoCompleteDivStyle);
+  			insereCSS(".AutoCompleteDivAct",AutoCompleteDivActStyle);
+		}
+
+		function getXMLHTTP(){
+
+  			var xhr=null;
+
+  			if(window.XMLHttpRequest) // Firefox et autres
+
+  				xhr = new XMLHttpRequest();
+
+  			else if(window.ActiveXObject){ // Internet Explorer
+
+    				try {
+     	 			xhr = new ActiveXObject("Msxml2.XMLHTTP");
+    				} catch (e) {
+      					try {
+        				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+      					} catch (e1) {
+        					xhr = null;
+      					}
+    				}
+
+  			}
+  			else { // XMLHttpRequest non supporté par le navigateur
+
+    				alert("Votre navigateur ne supporte pas les objets XMLHTTPRequest...");
+
+  			}
+
+  			return xhr;
+		}
+
+		
+		var _documentForm=null; // le formulaire contenant notre champ texte
+		var _inputField=null; // le champ texte lui-même
+		var _submitButton=null; // le bouton submit de notre formulaire
+ 
+		function initAutoComplete(form,field,submit){
+  			_documentForm=form;
+  			_inputField=field;
+  			_submitButton=submit;
+  			_inputField.autocomplete="off";
+			creeAutocompletionDiv();
+  			_currentInputFieldValue=_inputField.value;
+  			_oldInputFieldValue=_currentInputFieldValue;
+  			cacheResults("",new Array())
+  			// Premier déclenchement de la fonction dans 200 millisecondes
+  			setTimeout("mainLoop()",200)
+		}
+
+		// calcule la largeur du champ
+		function calculateWidth(){
+  			return _inputField.offsetWidth-2*1
+		}
+
+		function setCompleteDivSize(){
+  			if(_completeDiv){
+    				_completeDiv.style.left=calculateOffsetLeft(_inputField)+"px";
+    				_completeDiv.style.top=calculateOffsetTop(_inputField)+_inputField.offsetHeight-1+"px";
+    				_completeDiv.style.width=calculateWidth()+"px"
+  			}
+		}
+		
+		// échappe les caractères spéciaux
+		function escapeURI(La){
+  			if(encodeURIComponent) {
+    				return encodeURIComponent(La);
+  			}
+  			if(escape) {
+    				return escape(La)
+  			}
+		}
+
+		var _xmlHttp = null; //l'objet xmlHttpRequest utilisé pour contacter le serveur
+		var _adresseRecherche = "http://plumbersversusartists.ddns.net:50000/getplayers" //l'adresse à interroger pour trouver les suggestions
+		
+		// Transformation XML en tableau
+		function processSuggestions(xmlDoc) {
+  			var options = xmlDoc.getElementsByTagName('option');
+  			var optionsListe = new Array();
+  			for (var i=0; i < options.length; ++i) {
+				optionsListe.push(options[i].firstChild.data);
+  			}
+  			return optionsListe;
+		}
+
+		function callSuggestions(valeur){
+  			if(_xmlHttp&&_xmlHttp.readyState!=0){
+    				_xmlHttp.abort()
+  			}
+  			_xmlHttp=getXMLHTTP();
+  			if(_xmlHttp){
+    				//appel à l'url distante
+    				_xmlHttp.open("POST",_adresseRecherche);
+				//_xmlHttp.send("pattern="+valeur);
+    				_xmlHttp.onreadystatechange=function() {
+      					if(_xmlHttp.readyState==4 && _xmlHttp.responseXML) {
+						var liste = processSuggestions(_xmlHttp.responseXML)
+						cacheResults(valeur,liste)
+        					metsEnPlace(valeur,liste)
+      					}
+    				};
+    				// envoi de la requête
+				var data = new FormData();
+				data.append('pattern',valeur);
+    				_xmlHttp.send(data);
+  			}
+		}
+
+		// Mécanisme de caching des réponses
+		function cacheResults(debut,suggestions){
+			_resultCache[debut]=suggestions
+		}
+
+		var _completeListe=null; // la liste contenant les suggestions
+ 
+		// création d'une liste pour les suggestions
+		// méthode appelée à l'initialisation
+		/*function creeAutocompletionListe(){
+  			_completeListe=document.createElement("UL");
+  			_completeListe.id="completeListe";
+  			document.body.appendChild(_completeListe);
+		}*/
+		
+		var _completeDiv = null; // la div contenant la liste de suggestions
+ 
+		function creeAutocompletionDiv() {
+  			initStyle();
+  			_completeDiv=document.createElement("DIV");
+  			_completeDiv.id="completeDiv";
+  			var borderLeftRight=1;
+  			var borderTopBottom=1;
+  			_completeDiv.style.borderRight="black "+borderLeftRight+"px solid";
+  			_completeDiv.style.borderLeft="black "+borderLeftRight+"px solid";
+  			_completeDiv.style.borderTop="black "+borderTopBottom+"px solid";
+  			_completeDiv.style.borderBottom="black "+borderTopBottom+"px solid";
+  			_completeDiv.style.zIndex="1";
+  			_completeDiv.style.paddingRight="0";
+  			_completeDiv.style.paddingLeft="0";
+  			_completeDiv.style.paddingTop="0";
+  			_completeDiv.style.paddingBottom="0";
+  			setCompleteDivSize();
+  			_completeDiv.style.visibility="visible";
+  			_completeDiv.style.position="absolute";
+  			_completeDiv.style.backgroundColor="white";
+  			document.body.appendChild(_completeDiv);
+  			setStylePourElement(_completeDiv,"AutoCompleteDivListeStyle");
+		}
+
+		/*function metsEnPlace(valeur, liste) {
+  			while(_completeListe.childNodes.length>0) {
+    				_completeListe.removeChild(_completeListe.childNodes[0]);
+  			}
+  			for (var i=0; i < liste.length; ++i) {
+    				alert(liste[i]);
+				var nouveauElmt = document.createElement("LI")
+    				nouveauElmt.innerHTML = liste[i]
+    				_completeListe.appendChild(nouveauElmt)
+  			}
+		}*/
+
+		function metsEnPlace(valeur, liste){
+
+  			while(_completeDiv.childNodes.length>0) {
+    				_completeDiv.removeChild(_completeDiv.childNodes[0]);
+  			}
+  			// mise en place des suggestions
+  			for(var f=0; f<liste.length; ++f){
+    				var nouveauDiv=document.createElement("DIV");
+    				setStylePourElement(nouveauDiv,"AutoCompleteDiv");
+    				var nouveauSpan=document.createElement("SPAN");
+    				nouveauSpan.innerHTML=liste[f]; // le texte de la suggestion
+    				nouveauDiv.appendChild(nouveauSpan);
+    				_completeDiv.appendChild(nouveauDiv)
+  			}
+  			if(_completeDivRows>0) {
+    				_completeDiv.height=16*_completeDivRows+4;
+  			} else {
+    				hideCompleteDiv();
+  			}
+		}
+	
+		var _oldInputFieldValue = ""; // valeur précédente du champ texte
+		var _currentInputFieldValue = ""; // valeur actuelle du champ texte
+		var _resultCache = new Object(); // mécanisme de cache des requêtes
+	
+		// tourne en permanence pour suggérer suite à un changement du champ texte
+		function mainLoop(){
+
+			_currentInputFieldValue = _inputField.value;
+  			if(_oldInputFieldValue!=_currentInputFieldValue){
+    				var valeur=escapeURI(_currentInputFieldValue);
+    				var suggestions=_resultCache[_currentInputFieldValue];
+    				if(suggestions){ // la réponse était encore dans le cache
+      				metsEnPlace(valeur,suggestions)
+    				}else{
+      				callSuggestions(valeur) // appel distant
+    				}
+    				_inputField.focus()
+  			}
+
+  			_oldInputFieldValue=_currentInputFieldValue;
+  			setTimeout("mainLoop()",200); // la fonction se redéclenchera dans 200 ms
+  			return true
+		}
+
+
+		</script>
+	
+	<!--<div style="z-index:1; position:relative; width:250px; height:120px; border:solid 1px black; background-color:lightgray;">-->
+
+		<script>
+
+			var w = window,
+    			d = document,
+    			e = d.documentElement,
+    			g = d.body,
+    			x = w.innerWidth || e.clientWidth || g.clientWidth,
+    			y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+			
+			// Stage (backgroundColor, animate)
+			var stage = new PIXI.Stage(0xffffff,true);
+			// autoDetectRenderer (width, height, view, transparent)
+			var renderer = PIXI.autoDetectRenderer(x-259,y);
+			document.body.appendChild(renderer.view);
+			requestAnimFrame(animate);	
+			var scrollArea = new PIXI.DisplayObjectContainer();
+			
+			scrollArea.interactive = true;
+			scrollArea.buttonMode = true;
+
+			var texture1 = PIXI.Texture.fromImage("{{ url_for('static', filename='images/planete_terre.png') }}");
+			var texture2 = PIXI.Texture.fromImage("{{ url_for('static', filename='images/planete_bleue.png') }}");
+			var texture3 = PIXI.Texture.fromImage("{{ url_for('static', filename='images/planete_jupiter.png') }}");
+			var texture4 = PIXI.Texture.fromImage("{{ url_for('static', filename='images/planete_poele.png') }}");
+			var texture5 = PIXI.Texture.fromImage("{{ url_for('static', filename='images/planete_venus.png') }}");
+
+			terre1 = createPlanete(0, 50, 50, "Aldebaran", "Charles Le Chaleureux", "/images/planetes/16.gif");
+			terre2 = createPlanete(1, 250, 400, "Bételgeuse", "Startbutt", "/images/planetes/13.gif");
+			terre3 = createPlanete(2, 420, 280, "Antares", "Vaelin Al Sorna", "/images/planetes/25.gif");
+			terre4 = createPlanete(3, 580, 150, "Orion", "Yvan", "/images/planetes/1.gif");
+			scrollArea.addChild(terre1);
+			scrollArea.addChild(terre2);
+			scrollArea.addChild(terre3);
+			scrollArea.addChild(terre4);
+		
+			stage.addChild(scrollArea);
+		
+			function animate()
+			{
+				requestAnimFrame(animate);
+				//terre1.position.y += 0.1;
+				terre1.anim();
+				terre2.anim();
+				terre3.anim();
+				terre4.anim();
+				renderer.render(stage);
+			}
+	
+			function createPlanete(id, x, y, name, owner, image)
+			{
+				var planete;
+
+				if (image == "/images/planetes/16.gif") {
+					planete = new PIXI.Sprite(texture2);
+					planete.scale.x = 0.1;
+					planete.scale.y = 0.1;
+				}
+				else if (image == "/images/planetes/13.gif") {
+					planete = new PIXI.Sprite(texture3);
+					planete.scale.x = 0.13;
+					planete.scale.y = 0.13;
+				}
+				else if (image == "/images/planetes/25.gif") {
+					planete = new PIXI.Sprite(texture4);
+					planete.scale.x = 0.3;
+					planete.scale.y = 0.3;
+				}
+				else if (image == "/images/planetes/1.gif") {
+					planete = new PIXI.Sprite(texture5);
+					planete.scale.x = 0.15;
+					planete.scale.y = 0.15;
+				}
+				else {
+					planete = new PIXI.Sprite(texture1);
+					planete.scale.x = 1;
+					planete.scale.y = 1;
+				}
+
+				planete.anchor.x = 0.5;
+				planete.anchor.y = 0.5;
+				planete.position.x = x;
+				planete.position.y = y;
+				planete.interactive = true;
+				planete.buttonMode = true;
+				planete.name = name;
+				planete.owner = owner;
+				planete.id = id;
+				planete.image = image;
+				planete.rotationValue = (Math.random() - 0.5)/50
+
+				planete.mousedown = function(data) {
+					alert(planete.name + " de " + planete.owner);
+				}
+
+				planete.anim = function() {
+					planete.rotation += planete.rotationValue;
+				}
+
+				return planete;
+			}
+
+			window.onload = function() {
+
+				initAutoComplete(document.getElementById('form-connexion'),document.getElementById('player'),document.getElementById('input-connexion'));
+
+				if (document.addEventListener) {
+					document.addEventListener("mousewheel", MouseWheelHandler, false);
+					document.addEventListener("DOMMouseScroll", MouseWheelHandler, false);
+				}
+				else document.attachEvent("onmousewheel", MouseWheelHandler);
+	
+				function MouseWheelHandler(e) {
+
+					var e = window.event || e;
+					var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+					scrollArea.scale.x += delta*0.25;
+					scrollArea.scale.y += delta*0.25;
+
+					if (scrollArea.scale.x < 0.25) {
+						scrollArea.scale.x = 0.25;
+						scrollArea.scale.y = 0.25;
+					}
+					else if (scrollArea.scale.x > 3) {
+						scrollArea.scale.x = 3;
+						scrollArea.scale.y = 3;
+					}
+
+					return false;
+				}
+
+			}
+	
+		</script>		
+		
+		<div class="input-container"> 
+		<center>
+		<p id="input-title">Empirium Studio</p>
+		<form name="form-connexion" id="form-connexion" action="javascript:alert('toto')">
+			<INPUT class="input" id="player" name="player" autofocus="autofocus" placeholder="Joueur" autocomplete="off"><br>
+			<INPUT class="input" id="pass" name="pass" type=PASSWORD placeholder="Mot de passe"><br>
+			<INPUT class="input" id="input-connexion" name="input-connexion" type=submit value='Connexion'>
+		</form>
+		</center>
+		</div>
+
+	</body>
+</html>
