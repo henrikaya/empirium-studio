@@ -2,10 +2,11 @@
 # -*- coding:utf-8 -*-
 
 from flask import Flask, request, escape, session, render_template, Response
+import jinja2
 from pymongo import MongoClient
 import urllib, urllib2
 import cookielib
-import connexion
+import tools.connection
 import time
 import os
 from bson import BSON
@@ -19,7 +20,7 @@ sys.setdefaultencoding('utf-8')
 app = Flask(__name__)
 app.secret_key = 'ts\x8a\x120\x06\x1d\xb6\xb5\xefMS\x17\xfe|~\xa5\xed}\xb9\x8f\x8d\xcbS'
 
-@app.route('/connexion/', methods=['POST'], strict_slashes=False)
+@app.route('/connection/', methods=['POST'], strict_slashes=False)
 def user_connect():
 
 	name = request.form['name']
@@ -37,15 +38,15 @@ def user_connect():
 	else:
 		return "player known but id unknown"
 
-	if (connexion.isPasswordCorrect(identifiant, password)):
+	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
 
 		# TODO: si mdp different, lancer une mise a jour des donnees empi avec ce nouveau mdp
 		if (joueur['password'] != password):
-			os.system("/home/pi/Documents/python/empi/scripts8/updateDatas.py %s %s %s &" % (identifiant, password, name))
+			os.system("/home/pi/Documents/python/empi/repo/empirium_studio/tools/updateDatas.py %s %s %s &" % (identifiant, password, name))
 
 		col.update({"id":identifiant},{"$set":{"password":password}})
-		col.update({"id":identifiant},{"$set":{"last_connexion":time.asctime()}})
+		col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
 		return "success"
 	else:
 		session.pop('id', None)
@@ -89,14 +90,10 @@ def get(num_tour):
 		
 		data = []
 
-#		data = col.find()
-#
-#		ret = "[" + ",".join(data) + "]"
-
 		for value in col.find():
 			elmt = json.dumps(value, sort_keys=True, indent=4, default=json_util.default)
 			data.append(str(elmt))
-#
+
 		ret = "[" + ",".join(data) + "]"
 
 		return ret
@@ -110,3 +107,4 @@ def index():
 if __name__ == '__main__':
 
     app.run(debug=True, host="0.0.0.0", port=50000)
+

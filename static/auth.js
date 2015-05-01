@@ -230,7 +230,7 @@ $(function () {
 	
 	        $.ajax({
 	        	type: 'POST',
-            		url: 'connexion',
+            		url: 'connection',
 	    		data: mydata,
             		timeout: 3000,
             		success: function(data) { processAuthResponse(data); },
