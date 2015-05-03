@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-import connexion
+import connection
 import parsing
 import database
 import sys
@@ -16,9 +16,9 @@ if __name__ == '__main__':
 	password = sys.argv[2]
 	name = sys.argv[3]
 	
-	print "%s : Connexion..." % sys.argv[0]
-	cookies = connexion.connect(identifiant, password)
-	print "%s : Connexion OK" % sys.argv[0]
+	print "%s : Connection..." % sys.argv[0]
+	cookies = connection.connect(identifiant, password)
+	print "%s : Connection OK" % sys.argv[0]
 
 	print "%s : Parsing..." % sys.argv[0]
 	datas = parsing.getAllDatas(cookies, name)

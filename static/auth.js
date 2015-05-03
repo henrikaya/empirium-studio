@@ -3,32 +3,62 @@ $(function () {
 	var connectionState = 0;
 	var map = new Map();
 
-	/*$("#icon-map").svg({
-        	onLoad: function() {
-            		var svg = $("#icon-map").svg('get');
-            		svg.load('static/images/map-grey.svg', {addTo: true,  changeSize: false});
-            	},
-        	settings: {}
-	});*/
+	// create a pixi stage and a renderer
+    	var stage;
+    	var renderer;
+
+	function initPixi() {
+	
+		stage = new PIXI.Stage(0x66FF99);
+    		renderer = PIXI.autoDetectRenderer(30 + $(window).width() - $('#icon-map').width(), $(window).height());
+
+		// add the renderer view element to the DOM
+		var x = document.getElementById("map"); 
+	    	x.appendChild(renderer.view);
+	 
+	    	requestAnimFrame( animate );
+	 
+	    	var scrollArea = new PIXI.DisplayObjectContainer();
+			
+		scrollArea.interactive = true;
+		scrollArea.buttonMode = true;
+	}
+
+	function animate() {
+	 
+		requestAnimFrame( animate );
+	 
+		// render the stage   
+		renderer.render(stage);
+	}
 	
 	function initPositions() {
-		var pos = $('#auth-container').offset();
-		pos.top = ($(window).height() - $('#auth-container').height()) / 2 + $('#mynavbar').height() / 2;		
-		$('#auth-container').offset(pos);
-
-		var posLoading = $('#auth-container').offset();
-		posLoading.top += ($('#auth-container').height() - $('#loading').width()) / 2;
-		posLoading.left += ($('#auth-container').width() - $('#loading').height()) / 2;
-		$('#loading').offset(posLoading);
-		$('#loading').hide();
 
 		$('#icon-map').height($(window).height()/4);
 		$('#icon-alliance').height($(window).height()/4);
-		$('#icon-stats').height($(window).height()/4)
-		$('#icon-exit').height($(window).height()/4)
+		$('#icon-stats').height($(window).height()/4);
+		$('#icon-exit').height($(window).height()/4);
+
+		var pos = $('#auth-container').offset();
+		pos.top = ($(window).height() - $('#auth-container').height()) / 2;
+		pos.left = ($(window).width() - $('#auth-container').width()) / 2;		
+		$('#auth-container').offset(pos);
+
+		var posLoading = $('#loading').offset();
+		posLoading.top = ($(window).height() - $('#loading').height()) / 2;
+		posLoading.left = ($(window).width() - $('#loading').width()) / 2;
+		$('#loading').offset(posLoading);
+
+		var posMap = $('#map').offset();
+		posMap.top = 0;
+		posMap.left = $('#icon-map').width();
+		$('#map').offset(posMap);
 	}
 
 	initPositions();
+	initPixi();
+	$('#loading').hide();
+	$('#map').hide();
 
 	$(window).resize(initPositions);
 	
@@ -189,18 +219,21 @@ $(function () {
 			alert("ah, connais pas!");
 			$('#loading').hide();
 			$('#auth-container').show();
+			initPositions();
 			$('#icon-map:hover').css('cursor', 'normal');
 		}
 		else if (data == "wrong password") {
 			alert("ah non!!");
 			$('#loading').hide();
 			$('#auth-container').show();
+			initPositions();
 			$('#icon-map:hover').css('cursor', 'normal');
 		}
 		else if (data == "success") {
 			connectionState = 1;
 
 			$('#loading').hide();
+			initPositions();
 			$('#icon-map').attr("src", "static/images/map-normal.svg");
 			$('#icon-alliance').attr("src", "static/images/alliance2-normal.svg");
 			$('#icon-stats').attr("src", "static/images/stats2-normal.svg");
@@ -216,6 +249,7 @@ $(function () {
 			alert("Reponse du serveur inconnue : \"" + data + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
 			$('#loading').hide();
 			$('#auth-container').show();
+			initPositions();
 			$('#icon-map:hover').css('cursor', 'normal');
 		}
 
@@ -225,6 +259,7 @@ $(function () {
 
 		$('#auth-container').hide();
 		$('#loading').show();
+		initPositions();
 	
 	        var mydata = "name=" + $('#player').val() + "&pass=" + MD5($('#password').val());
 	
@@ -252,7 +287,6 @@ $(function () {
 
 	function printData(data) {
 
-
 		map.clear();
 
 		var objs = jQuery.parseJSON(data);
@@ -272,6 +306,9 @@ $(function () {
 		}
 
 		alert( map.toString() );
+
+		$('#map').show();
+		initPositions();
 
 	}
 

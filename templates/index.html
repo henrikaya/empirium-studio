@@ -30,29 +30,31 @@
 			<div class="row no-gutter"><img id="icon-exit" src="{{ url_for('static', filename='images/exit2-grey.svg') }}"></div>
 		</div>
 
-		<img id="loading" src="{{ url_for('static', filename='images/loading3.gif') }}">
 	 
 		<div id="main-screen">
 			<div id="auth-container">
 			
-				<div class="row demo-row">
-						<p id="indication">Entrez vos identifiants Empirium pour vous connecter.<br><br></p>
+				<div>
+					<p id="indication">Entrez vos identifiants Empirium pour vous connecter.<br><br></p>
 				</div>
-				<div class="row demo-row">
-					  <div class="form-group">
+				<div>
+					<div class="form-group">
 						<input id="player" type="text" value="" placeholder="Joueur" autofocus="autofocus" class="form-control"/>
-					  </div>
+					</div>
 				</div>
-				<div class="row demo-row">
-					  <div class="form-group">
+				<div>
+					<div class="form-group">
 						<input id="password" type="password" value="" placeholder="Mot de passe" class="form-control" />
-					  </div>
+					</div>
 				</div>
-				<div class="row demo-row">
+				<div>
 					  <button id="button-connection" class="btn btn-block btn-default btn-primary">Connexion</a>
 				</div>
 			</div>
 		</div>
+
+		<img id="loading" src="{{ url_for('static', filename='images/loading3.gif') }}">
+		<div id="map"></div>
 	
 	</div>
 
