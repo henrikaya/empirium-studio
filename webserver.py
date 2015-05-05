@@ -13,6 +13,8 @@ from bson import BSON
 from bson import json_util
 import json
 
+import syslog
+
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -31,11 +33,13 @@ def user_connect():
 	joueur = col.find_one({'name':name})
 
 	if (joueur == None):
+		syslog.syslog("Someone tried to connect as %s, but this name is unknown" % name)
 		return "player unknown"
 
 	if (joueur.has_key("id")):
 		identifiant = joueur['id']
 	else:
+		syslog.syslog("Someone tried to connect as %s - this name is known but there is no id associated" % name)
 		return "player known but id unknown"
 
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
@@ -43,15 +47,19 @@ def user_connect():
 
 		# TODO: si mdp different, lancer une mise a jour des donnees empi avec ce nouveau mdp
 		if (joueur['password'] != password):
+			syslog.syslog("Update password of player %s" % identifiant)
 			os.system("/home/pi/Documents/python/empi/repo/empirium_studio/tools/updateDatas.py %s %s %s &" % (identifiant, password, name))
 
 		col.update({"id":identifiant},{"$set":{"password":password}})
 		col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
+		syslog.syslog("%s (%s) connected" % (name, identifiant))
 		return "success"
 	else:
+		syslog.syslog("%s (%s) tried to connect - wrong password" % (name, identifiant))
 		session.pop('id', None)
 		return "wrong password"
-	
+
+	syslog.syslog("Internal error during connection of %s" % name)
 	return "Erreur interne du serveur. Contactez un administrateur (LG)."
 
 @app.route('/getplayers', methods=['GET', 'POST'], strict_slashes=False)
@@ -77,6 +85,8 @@ def getplayers():
 	
 	ret += "</options>"
 
+	syslog.syslog("Someone gets players XML")
+
 	return Response(ret, mimetype='text/xml');
 
 @app.route('/get/<num_tour>', methods=['GET'], strict_slashes=False)
@@ -96,15 +106,21 @@ def get(num_tour):
 
 		ret = "[" + ",".join(data) + "]"
 
+		syslog.syslog("%s gets map for cycle %s" % (session['id'], num_tour))
+
 		return ret
 
+	syslog.syslog("Someone tried to get map for cycle %s without to be connected" % num_tour)
 	return "Vous n'êtes pas identifié."
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
+    syslog.syslog("Someone gets index.html")
     return render_template('index.html')
 
 if __name__ == '__main__':
 
+    syslog.openlog()
+    syslog.syslog("Web-server starts !")
     app.run(debug=True, host="0.0.0.0", port=50000)
 

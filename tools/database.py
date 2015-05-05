@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 from pymongo import MongoClient
+import syslog
 
 def insertData(data, db, name):
 
@@ -14,8 +15,6 @@ def insertData(data, db, name):
 
     if col.find_one({"id":data[1]}) == None:
         col.insert(post)
-    else:
-        print "Element %s deja present" % data[1]
 
     return
 
@@ -27,4 +26,7 @@ def insertAllDatas(datas, name):
     for data in datas:
 	insertData(data, db, name)
 
-    return
+    syslog.openlog()
+    syslog.syslog("Datas imported from %s's radars" % name)
+    
+return
