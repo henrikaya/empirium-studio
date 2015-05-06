@@ -3,41 +3,25 @@ $(function () {
 	var connectionState = 0;
 	var map = new Map();
 
-	// create a pixi stage and a renderer
-    	var stage;
-    	var renderer;
-
-	function initPixi() {
-	
-		stage = new PIXI.Stage(0x66FF99);
-    		renderer = PIXI.autoDetectRenderer(30 + $(window).width() - $('#icon-map').width(), $(window).height());
-
-		// add the renderer view element to the DOM
-		var x = document.getElementById("map"); 
-	    	x.appendChild(renderer.view);
-	 
-	    	requestAnimFrame( animate );
-	 
-	    	var scrollArea = new PIXI.DisplayObjectContainer();
-			
-		scrollArea.interactive = true;
-		scrollArea.buttonMode = true;
-	}
-
-	function animate() {
-	 
-		requestAnimFrame( animate );
-	 
-		// render the stage   
-		renderer.render(stage);
-	}
-	
 	function initPositions() {
 
 		$('#icon-map').height($(window).height()/4);
 		$('#icon-alliance').height($(window).height()/4);
 		$('#icon-stats').height($(window).height()/4);
 		$('#icon-exit').height($(window).height()/4);
+
+		var posIconMap = $('#icon-map').offset();
+		var posIconAlliance = $('#icon-alliance').offset();
+		var posIconStats = $('#icon-stats').offset();
+		var posIconExit = $('#icon-exit').offset();
+		posIconMap.left = 0;
+		posIconAlliance.left = 0;
+		posIconStats.left = 0;
+		posIconExit.left = 0;		
+		$('#icon-map').offset(posIconMap);
+		$('#icon-alliance').offset(posIconAlliance);
+		$('#icon-stats').offset(posIconStats);
+		$('#icon-exit').offset(posIconExit);
 
 		var pos = $('#auth-container').offset();
 		pos.top = ($(window).height() - $('#auth-container').height()) / 2;
@@ -243,7 +227,8 @@ $(function () {
 			$('#icon-stats:hover').css('cursor', 'pointer');
 			$('#icon-exit:hover').css('cursor', 'pointer');
 
-			initGraphics();
+			$('#map').show();
+			initPositions();
 		}
 		else {
 			alert("Reponse du serveur inconnue : \"" + data + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
