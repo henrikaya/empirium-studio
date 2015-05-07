@@ -5,21 +5,25 @@ $(function () {
 
 	function initPositions() {
 
-		$('#icon-map').height($(window).height()/4);
-		$('#icon-alliance').height($(window).height()/4);
-		$('#icon-stats').height($(window).height()/4);
-		$('#icon-exit').height($(window).height()/4);
+		$('#icon-map').height($(window).height()/5);
+		$('#icon-alliance').height($(window).height()/5);
+		$('#icon-technology').height($(window).height()/5);
+		$('#icon-stats').height($(window).height()/5);
+		$('#icon-exit').height($(window).height()/5);
 
 		var posIconMap = $('#icon-map').offset();
 		var posIconAlliance = $('#icon-alliance').offset();
+		var posIconTechnology = $('#icon-technology').offset();
 		var posIconStats = $('#icon-stats').offset();
 		var posIconExit = $('#icon-exit').offset();
 		posIconMap.left = 0;
 		posIconAlliance.left = 0;
+		posIconTechnology.left = 0;
 		posIconStats.left = 0;
 		posIconExit.left = 0;		
 		$('#icon-map').offset(posIconMap);
 		$('#icon-alliance').offset(posIconAlliance);
+		$('#icon-technology').offset(posIconTechnology);
 		$('#icon-stats').offset(posIconStats);
 		$('#icon-exit').offset(posIconExit);
 
@@ -69,6 +73,16 @@ $(function () {
     	cache.push(cacheImage);
 
 	var cacheImage = document.createElement('img');
+    	cacheImage.src = "static/images/technology-light.svg";
+    	cache.push(cacheImage);
+	var cacheImage = document.createElement('img');
+    	cacheImage.src = "static/images/technology-normal.svg";
+    	cache.push(cacheImage);
+	var cacheImage = document.createElement('img');
+    	cacheImage.src = "static/images/technology-grey.svg";
+    	cache.push(cacheImage);
+
+	var cacheImage = document.createElement('img');
     	cacheImage.src = "static/images/stats2-light.svg";
     	cache.push(cacheImage);
 	var cacheImage = document.createElement('img');
@@ -88,10 +102,11 @@ $(function () {
     	cacheImage.src = "static/images/exit2-grey.svg";
     	cache.push(cacheImage);
 
-	$('#icon-map').height($(window).height()/4);
-	$('#icon-alliance').height($(window).height()/4);
-	$('#icon-stats').height($(window).height()/4)
-	$('#icon-exit').height($(window).height()/4)
+	$('#icon-map').height($(window).height()/5);
+	$('#icon-alliance').height($(window).height()/5);
+	$('#icon-technology').height($(window).height()/5);
+	$('#icon-stats').height($(window).height()/5);
+	$('#icon-exit').height($(window).height()/5);
 	
 	$("#icon-map").mouseover(function(){
         	if (connectionState > 0)
@@ -107,6 +122,14 @@ $(function () {
     	}).mouseout(function(){
 		if (connectionState > 0)
         		$(this).attr("src", "static/images/alliance2-normal.svg");
+    	});
+
+	$("#icon-technology").mouseover(function(){
+		if (connectionState > 0)
+        		$(this).attr("src", "static/images/technology-light.svg");
+    	}).mouseout(function(){
+		if (connectionState > 0)
+        		$(this).attr("src", "static/images/technology-normal.svg");
     	});
 	
 	$("#icon-stats").mouseover(function(){
@@ -220,6 +243,7 @@ $(function () {
 			initPositions();
 			$('#icon-map').attr("src", "static/images/map-normal.svg");
 			$('#icon-alliance').attr("src", "static/images/alliance2-normal.svg");
+			$('#icon-technology').attr("src", "static/images/technology-normal.svg");
 			$('#icon-stats').attr("src", "static/images/stats2-normal.svg");
 			$('#icon-exit').attr("src", "static/images/exit2-normal.svg");
 			$('#icon-map:hover').css('cursor', 'pointer');
