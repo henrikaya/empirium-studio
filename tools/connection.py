@@ -33,6 +33,8 @@ def isPasswordCorrect(identifiant, password):
 	f = opener.open("http://v2.empirium.net/pan.php3")
 	data = f.read()
 	erreur = data.count("http://v2.empirium.net/index.php?r=ident&err=sess")
+	erreur += data.count("Traitement en cours")
+
 	if (erreur == 0):
 		return True
 	else:

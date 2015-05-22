@@ -55,7 +55,7 @@ def user_connect():
 		syslog.syslog("%s (%s) connected" % (name, identifiant))
 		return "success"
 	else:
-		syslog.syslog("%s (%s) tried to connect - wrong password" % (name, identifiant))
+		syslog.syslog("%s (%s) tried to connect - wrong password or cycle processing" % (name, identifiant))
 		session.pop('id', None)
 		return "wrong password"
 
