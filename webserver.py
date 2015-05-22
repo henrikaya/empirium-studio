@@ -12,10 +12,10 @@ import os
 from bson import BSON
 from bson import json_util
 import json
-
 import syslog
-
 import sys
+import ConfigParser
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -122,5 +122,9 @@ if __name__ == '__main__':
 
     syslog.openlog()
     syslog.syslog("Web-server starts !")
-    app.run(debug=True, host="0.0.0.0", port=50000)
+
+    config = ConfigParser.ConfigParser()
+    config.read("webserver.conf")
+
+    app.run(debug=True, host="0.0.0.0", port=config.getint("Server","Port"))
 
