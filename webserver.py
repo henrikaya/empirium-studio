@@ -126,5 +126,5 @@ if __name__ == '__main__':
     config = ConfigParser.ConfigParser()
     config.read("webserver.conf")
 
-    app.run(debug=True, host="0.0.0.0", port=config.getint("Server","Port"))
+    app.run(debug=False, host="0.0.0.0", port=config.getint("Server","Port"), threaded=True)
 

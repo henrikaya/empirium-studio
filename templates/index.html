@@ -15,16 +15,9 @@
   </head>
   <body>
     <div id="mycontainer">
-	 
-		<div id="barre-menu">
-			<div class="row no-gutter"><img id="icon-map" src="{{ url_for('static', filename='images/map-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-alliance" src="{{ url_for('static', filename='images/alliance2-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-technology" src="{{ url_for('static', filename='images/technology-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-stats" src="{{ url_for('static', filename='images/stats2-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-exit" src="{{ url_for('static', filename='images/exit2-normal.svg') }}"></div>
-		</div>
-
-	 
+	
+		<div id="map"></div>
+	
 		<div id="main-screen">
 			<div id="auth-container">
 			
@@ -48,13 +41,19 @@
 					<img id="fail"	  src="{{ url_for('static', filename='images/fail.png') }}">
 				</div>
 				<div>
-					  <button id="button-connection" class="btn btn-block btn-default btn-primary">Connexion</a>
+					  <button id="button-connection" class="btn btn-block btn-default">Connexion</a>
 				</div>
 			</div>
 		</div>
 
-		<div id="map"></div>
-	
+		<div id="barre-menu">
+			<div class="row no-gutter"><img id="icon-map" src="{{ url_for('static', filename='images/map-normal.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-alliance" src="{{ url_for('static', filename='images/alliance2-normal.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-technology" src="{{ url_for('static', filename='images/technology-normal.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-stats" src="{{ url_for('static', filename='images/stats2-normal.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-exit" src="{{ url_for('static', filename='images/exit2-normal.svg') }}"></div>
+		</div>
+
 	</div>
 
     <script src="{{ url_for('static', filename='jquery.js') }}"></script>

@@ -4,7 +4,7 @@ var renderer;
 function initPixi() {
 	
 	stage = new PIXI.Stage(0x000000);
- 	renderer = PIXI.autoDetectRenderer($(window).width() - $('#icon-map').width(), $(window).height());
+ 	renderer = PIXI.autoDetectRenderer($(window).width(), $(window).height());
 
 	// add the renderer view element to the DOM
 	var x = document.getElementById("map"); 

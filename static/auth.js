@@ -5,22 +5,28 @@ $(function () {
 
 	function initPositions() {
 
-		$('#icon-map').height($(window).height()/5);
-		$('#icon-alliance').height($(window).height()/5);
-		$('#icon-technology').height($(window).height()/5);
-		$('#icon-stats').height($(window).height()/5);
-		$('#icon-exit').height($(window).height()/5);
+		$('#icon-map').height($(window).height()/12);
+		$('#icon-alliance').height($(window).height()/12);
+		$('#icon-technology').height($(window).height()/12);
+		$('#icon-stats').height($(window).height()/12);
+		$('#icon-exit').height($(window).height()/12);
 
 		var posIconMap = $('#icon-map').offset();
 		var posIconAlliance = $('#icon-alliance').offset();
 		var posIconTechnology = $('#icon-technology').offset();
 		var posIconStats = $('#icon-stats').offset();
 		var posIconExit = $('#icon-exit').offset();
-		posIconMap.left = 0;
-		posIconAlliance.left = 0;
-		posIconTechnology.left = 0;
-		posIconStats.left = 0;
-		posIconExit.left = 0;		
+		posIconMap.left = 30;
+		posIconAlliance.left = 30 + $('#icon-map').width() + 20;
+		posIconTechnology.left = 30 + 2 * ($('#icon-map').width() + 20);
+		posIconStats.left = 30 + 3 * ($('#icon-map').width() + 20);
+		posIconExit.left = 30 + 4 * ($('#icon-map').width() + 20);		
+		posIconMap.top = 30;
+		posIconAlliance.top = 30;
+		posIconTechnology.top = 30;
+		posIconStats.top = 30;
+		posIconExit.top = 30;
+
 		$('#icon-map').offset(posIconMap);
 		$('#icon-alliance').offset(posIconAlliance);
 		$('#icon-technology').offset(posIconTechnology);
@@ -34,7 +40,7 @@ $(function () {
 
 		var posMap = $('#map').offset();
 		posMap.top = 0;
-		posMap.left = $('#icon-map').height();
+		posMap.left = 0;
 		$('#map').offset(posMap);
 	}
 
@@ -103,12 +109,6 @@ $(function () {
     	cacheImage.src = "static/images/exit2-grey.svg";
     	cache.push(cacheImage);
 
-	$('#icon-map').height($(window).height()/5);
-	$('#icon-alliance').height($(window).height()/5);
-	$('#icon-technology').height($(window).height()/5);
-	$('#icon-stats').height($(window).height()/5);
-	$('#icon-exit').height($(window).height()/5);
-	
 	$("#icon-map").mouseover(function(){
         	if (connectionState > 0)
 			$(this).attr("src", "static/images/map-light.svg");
@@ -272,9 +272,10 @@ $(function () {
 			$('#success').offset(pos);
 			$('#auth-container').height(authContainerHeight);
 			$('#auth-container').offset(authContainerPos);
-			$("#auth-container").delay(1200).fadeOut("slow");
+			$("#auth-container").delay(1200).fadeOut("slow", function() { initPositions(); });
 
 			$('#map').show();
+			initPositions();
 		}
 		else {
 			alert("Reponse du serveur inconnue : \"" + data + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
@@ -310,7 +311,7 @@ $(function () {
 	        	type: 'POST',
             		url: 'connection',
 	    		data: mydata,
-            		timeout: 3000,
+            		timeout: 10000,
             		success: function(data) { processAuthResponse(data); },
             		error: function() {
               		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.'); }
@@ -362,7 +363,7 @@ $(function () {
 				type: 'GET',
 		    		url: 'get/535',
 				contentType: "application/json; charset=utf-8",
-		    		timeout: 3000,
+		    		timeout: 10000,
 		    		success: function(data) { printData(data); },
 		    		error: function() {
 		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.'); }
