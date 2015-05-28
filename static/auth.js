@@ -32,22 +32,23 @@ $(function () {
 		pos.left = ($(window).width() - $('#auth-container').width()) / 2;		
 		$('#auth-container').offset(pos);
 
-		var posLoading = $('#loading').offset();
-		posLoading.top = ($(window).height() - $('#loading').height()) / 2;
-		posLoading.left = ($(window).width() - $('#loading').width()) / 2;
-		$('#loading').offset(posLoading);
-
 		var posMap = $('#map').offset();
 		posMap.top = 0;
-		posMap.left = $('#icon-map').width();
+		posMap.left = $('#icon-map').height();
 		$('#map').offset(posMap);
 	}
 
+	$('#icon-map').hide();
+	$('#icon-alliance').hide();
+	$('#icon-technology').hide();
+	$('#icon-stats').hide();
+	$('#icon-exit').hide();
 	initPositions();
 	initPixi();
 	$('#loading').hide();
+	$('#success').hide();
+	$('#fail').hide();
 	$('#map').hide();
-
 	$(window).resize(initPositions);
 	
 	var cache = [];
@@ -222,54 +223,87 @@ $(function () {
 
     	function processAuthResponse(data) {
 
-        	if (data == "player unknown") {
-			alert("ah, connais pas!");
-			$('#loading').hide();
-			$('#auth-container').show();
-			initPositions();
-			$('#icon-map:hover').css('cursor', 'normal');
-		}
-		else if (data == "wrong password") {
-			alert("ah non!!");
-			$('#loading').hide();
-			$('#auth-container').show();
-			initPositions();
-			$('#icon-map:hover').css('cursor', 'normal');
+		if (data == "wrong password" || data =="player unknown") {
+		
+		 	var authContainerHeight = $('#auth-container').height();
+                        var authContainerWidth = $('#auth-container').width();
+                        var authContainerPos = $('#auth-container').offset();
+
+                        var topLoading = $('#loading').offset().top;
+                        var hLoading = $('#loading').height();
+                        $('#loading').hide();
+                        $('#fail').fadeIn().fadeOut().fadeIn().fadeOut();
+                        pos = $('#fail').offset();
+                        // TODO: correct following line (all positions have to be relative...)
+                        pos.top = topLoading + (hLoading - $('#fail').height()) / 2;
+                        pos.left = authContainerPos.left + (authContainerWidth - $('#fail').width()) / 2 + 20;
+                        $('#fail').offset(pos);
+                        $('#auth-container').height(authContainerHeight);
+                        $('#auth-container').offset(authContainerPos);
+
+			$('#fail').delay(1800).hide(0);
+			$('#player').delay(1800).show(0);
+			$('#player').delay(1800).focus(0);
+			$('#password').delay(1800).show(0);
+			$('#button-connection').delay(1800).show(0);
 		}
 		else if (data == "success") {
 			connectionState = 1;
-
-			$('#loading').hide();
+	
+			var authContainerHeight = $('#auth-container').height();
+			var authContainerWidth = $('#auth-container').width();
+			var authContainerPos = $('#auth-container').offset();
+			
+			$('#icon-map').fadeIn("slow");
+			$('#icon-alliance').fadeIn("slow");
+			$('#icon-technology').fadeIn("slow");
+			$('#icon-stats').fadeIn("slow");
+			$('#icon-exit').fadeIn("slow");
 			initPositions();
-			$('#icon-map').attr("src", "static/images/map-normal.svg");
-			$('#icon-alliance').attr("src", "static/images/alliance2-normal.svg");
-			$('#icon-technology').attr("src", "static/images/technology-normal.svg");
-			$('#icon-stats').attr("src", "static/images/stats2-normal.svg");
-			$('#icon-exit').attr("src", "static/images/exit2-normal.svg");
-			$('#icon-map:hover').css('cursor', 'pointer');
-			$('#icon-alliance:hover').css('cursor', 'pointer');
-			$('#icon-stats:hover').css('cursor', 'pointer');
-			$('#icon-exit:hover').css('cursor', 'pointer');
+
+			var topLoading = $('#loading').offset().top;
+			var hLoading = $('#loading').height();
+			$('#loading').hide();
+			$('#success').show();
+			pos = $('#success').offset();
+			pos.top = topLoading + (hLoading - $('#success').height()) / 2;
+			// TODO: correct following line (all positions have to be relative...)
+			pos.left = authContainerPos.left + (authContainerWidth - $('#success').width()) / 2 + 20;
+			$('#success').offset(pos);
+			$('#auth-container').height(authContainerHeight);
+			$('#auth-container').offset(authContainerPos);
+			$("#auth-container").delay(1200).fadeOut("slow");
 
 			$('#map').show();
-			initPositions();
 		}
 		else {
 			alert("Reponse du serveur inconnue : \"" + data + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
 			$('#loading').hide();
 			$('#auth-container').show();
 			initPositions();
-			$('#icon-map:hover').css('cursor', 'normal');
 		}
 
     	}
 
     	function connect() {
 
-		$('#auth-container').hide();
+		var authContainerHeight = $('#auth-container').height();
+		var authContainerWidth = $('#auth-container').width();
+		var authContainerLeft = $('#auth-container').offset().left;
+		var topPButton = $('#player').offset().top;
+		var topCButton = $('#button-connection').offset().top;
+		var hCButton = $('#button-connection').height();
+		$('#player').hide();
+		$('#password').hide();
+		$('#button-connection').hide();
 		$('#loading').show();
-		initPositions();
-	
+		pos = $('#loading').offset();
+		pos.top = (topPButton + topCButton + hCButton - $('#loading').height()) / 2;
+		// TODO: correct following line (all positions have to be relative...)
+		pos.left = authContainerLeft + (authContainerWidth - $('#loading').width()) / 2 + 20;
+		$('#loading').offset(pos);
+		$('#auth-container').height(authContainerHeight);	
+
 	        var mydata = "name=" + $('#player').val() + "&pass=" + MD5($('#password').val());
 	
 	        $.ajax({

@@ -1,7 +1,7 @@
 body {
   overflow: hidden;
   //background-color: #455a6f;
-  background-color: #455a6f;
+  background-color: #000000;
 }
 
 #mycontainer {
@@ -19,14 +19,29 @@ body {
 #auth-container{
   padding: 25px;
   border-radius: 2px;
-  background-color: #ecf0f1;
+//  background-color: #ecf0f1;
+  background-color: #ffffff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+}
 
+#icon-map:hover,
+#icon-alliance:hover,
+#icon-technology:hover,
+#icon-stats:hover,
+#icon-exit:hover {
+  cursor: pointer;
 }
 
 #indication{
 	font-family: "Century Gothic";
-	font-size: 14px;;
+	font-size: 14px;
+}
+
+#indication-title{
+	font-family: "Century Gothic";
+	font-size: 18px;
+	font-weight: bold;
 }
 
 .ui-autocomplete {

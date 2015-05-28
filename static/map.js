@@ -3,7 +3,7 @@ var renderer;
 
 function initPixi() {
 	
-	stage = new PIXI.Stage(0x66FF99);
+	stage = new PIXI.Stage(0x000000);
  	renderer = PIXI.autoDetectRenderer($(window).width() - $('#icon-map').width(), $(window).height());
 
 	// add the renderer view element to the DOM
