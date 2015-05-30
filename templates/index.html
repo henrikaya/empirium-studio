@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <title>Empirium Studio</title>
-    <meta name="description" content="Flat UI Kit Free is a Twitter Bootstrap Framework design and Theme, this responsive framework includes a PSD and HTML version."/>
+    <meta name="description" content="Empirium Studio is a user-friendly tool for maps navigation, ships visualisation and data sharing for Empirium Game"/>
 
     <meta name="viewport" content="width=1000, initial-scale=1.0, maximum-scale=1.0">
 
     <link href="{{ url_for('static', filename='Flat-UI/dist/css/vendor/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet">
-
+    <!-- TODO: Changer favicon-->
     <link rel="shortcut icon" href="Flat-UI/img/favicon.ico">
 
   </head>
@@ -20,19 +20,19 @@
 	
 		<div id="main-screen">
 			<div id="auth-container">
-			
 				<div>
 					<p id="indication-title">Identification</p>
 					<p id="indication">Entrez vos identifiants Empirium pour vous connecter.<br><br></p>
 				</div>
-				<div>
+				<div id="authent-part">
 					<div class="form-group">
 						<input id="player" type="text" value="" placeholder="Joueur" autofocus="autofocus" class="form-control"/>
 					</div>
-				</div>
-				<div>
 					<div class="form-group">
 						<input id="password" type="password" value="" placeholder="Mot de passe" class="form-control" />
+					</div>
+					<div>
+					  	<button id="button-connection" class="btn btn-block btn-default">Connexion</a>
 					</div>
 				</div>
 				<div>
@@ -40,18 +40,15 @@
 					<img id="success" src="{{ url_for('static', filename='images/success.gif') }}">
 					<img id="fail"	  src="{{ url_for('static', filename='images/fail.png') }}">
 				</div>
-				<div>
-					  <button id="button-connection" class="btn btn-block btn-default">Connexion</a>
-				</div>
 			</div>
 		</div>
 
 		<div id="barre-menu">
-			<div class="row no-gutter"><img id="icon-map" src="{{ url_for('static', filename='images/map-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-alliance" src="{{ url_for('static', filename='images/alliance2-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-technology" src="{{ url_for('static', filename='images/technology-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-stats" src="{{ url_for('static', filename='images/stats2-normal.svg') }}"></div>
-			<div class="row no-gutter"><img id="icon-exit" src="{{ url_for('static', filename='images/exit2-normal.svg') }}"></div>
+			<div class="row no-gutter"><img id="icon-map" src=""></div>
+			<div class="row no-gutter"><img id="icon-alliance" src=""><div>
+			<div class="row no-gutter"><img id="icon-technology" src=""></div>
+			<div class="row no-gutter"><img id="icon-stats" src=""></div>
+			<div class="row no-gutter"><img id="icon-exit" src=""></div>
 		</div>
 
 	</div>

@@ -16,16 +16,17 @@ $(function () {
 		var posIconTechnology = $('#icon-technology').offset();
 		var posIconStats = $('#icon-stats').offset();
 		var posIconExit = $('#icon-exit').offset();
-		posIconMap.left = 30;
-		posIconAlliance.left = 30 + $('#icon-map').width() + 20;
-		posIconTechnology.left = 30 + 2 * ($('#icon-map').width() + 20);
-		posIconStats.left = 30 + 3 * ($('#icon-map').width() + 20);
-		posIconExit.left = 30 + 4 * ($('#icon-map').width() + 20);		
-		posIconMap.top = 30;
-		posIconAlliance.top = 30;
-		posIconTechnology.top = 30;
-		posIconStats.top = 30;
-		posIconExit.top = 30;
+
+		posIconMap.left = 		30;
+		posIconAlliance.left = 		30 + $('#icon-map').width() + 20;
+		posIconTechnology.left = 	30 + 2 * ($('#icon-map').width() + 20);
+		posIconStats.left = 		30 + 3 * ($('#icon-map').width() + 20);
+		posIconExit.left = 		30 + 4 * ($('#icon-map').width() + 20);		
+		posIconMap.top = 		30;
+		posIconAlliance.top = 		30;
+		posIconTechnology.top = 	30;
+		posIconStats.top = 		30;
+		posIconExit.top = 		30;
 
 		$('#icon-map').offset(posIconMap);
 		$('#icon-alliance').offset(posIconAlliance);
@@ -33,16 +34,18 @@ $(function () {
 		$('#icon-stats').offset(posIconStats);
 		$('#icon-exit').offset(posIconExit);
 
-		var pos = $('#auth-container').offset();
-		pos.top = ($(window).height() - $('#auth-container').height()) / 2;
-		pos.left = ($(window).width() - $('#auth-container').width()) / 2;		
+		var pos = 	$('#auth-container').offset();
+		pos.top = 	($(window).height() - $('#auth-container').height()) / 2;
+		pos.left = 	($(window).width() - $('#auth-container').width()) / 2;		
 		$('#auth-container').offset(pos);
 
-		var posMap = $('#map').offset();
-		posMap.top = 0;
-		posMap.left = 0;
+		var posMap = 	$('#map').offset();
+		posMap.top = 	0;
+		posMap.left = 	0;
 		$('#map').offset(posMap);
 	}
+
+	// Init positions of elements when a user arrives on the website
 
 	$('#icon-map').hide();
 	$('#icon-alliance').hide();
@@ -55,28 +58,28 @@ $(function () {
 	$('#success').hide();
 	$('#fail').hide();
 	$('#map').hide();
+	$('#loading').attr("src", "static/images/loading.gif");
+	$('#fail').attr("src", "static/images/fail.png");
+	$('#success').attr("src", "static/images/success.gif");
+
 	$(window).resize(initPositions);
+
+	// Store images in cache
 	
 	var cache = [];
-	
+
     	var cacheImage = document.createElement('img');
     	cacheImage.src = "static/images/map-light.svg";
     	cache.push(cacheImage);
 	var cacheImage = document.createElement('img');
     	cacheImage.src = "static/images/map-normal.svg";
     	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/map-grey.svg";
-    	cache.push(cacheImage);
 
 	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/alliance2-light.svg";
+    	cacheImage.src = "static/images/alliance-light.svg";
     	cache.push(cacheImage);
 	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/alliance2-normal.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/alliance2-grey.svg";
+    	cacheImage.src = "static/images/alliance-normal.svg";
     	cache.push(cacheImage);
 
 	var cacheImage = document.createElement('img');
@@ -85,28 +88,19 @@ $(function () {
 	var cacheImage = document.createElement('img');
     	cacheImage.src = "static/images/technology-normal.svg";
     	cache.push(cacheImage);
+
 	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/technology-grey.svg";
+    	cacheImage.src = "static/images/stats-light.svg";
+    	cache.push(cacheImage);
+	var cacheImage = document.createElement('img');
+    	cacheImage.src = "static/images/stats-normal.svg";
     	cache.push(cacheImage);
 
 	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/stats2-light.svg";
+    	cacheImage.src = "static/images/exit-light.svg";
     	cache.push(cacheImage);
 	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/stats2-normal.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/stats2-grey.svg";
-    	cache.push(cacheImage);
-
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/exit2-light.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/exit2-normal.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/exit2-grey.svg";
+    	cacheImage.src = "static/images/exit-normal.svg";
     	cache.push(cacheImage);
 
 	$("#icon-map").mouseover(function(){
@@ -119,10 +113,10 @@ $(function () {
 	
 	$("#icon-alliance").mouseover(function(){
 		if (connectionState > 0)
-        		$(this).attr("src", "static/images/alliance2-light.svg");
+        		$(this).attr("src", "static/images/alliance-light.svg");
     	}).mouseout(function(){
 		if (connectionState > 0)
-        		$(this).attr("src", "static/images/alliance2-normal.svg");
+        		$(this).attr("src", "static/images/alliance-normal.svg");
     	});
 
 	$("#icon-technology").mouseover(function(){
@@ -135,19 +129,21 @@ $(function () {
 	
 	$("#icon-stats").mouseover(function(){
 		if (connectionState > 0)
-        		$(this).attr("src", "static/images/stats2-light.svg");
+        		$(this).attr("src", "static/images/stats-light.svg");
     	}).mouseout(function(){
 		if (connectionState > 0)
-        		$(this).attr("src", "static/images/stats2-normal.svg");
+        		$(this).attr("src", "static/images/stats-normal.svg");
     	});
 	
 	$("#icon-exit").mouseover(function(){
 		if (connectionState > 0)
-        		$(this).attr("src", "static/images/exit2-light.svg");
+        		$(this).attr("src", "static/images/exit-light.svg");
     	}).mouseout(function(){
 		if (connectionState > 0)
-        		$(this).attr("src", "static/images/exit2-normal.svg");
+        		$(this).attr("src", "static/images/exit-normal.svg");
     	});
+
+	// TODO: Generate dynamically list of players
 	
     	var liste = [
 		"Aotearoa",
@@ -211,9 +207,6 @@ $(function () {
 
     	$('#player').autocomplete({
         	source: function(request, response) {
-	    		//var results = $.ui.autocomplete.filter(liste, request.term);
-	    		//response(results.slice(0, 5));
-
 	    		var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( request.term ), "i" );
             		response( $.grep( liste, function( item ){
                 		return matcher.test( item );
@@ -231,21 +224,23 @@ $(function () {
 
                         var topLoading = $('#loading').offset().top;
                         var hLoading = $('#loading').height();
+
+			function authentPartAppear() {
+				$('#authent-part').show();
+			}
+
                         $('#loading').hide();
-                        $('#fail').fadeIn().fadeOut().fadeIn().fadeOut();
+                        $('#fail').fadeIn().fadeOut().fadeIn().fadeOut(400, authentPartAppear);
+
                         pos = $('#fail').offset();
-                        // TODO: correct following line (all positions have to be relative...)
                         pos.top = topLoading + (hLoading - $('#fail').height()) / 2;
+                        // TODO: correct following line (all positions have to be relative...)
                         pos.left = authContainerPos.left + (authContainerWidth - $('#fail').width()) / 2 + 20;
+
                         $('#fail').offset(pos);
                         $('#auth-container').height(authContainerHeight);
                         $('#auth-container').offset(authContainerPos);
 
-			$('#fail').delay(1800).hide(0);
-			$('#player').delay(1800).show(0);
-			$('#player').delay(1800).focus(0);
-			$('#password').delay(1800).show(0);
-			$('#button-connection').delay(1800).show(0);
 		}
 		else if (data == "success") {
 			connectionState = 1;
@@ -253,13 +248,16 @@ $(function () {
 			var authContainerHeight = $('#auth-container').height();
 			var authContainerWidth = $('#auth-container').width();
 			var authContainerPos = $('#auth-container').offset();
-			
-			$('#icon-map').fadeIn("slow");
-			$('#icon-alliance').fadeIn("slow");
-			$('#icon-technology').fadeIn("slow");
-			$('#icon-stats').fadeIn("slow");
-			$('#icon-exit').fadeIn("slow");
-			initPositions();
+
+			function buttonsAppear() {
+				$('#icon-map').attr("src", "static/images/map-normal.svg").fadeIn("slow");
+				$('#icon-alliance').attr("src", "static/images/alliance-normal.svg").fadeIn("slow");
+				$('#icon-technology').attr("src", "static/images/technology-normal.svg").fadeIn("slow");
+				$('#icon-stats').attr("src", "static/images/stats-normal.svg").fadeIn("slow");
+				$('#icon-exit').attr("src", "static/images/exit-normal.svg").fadeIn("slow");
+				$('#map').fadeIn();
+				initPositions();
+			}
 
 			var topLoading = $('#loading').offset().top;
 			var hLoading = $('#loading').height();
@@ -272,10 +270,7 @@ $(function () {
 			$('#success').offset(pos);
 			$('#auth-container').height(authContainerHeight);
 			$('#auth-container').offset(authContainerPos);
-			$("#auth-container").delay(1200).fadeOut("slow", function() { initPositions(); });
-
-			$('#map').show();
-			initPositions();
+			$("#auth-container").delay(1200).fadeOut("slow", buttonsAppear);
 		}
 		else {
 			alert("Reponse du serveur inconnue : \"" + data + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
@@ -294,10 +289,9 @@ $(function () {
 		var topPButton = $('#player').offset().top;
 		var topCButton = $('#button-connection').offset().top;
 		var hCButton = $('#button-connection').height();
-		$('#player').hide();
-		$('#password').hide();
-		$('#button-connection').hide();
+		$('#authent-part').hide();
 		$('#loading').show();
+
 		pos = $('#loading').offset();
 		pos.top = (topPButton + topCButton + hCButton - $('#loading').height()) / 2;
 		// TODO: correct following line (all positions have to be relative...)
@@ -328,6 +322,8 @@ $(function () {
 			connect();
 		}
     	});
+
+	// Print (alert) informations about datas (ships and planets) received
 
 	function printData(data) {
 
