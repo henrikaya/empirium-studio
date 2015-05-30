@@ -1,7 +1,7 @@
 $(function () {
 
-	var connectionState = 0;
-	var map = new Map();
+	connectionState = 0;
+	map = new Map();
 
 	function initPositions() {
 
@@ -345,10 +345,15 @@ $(function () {
 
 		}
 
+		var background = new Background(80,80);
+		map.add(background);
+
 		alert( map.toString() );
 
 		$('#map').show();
 		initPositions();
+
+		bindMap();
 
 	}
 
