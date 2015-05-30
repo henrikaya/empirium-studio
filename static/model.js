@@ -14,38 +14,41 @@ function Background(x, y) {
 
 	mysprite.mousedown = function(data) {
 
-    		var pos = data.getLocalPosition(mysprite.parent);
-		//view.center(pos.x, pos.y);
-
+    		var pos = data.getLocalPosition(mysprite.parent.parent);
 		view.mode = 1;
-		view.smouseX = pos.x;
-		view.smouseY = pos.y;
+		view.smouseX = Math.round(pos.x);
+		view.smouseY = Math.round(pos.y);
 		view.scenterX = view.acenterX;
 		view.scenterY = view.acenterY;
+		console.log("Init: Souris : " + view.smouseX + "/" + view.smouseY + "  ||||  Centre : " + view.scenterX + "/" + view.scenterY);
 	}
 
 	mysprite.mousemove = function(data) {
 
     		if (view.mode == 1) {
-			var pos = data.getLocalPosition(mysprite.parent);
-			nposX = view.acenterX - pos.x + view.smouseX;
-			nposY = view.acenterY - pos.y + view.smouseY;
-			if ((nposX-view.acenterX)*(nposX-view.acenterX) + (nposY-view.acenterY)*(nposY-view.acenterY) > 10) {
-				//view.smouseX = pos.x;
-				//view.smouseY = pos.y;
-				//alert("view.centerX = " + view.centerX + " --- " + "pos.x = " + pos.x + "view.smouseX = " + view.smouseX);
-				console.log("Mouse : " + pos.x + "/" + pos.y);
-				console.log("Old center : "+ view.acenterX + "/" + view.acenterY);
-				view.center(nposX, nposY);
-				console.log("New center : "+ nposX + "/" + nposY);
+
+			var pos = data.getLocalPosition(mysprite.parent.parent);
+			var deltaX = view.smouseX - Math.round(pos.x);
+			var deltaY = view.smouseY - Math.round(pos.y);
+
+			centerX = view.scenterX + deltaX / scrollArea.scale.x;
+			centerY = view.scenterY + deltaY / scrollArea.scale.y;
+
+			console.log("Move: Souris : " + Math.round(pos.x) + "/" + Math.round(pos.y) + "  ||||  Centre : " + view.scenterX + "/" + view.scenterY);
+
+			// If needed we move window
+			if (deltaX != 0 || deltaY != 0) {
+				console.log("Prop: Centre : " + centerX + "/" + centerY);
+				view.center(centerX, centerY);
+				view.smouseX = Math.round(pos.x);
+				view.smouseY = Math.round(pos.y);
+				view.scenterX = view.acenterX;
+				view.scenterY = view.acenterY;
 			}
 		}
 	}
 
-	mysprite.mouseup = function(data) {
-
-    		view.mode = 0;
-	}
+	mysprite.mouseup = function(data) { view.mode = 0; }
 
 	this.sprite = mysprite;
 

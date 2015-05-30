@@ -19,11 +19,8 @@ function View() {
 		var nposx = renderer.width/2 - x*scrollArea.scale.x;
 		var nposy = renderer.height/2 - y*scrollArea.scale.y;
 
-		//alert ( "old scroll origin : " + scrollArea.x + "/" + scrollArea.y + " --- mouse position : " + x + "/" + y + " --- zoom : " + scrollArea.scale.x  + " --- new scroll origin : " + nposx + "/" + nposy);
-
 		scrollArea.x = nposx;
 		scrollArea.y = nposy;
-
 	}
 
 }
@@ -46,10 +43,13 @@ function MouseWheelHandler(e) {
 			}
 		}
 
+		var centerX = view.acenterX;
+		var centerY = view.acenterY;
+
 		scrollArea.scale.x = zoomList[zoomIndex];
 		scrollArea.scale.y = zoomList[zoomIndex];
 
-		view.center(-276,179);
+		view.center(centerX, centerY);
 
 		return false;
 }
@@ -71,24 +71,6 @@ function initPixi() {
 	scrollArea.buttonMode = true;
 
 	texture_planete = PIXI.Texture.fromImage("static/images/planete_bleue.png");
-    	// create a new Sprite using the texture
-    	var bunny = new PIXI.Sprite(texture_planete);
-	bunny.scale.x = 0.0012;
-	bunny.scale.y = 0.0012;
- 
-    	// center the sprites anchor point
-    	bunny.anchor.x = 0.5;
-    	bunny.anchor.y = 0.5;
- 
-    	// move the sprite t the center of the screen
-    	bunny.position.x = 200;
-    	bunny.position.y = 150;
-
-	bunny.mousedown = function(data) { alert("badibou"); }
-	bunny.interactive = true;
-	bunny.buttonMode = true;
- 
-    	scrollArea.addChild(bunny);
 
 	stage.addChild(scrollArea);
 
@@ -103,18 +85,6 @@ function initPixi() {
 	else document.attachEvent("onmousewheel", MouseWheelHandler);
  
 	texture_background = PIXI.Texture.fromImage("static/images/background.png");
-	var background = new PIXI.Sprite(texture_background);
-	background.position.x = 0;
-	background.position.y = 0;
-	background.scale.x = 1000;
-	background.scale.y = 1000;
-	background.interactive = true;
-	background.buttonMode = true;
-	background.mousdown = function(data) {
-		alert("background...");
-	}
-
-	scrollArea.addChild(background);
 
 	view = new View();
 	view.center(-276,179);
@@ -136,7 +106,6 @@ function bindMap() {
 function animate() {
 	 
 	requestAnimFrame( animate );
-	// render the stage   
 	renderer.render(stage);
 }
 

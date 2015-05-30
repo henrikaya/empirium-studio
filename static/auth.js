@@ -323,7 +323,7 @@ $(function () {
 		}
     	});
 
-	// Print (alert) informations about datas (ships and planets) received
+	// Print informations about datas (ships and planets) received
 
 	function printData(data) {
 
@@ -348,7 +348,7 @@ $(function () {
 		var background = new Background(80,80);
 		map.add(background);
 
-		alert( map.toString() );
+		console.log( map.toString() );
 
 		$('#map').show();
 		initPositions();
