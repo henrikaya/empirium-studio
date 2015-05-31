@@ -371,5 +371,20 @@ $(function () {
 			});
 		}
 	});
+
+	$('#icon-exit').click(function() {
+
+		if (connectionState == 1) {
+			$.ajax({
+				type: 'GET',
+		    		url: 'disconnection/',
+		    		timeout: 10000,
+		    		success: function(data) { connectionState = 0; window.location.replace("http://plumbersversusartists.ddns.net:50000"); },
+		    		error: function() {
+		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.'); }
+			});
+		}
+	});
+
 	
 });

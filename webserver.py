@@ -22,6 +22,19 @@ sys.setdefaultencoding('utf-8')
 app = Flask(__name__)
 app.secret_key = 'ts\x8a\x120\x06\x1d\xb6\xb5\xefMS\x17\xfe|~\xa5\xed}\xb9\x8f\x8d\xcbS'
 
+@app.route('/disconnection/', methods=['GET'], strict_slashes=False)
+def user_disconnect():
+
+	if 'id' in session:
+
+		syslog.syslog("Player %s disconnected" % session['id'])
+		session.pop('id')
+
+		return "disconnection ok"
+
+	return "player not connected"
+
+
 @app.route('/connection/', methods=['POST'], strict_slashes=False)
 def user_connect():
 
