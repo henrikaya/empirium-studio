@@ -91,6 +91,7 @@ function initPixi() {
 	scrollArea.buttonMode = true;
 
 	texture_planete = PIXI.Texture.fromImage("static/images/planete_bleue.png");
+	texture_ship = PIXI.Texture.fromImage("static/images/ship.png");	
 
 	stage.addChild(scrollArea);
 
@@ -119,6 +120,10 @@ function bindMap() {
 
 	for (i = 0; i < map.planets.length; i++) {
 		scrollArea.addChild(map.planets[i].sprite);
+	}
+
+	for (i = 0; i < map.ships.length; i++) {
+		scrollArea.addChild(map.ships[i].sprite);
 	}
 
 }

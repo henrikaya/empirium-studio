@@ -110,6 +110,8 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 	this.x = x;
 	this.y = y;
 
+	var mysprite = new PIXI.Sprite(texture_ship);
+
 	this.toString = function() {
 		ret = "Vaisseau " + this.id + " - " + this.name + "\n";
 		ret += "MongoDB ID : " + this._id + "\n";
@@ -118,6 +120,25 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 		ret += "Position : " + this.x + "/" + this.y;
 		return ret;
 	}
+
+	mysprite.scale.x = 0.0033;
+	mysprite.scale.y = 0.0033;
+	mysprite.position.x = x;
+	mysprite.position.y = -y;
+	mysprite.mousedown = function(data) {
+		ret = "Vaisseau " + id + " - " + name + "\n";
+		ret += "MongoDB ID : " + _id + "\n";
+		ret += "Type : " + image + "\n";
+		ret += "Propriétaire : " + owner + "\n";
+		ret += "Position : " + x + "/" + y;
+		alert(ret);
+	}
+	mysprite.interactive = true;
+	mysprite.buttonMode = true;
+
+	this.sprite = mysprite;
+
+
 }
 
 function Map() {
