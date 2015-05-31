@@ -10,7 +10,7 @@ function Background(x, y) {
 	mysprite.position.x = -x*9/2;
 	mysprite.position.y = -y*9/2;
 	mysprite.interactive = true;
-	mysprite.buttonMode = true;
+	mysprite.buttonMode = false;
 
 	mysprite.mousedown = function(data) {
 
@@ -20,10 +20,17 @@ function Background(x, y) {
 		view.smouseY = Math.round(pos.y);
 		view.scenterX = view.acenterX;
 		view.scenterY = view.acenterY;
-		console.log("Init: Souris : " + view.smouseX + "/" + view.smouseY + "  ||||  Centre : " + view.scenterX + "/" + view.scenterY);
 	}
 
 	mysprite.mousemove = function(data) {
+
+		var pos = data.getLocalPosition(mysprite.parent.parent);
+		var posMap = data.getLocalPosition(mysprite.parent);
+
+		view.amouseAbsX = pos.x;
+		view.amouseAbsY = pos.y
+		view.amouseX = posMap.x;
+		view.amouseY = posMap.y;
 
     		if (view.mode == 1) {
 
@@ -34,11 +41,8 @@ function Background(x, y) {
 			centerX = view.scenterX + deltaX / scrollArea.scale.x;
 			centerY = view.scenterY + deltaY / scrollArea.scale.y;
 
-			console.log("Move: Souris : " + Math.round(pos.x) + "/" + Math.round(pos.y) + "  ||||  Centre : " + view.scenterX + "/" + view.scenterY);
-
 			// If needed we move window
 			if (deltaX != 0 || deltaY != 0) {
-				console.log("Prop: Centre : " + centerX + "/" + centerY);
 				view.center(centerX, centerY);
 				view.smouseX = Math.round(pos.x);
 				view.smouseY = Math.round(pos.y);

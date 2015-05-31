@@ -2,15 +2,23 @@ function View() {
 
 	this.mode = 0;
 
+	// Store center coordonates (start and current)
 	this.scenterX = 0;
 	this.scenterY = 0;
 	this.acenterX = 0;
 	this.acenterY = 0;
+
+	// Store mouse coordonates (start and current)
 	this.smouseX = 0;
 	this.smouseY = 0;
 	this.amouseX = 0;
 	this.amouseY = 0;
 
+	// Sore mouse coordonates (current, and absolute (relative to window))
+	this.amouseAbsX = 0;
+	this.amouseAbsY = 0;
+
+	// Center map on x,y
 	this.center = function(x,y) {
 
 		this.acenterX = x;
@@ -21,6 +29,15 @@ function View() {
 
 		scrollArea.x = nposx;
 		scrollArea.y = nposy;
+	}
+
+	// Bind a point (relative to map) to a position (relative to window)
+	this.bindPoint = function(xMap, yMap, xAbs, yAbs) {
+	
+		var dX = (xAbs - $(window).width()/2) / scrollArea.scale.x;
+		var dY = (yAbs - $(window).height()/2) / scrollArea.scale.y;
+
+		this.center(xMap - dX, yMap - dY);
 	}
 
 }
@@ -45,11 +62,15 @@ function MouseWheelHandler(e) {
 
 		var centerX = view.acenterX;
 		var centerY = view.acenterY;
+		var xMap = view.amouseX;
+		var yMap = view.amouseY;
+		var xAbs = view.amouseAbsX;
+		var yAbs = view.amouseAbsY;
 
 		scrollArea.scale.x = zoomList[zoomIndex];
 		scrollArea.scale.y = zoomList[zoomIndex];
 
-		view.center(centerX, centerY);
+		view.bindPoint(xMap, yMap, xAbs, yAbs)
 
 		return false;
 }
@@ -59,7 +80,6 @@ function initPixi() {
 	stage = new PIXI.Stage(0x000000);
  	renderer = PIXI.autoDetectRenderer($(window).width(), $(window).height());
 
-	// add the renderer view element to the DOM
 	var x = document.getElementById("map"); 
 	x.appendChild(renderer.view);
 	 
