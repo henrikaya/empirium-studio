@@ -308,7 +308,7 @@ $(function () {
             		timeout: 10000,
             		success: function(data) { processAuthResponse(data); },
             		error: function() {
-              		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.'); }
+		      	alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
         	});    
 
     	}
@@ -367,7 +367,7 @@ $(function () {
 		    		timeout: 10000,
 		    		success: function(data) { printData(data); },
 		    		error: function() {
-		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.'); }
+		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
 			});
 		}
 	});
@@ -379,9 +379,9 @@ $(function () {
 				type: 'GET',
 		    		url: 'disconnection/',
 		    		timeout: 10000,
-		    		success: function(data) { connectionState = 0; window.location.replace("http://plumbersversusartists.ddns.net:50000"); },
+		    		success: function(data) { connectionState = 0; window.location.replace(config['server']['host'] + ":" + config['server']['port']); },
 		    		error: function() {
-		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.'); }
+		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
 			});
 		}
 	});

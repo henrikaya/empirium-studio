@@ -61,7 +61,7 @@ def user_connect():
 		# TODO: si mdp different, lancer une mise a jour des donnees empi avec ce nouveau mdp
 		if (joueur['password'] != password):
 			syslog.syslog("Update password of player %s" % identifiant)
-			os.system("/home/pi/Documents/python/empi/repo/empirium_studio/tools/updateDatas.py %s %s %s &" % (identifiant, password, name))
+			os.system("%s %s %s %s &" % (config.get("Tools", "Update"), identifiant, password, name))
 
 		col.update({"id":identifiant},{"$set":{"password":password}})
 		col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})

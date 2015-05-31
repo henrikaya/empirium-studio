@@ -29,4 +29,4 @@ def insertAllDatas(datas, name):
     syslog.openlog()
     syslog.syslog("Datas imported from %s's radars" % name)
     
-return
+    return
