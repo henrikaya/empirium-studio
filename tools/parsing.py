@@ -6,6 +6,17 @@ import cookielib
 from bs4 import BeautifulSoup
 from lxml import etree
 
+def getCycleNumber():
+
+	opener = urllib2.build_opener()
+	f = opener.open("http://v2.empirium.net")
+	html = etree.HTML(f.read())
+	result = etree.tostring(html, pretty_print=True, method="html")
+
+	coord = result.find("[ Tour n") + 14;
+
+	return result[coord:coord+3]
+
 def getShipLinks(cookies):
 	
 	opener2 = urllib2.build_opener() 

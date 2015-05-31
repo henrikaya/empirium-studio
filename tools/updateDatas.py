@@ -19,11 +19,11 @@ if __name__ == '__main__':
 	password = sys.argv[2]
 	name = sys.argv[3]
 
+	cycle = parsing.getCycleNumber()
+
 	syslog.syslog("Update datas for %s (%s)" % (name, identifiant))
 	
 	cookies = connection.connect(identifiant, password)
-
 	datas = parsing.getAllDatas(cookies, name)
-
-	database.insertAllDatas(datas, name)
+	database.insertAllDatas(datas, name, cycle)
 

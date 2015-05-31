@@ -7,6 +7,7 @@ from pymongo import MongoClient
 import urllib, urllib2
 import cookielib
 import tools.connection
+import tools.parsing
 import time
 import os
 from bson import BSON
@@ -101,6 +102,16 @@ def getplayers():
 	syslog.syslog("Someone gets players XML")
 
 	return Response(ret, mimetype='text/xml');
+
+@app.route('/getcyclenumber', methods=['GET'], strict_slashes=False)
+def getcyclenumber():
+
+	syslog.syslog("Someone gets cycle number")
+
+	data = {}
+	data['num'] = tools.parsing.getCycleNumber()
+	
+	return Response(json.dumps(data, default=json_util.default), mimetype='application/json')
 
 @app.route('/get/<num_tour>', methods=['GET'], strict_slashes=False)
 def get(num_tour):

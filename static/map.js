@@ -107,7 +107,7 @@ function initPixi() {
 	texture_background = PIXI.Texture.fromImage("static/images/background.png");
 
 	view = new View();
-	view.center(-276,179);
+	view.center(-273,198);
 
 }
 

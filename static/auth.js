@@ -356,16 +356,31 @@ $(function () {
 		bindMap();
 
 	}
+	
+	function getDatas(cycle) {
+
+		if (connectionState == 1) {
+			$.ajax({
+				type: 'GET',
+		    		url: 'get/' + cycle,
+				contentType: "application/json; charset=utf-8",
+		    		timeout: 10000,
+		    		success: function(data) { printData(data); },
+		    		error: function() {
+		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
+			});
+		}
+	}
 
 	$('#icon-map').click(function() {
 
 		if (connectionState == 1) {
 			$.ajax({
 				type: 'GET',
-		    		url: 'get/535',
+		    		url: 'getcyclenumber',
 				contentType: "application/json; charset=utf-8",
 		    		timeout: 10000,
-		    		success: function(data) { printData(data); },
+		    		success: function(data) { getDatas(data['num']); },
 		    		error: function() {
 		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
 			});
