@@ -6,14 +6,14 @@ import syslog
 
 def insertData(data, db, name, cycle):
 
-    if (len(data) < 7):
-        return -1
-
-    post = {'type':data[0], 'id':data[1], 'nom':data[2], 'image':data[3], 'x':data[4], 'y':data[5], 'owner':data[6], 'from':[name]}
+    if data[0] == 'Vaisseau' or data[0] == 'Planete':
+    	post = {'type':data[0], 'id':data[1], 'nom':data[2], 'image':data[3], 'x':data[4], 'y':data[5], 'owner':data[6], 'from':[name]}
+    else:
+	post = {'type':data[0], 'id':data[1], 'destination':data[2], 'x':data[3], 'y':data[4], 'from':[name]}
 
     col = db['tour_%s' % cycle]
 
-    if col.find_one({"id":data[1]}) == None:
+    if col.find_one({"type":data[0], "id":data[1]}) == None:
         col.insert(post)
 
     return

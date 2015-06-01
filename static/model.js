@@ -81,6 +81,8 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 		return ret;
 	}
 
+	mysprite.anchor.x = 0.5;
+	mysprite.anchor.y = 0.5;
 	mysprite.scale.x = 0.0012;
 	mysprite.scale.y = 0.0012;
 	mysprite.position.x = x;
@@ -121,6 +123,8 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 		return ret;
 	}
 
+	mysprite.anchor.x = 0.5;
+	mysprite.anchor.y = 0.5;
 	mysprite.scale.x = 0.0033;
 	mysprite.scale.y = 0.0033;
 	mysprite.position.x = x;
@@ -141,10 +145,55 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 
 }
 
+function Vortex(_id, from, id, type, destination, x, y) {
+
+    	this._id = _id;
+	this.from = from;
+	this.id = id;
+	this.type = type;
+	this.destination = destination;
+	this.x = x;
+	this.y = y;
+
+	var mysprite = new PIXI.Sprite(texture_vortex);
+
+	this.toString = function() {
+		ret = "Vortex " + this.id + " - " + this.name + "\n";
+		ret += "MongoDB ID : " + this._id + "\n";
+		ret += "Destination : " + this.destination + "\n";
+		ret += "Position : " + this.x + "/" + this.y;
+
+		return ret;
+	}
+
+	mysprite.anchor.x = 0.5;
+	mysprite.anchor.y = 0.5;
+	mysprite.scale.x = 0.0025;
+	mysprite.scale.y = 0.0025;
+	mysprite.position.x = x;
+	mysprite.position.y = -y;
+	mysprite.mousedown = function(data) {
+		ret = "Vortex " + id + " - " + name + "\n";
+		ret += "MongoDB ID : " + _id + "\n";
+		ret += "Destination : " + destination + "\n";
+		ret += "Position : " + x + "/" + y;
+		alert(ret);
+	}
+	mysprite.interactive = true;
+	mysprite.buttonMode = true;
+
+	this.sprite = mysprite;
+
+	this.anim = function() {
+		this.sprite.rotation -= 0.01;
+	}
+}
+
 function Map() {
 
 	this.planets = [];
 	this.ships = [];
+	this.vortex = [];
 	this.backgrounds = [];
 
 	this.add = function(elmt) {
@@ -154,6 +203,9 @@ function Map() {
 		else if (elmt instanceof Ship) {
 			this.ships.push(elmt);
 		}
+		else if (elmt instanceof Vortex) {
+			this.vortex.push(elmt);
+		}
 		else if (elmt instanceof Background) {
 			this.backgrounds.push(elmt);
 		}
@@ -162,12 +214,14 @@ function Map() {
 	this.clear = function() {
 		while (this.planets.length) { this.planets.pop(); }
 		while (this.ships.length) { this.ships.pop(); }
+		while (this.vortex.length) { this.vortex.pop(); }
 		while (this.backgrounds.length) { this.backgrounds.pop(); }
 	}
 
 	this.toString = function() {
 		ret = "Nombre de planètes : " + this.planets.length + "\n";
 		ret += "Nombre de vaisseaux : " + this.ships.length + "\n";
+		ret += "Nombre de vortex : " + this.vortex.length + "\n";
 		return ret;
 	}
 

@@ -92,6 +92,7 @@ function initPixi() {
 
 	texture_planete = PIXI.Texture.fromImage("static/images/planete_bleue.png");
 	texture_ship = PIXI.Texture.fromImage("static/images/ship.png");	
+	texture_vortex = PIXI.Texture.fromImage("static/images/vortex.png");
 
 	stage.addChild(scrollArea);
 
@@ -122,6 +123,10 @@ function bindMap() {
 		scrollArea.addChild(map.planets[i].sprite);
 	}
 
+	for (i = 0; i < map.vortex.length; i++) {
+		scrollArea.addChild(map.vortex[i].sprite);
+	}
+
 	for (i = 0; i < map.ships.length; i++) {
 		scrollArea.addChild(map.ships[i].sprite);
 	}
@@ -131,6 +136,11 @@ function bindMap() {
 function animate() {
 	 
 	requestAnimFrame( animate );
+
+	for (i = 0; i < map.vortex.length; i++) {
+		map.vortex[i].anim();
+	}
+
 	renderer.render(stage);
 }
 

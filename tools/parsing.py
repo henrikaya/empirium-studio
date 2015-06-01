@@ -59,7 +59,8 @@ def getDatas(cookies, link, playerName):
 		else:
 			type = type_complet[1]
 
-		# TODO: il faudra gérer le cas des Leviathan		
+		# TODO: il faudra gérer le cas des Leviathan
+		# Navette, Fregate and Croiseur processing
 		if (type == 'N' or type == 'F' or type == 'C'):
 			IdName = str(element.find("h1")).strip("<h1>").strip("</h1").strip("Navette ").strip("Frégate ").strip("Croiseur").strip("Commodore").strip("\n").split("<br/>")
 			indexCoordStart = str(element).find("<img")
@@ -75,6 +76,28 @@ def getDatas(cookies, link, playerName):
 			el.append(coord[1].strip(" "))
 			el.append(element.find("a").contents[0].encode("utf8"))
 			out.append(el)
+		# Vortex processing
+		elif type == 'V':
+			indexID = str(element).find("Vortex ") + 7
+			indexIDend = indexID + str(element)[indexID:].find("<")
+			ident = str(element)[indexID:indexIDend]
+
+			indexDest = str(element).find("Vers ") + 5
+			indexDestend = indexDest + str(element)[indexDest:].find("<")
+			dest = str(element)[indexDest:indexDestend]
+
+			indexCoord = str(element).find("Coord. ") +  7
+			indexCoordend = indexCoord + str(element)[indexCoord:].find("<br")
+			coord = str(element)[indexCoord:indexCoordend].strip(" ")
+
+			el.append("Vortex")
+			el.append(ident)
+			el.append(dest)
+			el.append(coord.split("/")[0])
+			el.append(coord.split("/")[1])
+			out.append(el)
+
+		# Planete processing
 		elif type == 'P':
 			index = str(element.find("h1")).find("Planète")
 			idName = str(element.find("h1"))[index:].strip("Planète ").strip("</h1>").strip("\n").split("<br/>")

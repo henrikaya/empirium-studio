@@ -342,6 +342,10 @@ $(function () {
 				var planet = new Planet(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.type, o.x, o.y);
 				map.add(planet);
 			}
+			else if (o.type == "Vortex") {
+				var vortex = new Vortex(o._id.$oid, o.from, o.id, o.type, o.destination, o.x, o.y);
+				map.add(vortex);
+			}
 
 		}
 

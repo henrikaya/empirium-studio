@@ -4,6 +4,7 @@ var stage;
 var renderer;
 var texture_planete;
 var texture_ship;
+var texture_vortex;
 var texture_background;
 var scrollArea;
 var view;
