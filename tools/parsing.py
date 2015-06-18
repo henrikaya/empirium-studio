@@ -5,6 +5,7 @@ import urllib, urllib2
 import cookielib
 from bs4 import BeautifulSoup
 from lxml import etree
+import syslog
 
 def getCycleNumber():
 
@@ -36,7 +37,27 @@ def getShipLinks(cookies):
 	
 	return liste_liens_radars 
 
+def getPlanetLinks(cookies):
+	
+	opener2 = urllib2.build_opener() 
+	opener2.addheaders.append(('Cookie', "; ".join('%s=%s' % (cookie.name,cookie.value) for cookie in cookies))) 
+	f = opener2.open("http://v2.empirium.net/pan.php3?th=pl") 
+	data = f.read() 
+	html = etree.HTML(data) 
+	result = etree.tostring(html, pretty_print=True, method="html") 
+	soup = BeautifulSoup(result)
+
+	# Recuperation des liens vers les radars de tous les vaisseaux
+	liste_liens_radars = [] 
+	for link in soup.findAll('a'):
+		link_value = link.get('href')
+		if link_value[1:16]=="/planete/gauche" and link_value.count("Impots") == 0:
+			liste_liens_radars.append("http://v2.empirium.net" + link_value[1:]) 
+
+	return liste_liens_radars 
+
 def getDatas(cookies, link, playerName):
+
 	# Recuperation du radar
 	op3 = urllib2.build_opener() 
 	op3.addheaders.append(('Cookie', "; ".join('%s=%s' % (cookie.name,cookie.value) for cookie in cookies))) 
@@ -174,6 +195,185 @@ def getDatas(cookies, link, playerName):
 							out.append(el)
 	return out
 
+def getDatasPlanets(cookies, link, playerName):
+
+	# Recuperation du radar
+	op3 = urllib2.build_opener() 
+	op3.addheaders.append(('Cookie', "; ".join('%s=%s' % (cookie.name,cookie.value) for cookie in cookies))) 
+	f3 = op3.open(link) 
+	d3 = f3.read() 
+	h3 = etree.HTML(d3) 
+	r3 = etree.tostring(h3, pretty_print=True, method="html")
+	s3 = BeautifulSoup(r3)
+
+	out = []
+
+	# Pour chaque element visible sur le radar	
+	for element in s3.findAll('div', attrs={"class":"carte_bulle"}):
+		el = []
+		# Recuperation du type de l'element (Fregate, Navette,
+		# Planete, Groupe, ...)
+
+		typeIdName = str(element.find("h1"))[4:-5]
+
+		if typeIdName[0] == "N":
+			ident = typeIdName.split("<br/>")[0][8:]
+			name = typeIdName.split("<br/>")[1].strip("\n")
+			image = str(element.find("img"))[12:-3]
+			iCoord = str(element).find("\"/>") + 3
+			iCoordEnd = iCoord + str(element)[iCoord:].find("<br/>") - 10
+			coord = str(element)[iCoord:iCoordEnd]
+			owner = element.find("a").contents[0]
+
+			el.append("Vaisseau")
+			el.append(ident)
+			el.append(name)
+			el.append(image)
+			el.append(coord.split("/")[0].strip(" "))
+			el.append(coord.split("/")[1].strip(" "))
+			el.append(owner)
+			out.append(el)
+
+		elif typeIdName[0:2] == "Co":
+			ident = typeIdName.split("<br/>")[0][10:]
+			name = typeIdName.split("<br/>")[1].strip("\n")
+			image = str(element.find("img"))[12:-3]
+			iCoord = str(element).find("\"/>") + 3
+			iCoordEnd = iCoord + str(element)[iCoord:].find("<br/>") - 10
+			coord = str(element)[iCoord:iCoordEnd]
+			owner = element.find("a").contents[0]
+
+			el.append("Vaisseau")
+			el.append(ident)
+			el.append(name)
+			el.append(image)
+			el.append(coord.split("/")[0].strip(" "))
+			el.append(coord.split("/")[1].strip(" "))
+			el.append(owner)
+			out.append(el)
+
+		elif typeIdName[0:2] == "Cr":
+			ident = typeIdName.split("<br/>")[0][9:]
+			name = typeIdName.split("<br/>")[1].strip("\n")
+			image = str(element.find("img"))[12:-3]
+			iCoord = str(element).find("\"/>") + 3
+			iCoordEnd = iCoord + str(element)[iCoord:].find("<br/>") - 10
+			coord = str(element)[iCoord:iCoordEnd]
+			owner = element.find("a").contents[0]
+
+			el.append("Vaisseau")
+			el.append(ident)
+			el.append(name)
+			el.append(image)
+			el.append(coord.split("/")[0].strip(" "))
+			el.append(coord.split("/")[1].strip(" "))
+			el.append(owner)
+			out.append(el)
+
+		elif typeIdName[0] == "F":
+			ident = typeIdName.split("<br/>")[0][8:]
+			name = typeIdName.split("<br/>")[1].strip("\n")
+			image = str(element.find("img"))[12:-3]
+			iCoord = str(element).find("\"/>") + 3
+			iCoordEnd = iCoord + str(element)[iCoord:].find("<br/>") - 10
+			coord = str(element)[iCoord:iCoordEnd]
+			owner = element.find("a").contents[0]
+
+			el.append("Vaisseau")
+			el.append(ident)
+			el.append(name)
+			el.append(image)
+			el.append(coord.split("/")[0].strip(" "))
+			el.append(coord.split("/")[1].strip(" "))
+			el.append(owner)
+			out.append(el)
+
+		elif typeIdName[2:5] == "img":
+			image = str(element.find("img"))[12:-3]
+
+			iTI = str(element).find("\"/>") + 12
+			iTIEnd = iTI + str(element)[iTI:].find("<br/>")
+			iNameEnd = iTIEnd + str(element)[iTIEnd:].find("</h1>")
+			iCoordEnd = iNameEnd + str(element)[iNameEnd:].find("<br/>") - 10
+			ti = str(element)[iTI:iTIEnd]
+			name = str(element)[iTIEnd+5:iNameEnd]
+			coord = str(element)[iNameEnd+5:iCoordEnd]
+			owner = element.find("a").contents[0]
+		
+			if owner.encode("utf-8") == "Gérer":
+				owner = playerName
+
+			el.append("Planete")
+			el.append(ti)
+			el.append(name)
+			el.append(image)
+			el.append(coord.split("/")[0].strip(" "))
+			el.append(coord.split("/")[1].strip(" "))
+			el.append(owner)
+			out.append(el)
+
+		else:
+
+			data = typeIdName.split(" ")
+			nb = data[0]
+			x = data[3]
+			y = data[5]
+
+
+			i = 0
+			for e in element.findAll("div", attrs={"class":"sousgroupe"}):
+				items = str(e).split("<br/><br/>")
+				for item in items:
+					if (len(item) >= 20):
+						i += 1
+
+						iImage = item.find("/images/")
+						iImageEnd = iImage + item[iImage:].find("\"/>")
+						image = item[iImage:iImageEnd]
+
+						if image[8] == 'v':
+							iIdNameEnd = iImageEnd + item[iImageEnd:].find(" de <a")
+							idName = item[iImageEnd+3:iIdNameEnd]
+
+							iOwner = item.find("gauche\">") + 8
+							iOwnerEnd = iOwner + item[iOwner:].find("</a>")
+							owner = item[iOwner:iOwnerEnd]
+							el.append("Vaisseau")
+							el.append(idName.split("-")[0].strip(" "))
+							el.append(idName.split("-")[1].strip(" "))
+							el.append(image)
+							el.append(x)
+							el.append(y)
+							el.append(owner)
+							out.append(el)
+
+						elif image[8] == 'p':
+							iIdNameEnd = iImageEnd + item[iImageEnd:].find("<a href")
+							idName = item[iImageEnd+6:iIdNameEnd]
+
+							iOwner = item.find("gauche\">") + 12
+							iOwnerEnd = iOwner + item[iOwner:].find("</a>")
+							owner = item[iOwner:iOwnerEnd]
+
+							if owner == "":
+								owner = "Rebelles"
+
+							el.append("Planete")
+							el.append(idName.split("-")[0].strip(" "))
+							el.append(idName.split("-")[1].strip(" "))
+							el.append(image)
+							el.append(x)
+							el.append(y)
+							el.append(owner)
+							out.append(el)
+
+						else:
+							syslog.syslog("Error: element unknown during planet radar parsing - player:%s - link:%s - item:%s" % (playerName, link, item))
+
+						el = []
+
+	return out
+
 def printPlanet(planet):
 
 	print("Identifiant : %s" % planet[1])
@@ -209,13 +409,20 @@ def printData(data):
 
 def getAllDatas(cookies, playerName):
 	
-	links = getShipLinks(cookies)
+	linksShips = getShipLinks(cookies)
+	linksPlanets = getPlanetLinks(cookies)
 	
 	datas = []
 
-	#for i in range(1):
-	for i in range(len(links)):
-		datas.extend(getDatas(cookies, links[i],playerName))
-		print "{0:.0f}% radars processed...".format(float(i+1)/len(links) * 100)
-	
+	for i in range(len(linksShips)):
+		datas.extend(getDatas(cookies, linksShips[i], playerName))
+		print "{0:.0f}% ships's radars processed...".format(float(i+1)/len(linksShips) * 100)
+
+	for i in range(len(linksPlanets)):
+		datas.extend(getDatasPlanets(cookies, linksPlanets[i], playerName))
+		print "{0:.0f}% planets's radars processed...".format(float(i+1)/len(linksPlanets) * 100)
+
 	return datas
+
+
+
