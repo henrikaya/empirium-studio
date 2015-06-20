@@ -88,11 +88,31 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
 	mysprite.mousedown = function(data) {
-		ret = "Planète " + id + " - " + name + "\n";
-		ret += "MongoDB ID : " + _id + "\n";
-		ret += "Propriétaire : " + owner + "\n";
-		ret += "Position : " + x + "/" + y;
-		alert(ret);
+		if (name != '' && name != "\n") {
+			$('#description-title').text(name);
+		}
+		else {
+			$('#description-title').text("<Planète anonyme>");
+		}
+		$('#description-subtitle').text("Planète " + id);
+		$('#description-section1').text("Située en " + x + "/" + y);
+		$('#description-section2').text("Appartient à " + owner);
+		$('#description-image').attr("src","static/images/planete_bleue.png");
+		$('#description').show();
+
+		//TODO: replace these 10 lines by a call to initPositions()
+		var posDescription = $('#description').offset();
+		posDescription.top = 0;
+		posDescription.left = $(window).width() - $('#description').width() - 15;
+		$('#description').offset(posDescription);
+		$('#description').height($(window).height());
+
+		$('#description-close').height(25).width(25);
+		var posDescClose = $('#description-close').offset();
+		posDescClose.top = 10;
+		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
+		$('#description-close').offset(posDescClose);
+
 	}
 	mysprite.interactive = true;
 	mysprite.buttonMode = true;
@@ -130,12 +150,31 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
 	mysprite.mousedown = function(data) {
-		ret = "Vaisseau " + id + " - " + name + "\n";
-		ret += "MongoDB ID : " + _id + "\n";
-		ret += "Type : " + image + "\n";
-		ret += "Propriétaire : " + owner + "\n";
-		ret += "Position : " + x + "/" + y;
-		alert(ret);
+		if (name != '' && name != "\n") {
+			$('#description-title').text(name);
+		}
+		else {
+			$('#description-title').text("<Vaisseau anonyme>");
+		}
+		$('#description-subtitle').text("Vaisseau " + id);
+		$('#description-section1').text("Situé en " + x + "/" + y);
+		$('#description-section2').text("Appartient à " + owner);
+		$('#description-image').attr("src","static/images/ship.png");
+		$('#description').show();
+
+		//TODO: replace these 10 lines by a call to initPositions()
+		var posDescription = $('#description').offset();
+		posDescription.top = 0;
+		posDescription.left = $(window).width() - $('#description').width() - 15;
+		$('#description').offset(posDescription);
+		$('#description').height($(window).height());
+
+		$('#description-close').height(25).width(25);
+		var posDescClose = $('#description-close').offset();
+		posDescClose.top = 10;
+		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
+		$('#description-close').offset(posDescClose);
+
 	}
 	mysprite.interactive = true;
 	mysprite.buttonMode = true;
@@ -173,11 +212,26 @@ function Vortex(_id, from, id, type, destination, x, y) {
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
 	mysprite.mousedown = function(data) {
-		ret = "Vortex " + id + " - " + name + "\n";
-		ret += "MongoDB ID : " + _id + "\n";
-		ret += "Destination : " + destination + "\n";
-		ret += "Position : " + x + "/" + y;
-		alert(ret);
+		$('#description-title').text("Vortex " + id);
+		$('#description-subtitle').text("Destination : " + destination);
+		$('#description-section1').text("Situé en " + x + "/" + y);
+		$('#description-section2').text("");
+		$('#description-image').attr("src","static/images/vortex.png");
+		$('#description').show();
+
+		//TODO: replace these 10 lines by a call to initPositions()
+		var posDescription = $('#description').offset();
+		posDescription.top = 0;
+		posDescription.left = $(window).width() - $('#description').width() - 15;
+		$('#description').offset(posDescription);
+		$('#description').height($(window).height());
+
+		$('#description-close').height(25).width(25);
+		var posDescClose = $('#description-close').offset();
+		posDescClose.top = 10;
+		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
+		$('#description-close').offset(posDescClose);
+
 	}
 	mysprite.interactive = true;
 	mysprite.buttonMode = true;

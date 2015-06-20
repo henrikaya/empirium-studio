@@ -43,6 +43,19 @@ $(function () {
 		posMap.top = 	0;
 		posMap.left = 	0;
 		$('#map').offset(posMap);
+
+		var posDescription = $('#description').offset();
+		posDescription.top = 0;
+		// TODO: replace "15" by css padding value
+		posDescription.left = $(window).width() - $('#description').width() - 15;
+		$('#description').offset(posDescription);
+		$('#description').height($(window).height());
+
+		$('#description-close').height(25).width(25);
+		var posDescClose = $('#description-close').offset();
+		posDescClose.top = 10;
+		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
+		$('#description-close').offset(posDescClose);
 	}
 
 	// Init positions of elements when a user arrives on the website
@@ -54,6 +67,7 @@ $(function () {
 	$('#icon-exit').hide();
 	initPositions();
 	initPixi();
+	$('#description').hide();
 	$('#loading').hide();
 	$('#success').hide();
 	$('#fail').hide();
@@ -354,7 +368,6 @@ $(function () {
 
 		console.log( map.toString() );
 
-		$('#map').show();
 		initPositions();
 
 		bindMap();
@@ -402,6 +415,14 @@ $(function () {
 		    		error: function() {
 		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
 			});
+		}
+	});
+
+	$('#description-close').click(function() {
+
+		if (connectionState == 1) {
+			$('#description').hide();
+			initPositions();
 		}
 	});
 

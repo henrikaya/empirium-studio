@@ -42,19 +42,56 @@ body {
 #icon-alliance:hover,
 #icon-technology:hover,
 #icon-stats:hover,
-#icon-exit:hover {
+#icon-exit:hover,
+#description-close:hover {
   cursor: pointer;
 }
 
-#indication{
+#indication {
 	font-family: "Century Gothic";
 	font-size: 14px;
 }
 
-#indication-title{
+#indication-title {
 	font-family: "Century Gothic";
 	font-size: 18px;
 	font-weight: bold;
+}
+
+#description {
+  padding: 12px;
+  background-color: #333333;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  width: 250px;
+}
+
+#description-section1 {
+	font-family: "Century Gothic";
+	font-size: 14px;
+	text-align: center;
+	color: white;
+}
+
+#description-section2 {
+	font-family: "Century Gothic";
+	font-size: 14px;
+	text-align: center;
+	color: white;
+}
+
+#description-title {
+	font-family: "Century Gothic";
+	font-size: 19px;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+}
+
+#description-subtitle {
+	font-family: "Century Gothic";
+	font-size: 15px;
+	text-align: center;
+	color: white;
 }
 
 .ui-autocomplete {
