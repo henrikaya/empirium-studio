@@ -83,20 +83,29 @@ def getDatas(cookies, link, playerName):
 		# TODO: il faudra gérer le cas des Leviathan
 		# Navette, Fregate and Croiseur processing
 		if (type == 'N' or type == 'F' or type == 'C'):
-			IdName = str(element.find("h1")).strip("<h1>").strip("</h1").strip("Navette ").strip("Frégate ").strip("Croiseur").strip("Commodore").strip("\n").split("<br/>")
+
+			idName =  str(element.find("h1")).strip("<h1>").strip("</h1")
+			iId = idName.find(" ")
+			idName = idName[iId+1:].split("<br/>")
+
 			indexCoordStart = str(element).find("<img")
 			indexCoordStart += str(element)[indexCoordStart:].find(">") + 1
 			indexCoordEnd = indexCoordStart + str(element)[indexCoordStart:].find("<br/>") - 10
 			coord = str(element)[indexCoordStart:indexCoordEnd].strip(" ").split("/")
 
  			el.append("Vaisseau")
-			el.append(IdName[0])
-			el.append(IdName[1])
+			el.append(idName[0])
+			el.append(idName[1])
 			el.append(element.find("img")['src'][2:])
 			el.append(coord[0].strip(" "))
 			el.append(coord[1].strip(" "))
 			el.append(element.find("a").contents[0].encode("utf8"))
+
+			if (el[6] == "Gérer" or el[6] == "Déplacer"):
+				el[6] = playerName
+
 			out.append(el)
+
 		# Vortex processing
 		elif type == 'V':
 			indexID = str(element).find("Vortex ") + 7
@@ -158,6 +167,10 @@ def getDatas(cookies, link, playerName):
 							index2 = index1 + elmt[index1:].find(" - ")
 							id = elmt[index1+1:index2]
 							index3 = index2 + elmt[index2:].find(" de <")
+
+							if index3 < index2:
+								index3 = index2 + elmt[index2:].find("<br/><a")
+
 							nom = elmt[index2+3:index3]
 							index4 = elmt.find("/")
 							index5 = index4 + elmt[index4:].find("\"")
@@ -172,6 +185,10 @@ def getDatas(cookies, link, playerName):
 							el.append(coordX)
 							el.append(coordY)
 							el.append(owner)
+
+							if (el[6] == "Gérer" or el[6] == "Déplacer"):
+								el[6] = playerName
+
 							out.append(el)
 						elif elmt[19] == 'p':
 							index1 = elmt.find(">")
