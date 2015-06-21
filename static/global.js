@@ -6,6 +6,9 @@ var texture_planete;
 var texture_ship;
 var texture_vortex;
 var texture_background;
+
+var textures;
+
 var scrollArea;
 var view;
 

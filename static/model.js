@@ -92,7 +92,7 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 			$('#description-title').text(name);
 		}
 		else {
-			$('#description-title').text("<Planète anonyme>");
+			$('#description-title').text("<Sans nom>");
 		}
 		$('#description-subtitle').text("Planète " + id);
 		$('#description-section1').text("Située en " + x + "/" + y);
@@ -125,14 +125,32 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
     	this._id = _id;
 	this.from = from;
 	this.id = id;
-	this.image = image;
 	this.name = name;
+	this.image = "";
 	this.owner = owner;
 	this.type = type;
 	this.x = x;
 	this.y = y;
 
-	var mysprite = new PIXI.Sprite(texture_ship);
+	array_images = image.split("/")
+
+	if (array_images.length >= 4) {
+		image = array_images[3];
+	}
+
+	this.image = image;
+
+	var mysprite;
+	if (this.image in textures) {
+		mysprite = new PIXI.Sprite(textures[this.image]);
+		mysprite.scale.x = 0.005;
+		mysprite.scale.y = 0.005;
+	}
+	else {
+		mysprite = new PIXI.Sprite(texture_ship);
+		mysprite.scale.x = 0.0033;
+		mysprite.scale.y = 0.0033;
+	}
 
 	this.toString = function() {
 		ret = "Vaisseau " + this.id + " - " + this.name + "\n";
@@ -145,8 +163,6 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 
 	mysprite.anchor.x = 0.5;
 	mysprite.anchor.y = 0.5;
-	mysprite.scale.x = 0.0033;
-	mysprite.scale.y = 0.0033;
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
 	mysprite.mousedown = function(data) {
@@ -154,12 +170,21 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 			$('#description-title').text(name);
 		}
 		else {
-			$('#description-title').text("<Vaisseau anonyme>");
+			$('#description-title').text("<Sans nom>");
 		}
 		$('#description-subtitle').text("Vaisseau " + id);
 		$('#description-section1').text("Situé en " + x + "/" + y);
 		$('#description-section2').text("Appartient à " + owner);
-		$('#description-image').attr("src","static/images/ship.png");
+
+		if (image in textures) {
+			path = "static/images/ships/" + image;
+			$('#description-image').attr("src",path);
+		}
+		else {
+			$('#description-image').attr("src","static/images/ship.png");
+		}
+
+
 		$('#description').show();
 
 		//TODO: replace these 10 lines by a call to initPositions()

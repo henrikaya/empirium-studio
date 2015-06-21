@@ -94,9 +94,36 @@ function initPixi() {
 	texture_ship = PIXI.Texture.fromImage("static/images/ship.png");	
 	texture_vortex = PIXI.Texture.fromImage("static/images/vortex.png");
 
+	textures = {};
+	textures["frg_1.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_1.gif");
+	textures["frg_3.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_3.gif");
+	textures["frg_4.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_4.gif");
+	textures["frg_5.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_5.gif");
+	textures["frg_6.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_6.gif");
+	textures["frg_7.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_7.gif");
+	textures["frg_8.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_8.gif");
+	textures["frg_9.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_9.gif");
+	textures["frg_10.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_10.gif");
+	textures["frg_11.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_11.gif");
+	textures["frg_12.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_12.gif");
+	textures["frg_14.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_14.gif");
+	textures["frg_15.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_15.gif");
+	textures["frg_17.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_17.gif");
+	textures["frg_18.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_18.gif");
+	textures["frg_20.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_20.gif");
+	textures["frg_21.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_21.gif");
+	textures["frg_22.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_22.gif");
+	textures["frg_23.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_23.gif");
+	textures["frg_24.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_24.gif");
+	textures["frg_25.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_25.gif");
+	textures["frg_26.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_26.gif");
+	textures["frg_27.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_27.gif");
+	textures["frg_28.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_28.gif");
+	textures["frg_29.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_29.gif");
+
 	stage.addChild(scrollArea);
 
-	zoomIndex = 3;
+	zoomIndex = 5;
 	scrollArea.scale.x = zoomList[zoomIndex];
 	scrollArea.scale.y = zoomList[zoomIndex];
 
