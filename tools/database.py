@@ -13,8 +13,14 @@ def insertData(data, db, name, cycle):
 
     col = db['tour_%s' % cycle]
 
-    if col.find_one({"type":data[0], "id":data[1]}) == None:
+    previous =  col.find_one({"type":data[0], "id":data[1]})
+    if previous == None:
         col.insert(post)
+    else:
+	# if data exists in dabase, but not from this playername, we add playername to the list "from"
+	if not name in previous['from']:
+	    previous['from'].append(name)
+	    col.update({"type":data[0], "id":data[1]}, {"$set":{"from":previous['from']}}, multi=False)
 
     return
 

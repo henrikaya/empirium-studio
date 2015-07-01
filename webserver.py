@@ -56,10 +56,13 @@ def user_connect():
 		syslog.syslog("Someone tried to connect as %s - this name is known but there is no id associated" % name)
 		return "player known but id unknown"
 
+	session['id'] = identifiant
+	session['name'] = name
+
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
+		session['name'] = name
 
-		# TODO: si mdp different, lancer une mise a jour des donnees empi avec ce nouveau mdp
 		if (joueur['password'] != password):
 			syslog.syslog("Update password of player %s" % identifiant)
 			os.system("%s %s %s \"%s\" &" % (config.get("Tools", "Update"), identifiant, password, name))
@@ -121,10 +124,16 @@ def get(num_tour):
 		client = MongoClient('localhost', 27017)
 		db = client['test']
 		col = db["tour_%s" % num_tour]
-		
+
 		data = []
 
-		for value in col.find():
+		col_players = client['joueurs']['joueurs']
+		joueur = col_players.find_one({'name':session['name']})
+		allies = joueur['allies']
+
+		allies.append(session["name"])
+
+		for value in col.find({"from":{"$in":allies}}):
 			elmt = json.dumps(value, sort_keys=True, indent=4, default=json_util.default)
 			data.append(str(elmt))
 
@@ -136,6 +145,69 @@ def get(num_tour):
 
 	syslog.syslog("Someone tried to get map for cycle %s without to be connected" % num_tour)
 	return "Vous n'êtes pas identifié."
+
+@app.route('/request/friendship/<req>', methods=['GET'], strict_slashes=False)
+def request_friendship(req):
+
+	f_request = json.loads(req)
+
+	if 'id' in session:
+
+		if not f_request.has_key('to'):
+			return "invalid request", 300
+
+		if session['name'] == f_request['to']:
+			return "you cannot be allie to yourself", 200
+
+		client = MongoClient('localhost', 27017)
+		col = client['requests']['friendship']
+		col_players = client['joueurs']['joueurs']
+
+		post = {}
+		post['from_id'] = session['id']
+		post['from_name'] = session['name']
+		post['to_name'] = f_request['to']
+
+		i_post = {}
+		i_post['from_name'] = f_request['to']
+		i_post['to_name'] = session['name']
+
+		# if inverted request already in database
+		if (col.find_one(i_post) != None):		
+			col.remove(i_post)
+			local_allies = col_players.find({"name":session['name']})[0]['allies']
+			remote_allies = col_players.find({"name":f_request['to']})[0]['allies']
+
+			if not f_request['to'] in local_allies:
+				local_allies.append(f_request['to'])
+				remote_allies.append(session['name'])
+				col_players.update({"name":session['name']},{"$set":{"allies":local_allies}})
+				col_players.update({"name":f_request['to']},{"$set":{"allies":remote_allies}})
+			return "now allies", 200
+		else:
+
+			# if no allies yet
+			if f_request['to'] in  col_players.find({"name":session['name']})[0]['allies']:
+				return "already allies", 200
+
+			remote_allies = col_players.find({"name":f_request['to']})[0]['allies']
+
+			# if no request yet
+			if (col.find_one(post) != None):
+				return "allies request already exists", 200
+			else:
+				# if player from "to" attributes exists
+				if col_players.find_one({"name":f_request['to']}) != None:
+					col.insert(post)
+					syslog.syslog("%s (%s) sends a friendship request to %s" % (session['name'], session['id'], "a"))
+					return "allies request sent", 200
+				else:
+					return "player does not exist", 200
+
+		return "", 200
+
+	syslog.syslog("Someone tried to send a friendship request to %s" % "a")
+	return "Vous n'êtes pas identifié", 300
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
