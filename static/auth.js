@@ -75,6 +75,7 @@ $(function () {
 	$('#loading').attr("src", "static/images/loading.gif");
 	$('#fail').attr("src", "static/images/fail.png");
 	$('#success').attr("src", "static/images/success.gif");
+	$('#wallpaper').attr("src", "static/images/wallpapers/wallpaper1.jpeg");
 
 	$(window).resize(initPositions);
 

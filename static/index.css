@@ -66,21 +66,21 @@ body {
 }
 
 #description-section1 {
-	font-family: "Century Gothic";
+	font-family: "Helvetica";
 	font-size: 14px;
 	text-align: center;
 	color: white;
 }
 
 #description-section2 {
-	font-family: "Century Gothic";
+	font-family: "Helvetica";
 	font-size: 14px;
 	text-align: center;
 	color: white;
 }
 
 #description-title {
-	font-family: "Century Gothic";
+	font-family: "Helvetica";
 	font-size: 19px;
 	font-weight: bold;
 	text-align: center;
@@ -88,7 +88,7 @@ body {
 }
 
 #description-subtitle {
-	font-family: "Century Gothic";
+	font-family: "Helvetica";
 	font-size: 15px;
 	text-align: center;
 	color: white;

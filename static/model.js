@@ -12,7 +12,7 @@ function Background(x, y) {
 	mysprite.interactive = true;
 	mysprite.buttonMode = false;
 
-	mysprite.mousedown = function(data) {
+	mysprite.mousedown = mysprite.touchstart = function(data) {
 
     		var pos = data.getLocalPosition(mysprite.parent.parent);
 		view.mode = 1;
@@ -22,7 +22,7 @@ function Background(x, y) {
 		view.scenterY = view.acenterY;
 	}
 
-	mysprite.mousemove = function(data) {
+	mysprite.mousemove = mysprite.touchmove = function(data) {
 
 		var pos = data.getLocalPosition(mysprite.parent.parent);
 		var posMap = data.getLocalPosition(mysprite.parent);
@@ -52,7 +52,7 @@ function Background(x, y) {
 		}
 	}
 
-	mysprite.mouseup = function(data) { view.mode = 0; }
+	mysprite.mouseup = mysprite.mouseupoutside = function(data) { view.mode = 0; }
 
 	this.sprite = mysprite;
 
@@ -87,7 +87,7 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 	mysprite.scale.y = 0.0012;
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
-	mysprite.mousedown = function(data) {
+	mysprite.mousedown = mysprite.tap = function(data) {
 		if (name != '' && name != "\n") {
 			$('#description-title').text(name);
 		}
@@ -95,8 +95,8 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 			$('#description-title').text("<Sans nom>");
 		}
 		$('#description-subtitle').text("Planète " + id);
-		$('#description-section1').text("Située en " + x + "/" + y);
-		$('#description-section2').text("Appartient à " + owner);
+		$('#description-section1').text("Localisation : " + x + "/" + y);
+		$('#description-section2').text("Propriétaire : " + owner);
 		$('#description-image').attr("src","static/images/planete_bleue.png");
 		$('#description').show();
 
@@ -165,7 +165,7 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 	mysprite.anchor.y = 0.5;
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
-	mysprite.mousedown = function(data) {
+	mysprite.mousedown = mysprite.tap = function(data) {
 		if (name != '' && name != "\n") {
 			$('#description-title').text(name);
 		}
@@ -173,8 +173,8 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 			$('#description-title').text("<Sans nom>");
 		}
 		$('#description-subtitle').text("Vaisseau " + id);
-		$('#description-section1').text("Situé en " + x + "/" + y);
-		$('#description-section2').text("Appartient à " + owner);
+		$('#description-section1').text("Localisation : " + x + "/" + y);
+		$('#description-section2').text("Propriétaire : " + owner);
 
 		if (image in textures) {
 			path = "static/images/ships/" + image;
@@ -236,10 +236,10 @@ function Vortex(_id, from, id, type, destination, x, y) {
 	mysprite.scale.y = 0.0025;
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
-	mysprite.mousedown = function(data) {
+	mysprite.mousedown = mysprite.tap = function(data) {
 		$('#description-title').text("Vortex " + id);
 		$('#description-subtitle').text("Destination : " + destination);
-		$('#description-section1').text("Situé en " + x + "/" + y);
+		$('#description-section1').text("Localisation : " + x + "/" + y);
 		$('#description-section2').text("");
 		$('#description-image').attr("src","static/images/vortex.png");
 		$('#description').show();
