@@ -26,4 +26,5 @@ if __name__ == '__main__':
 	cookies = connection.connect(identifiant, password)
 	datas = parsing.getAllDatas(cookies, name)
 	database.insertAllDatas(datas, name, cycle)
+	database.updateCycleNumber(name, cycle)
 

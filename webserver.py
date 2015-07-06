@@ -63,7 +63,7 @@ def user_connect():
 		session['id'] = identifiant
 		session['name'] = name
 
-		if (joueur['password'] != password):
+		if (joueur['password'] != password or joueur['last_update'] != tools.parsing.getCycleNumber()):
 			syslog.syslog("Update password of player %s" % identifiant)
 			os.system("%s %s %s \"%s\" &" % (config.get("Tools", "Update"), identifiant, password, name))
 
