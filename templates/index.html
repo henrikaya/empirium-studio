@@ -8,17 +8,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 
     <link href="{{ url_for('static', filename='Flat-UI/dist/css/vendor/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='Flat-UI/dist/css/flat-ui.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet">
     <!-- TODO: Changer favicon-->
     <!--<link rel="shortcut icon" href="Flat-UI/img/favicon.ico">-->
 
   </head>
   <body>
-    <div id="mycontainer">
+	<div id="mycontainer">
 		
-		<img id="wallpaper" src="{{ url_for('static', filename='images/wallpapers/wallpaper2.jpeg') }}">
-	
 		<div id="map"></div>
+
+		<div id="nav" class="row demo-row">
+        		<div class="col-xs-12">
+          			<nav class="navbar navbar-inverse navbar-embossed navbar-custom" role="navigation">
+            				<div class="navbar-header">
+              					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+                				<span class="sr-only">Toggle navigation</span>
+              					</button>
+              					<a class="navbar-brand" href="#">Empirium Studio</a>
+            				</div>
+            				<div class="collapse navbar-collapse" id="navbar-collapse-01">
+              					<ul class="nav navbar-nav navbar-left">
+                				<li><a id="map-link" href="#fakelink">Carte<!--<span class="navbar-unread">1</span>--></a></li>
+                				<li><a href="#fakelink">Alliés</a></li>
+                				<li><a href="#fakelink">Technologies</a></li>
+                				<li><a href="#fakelink">Stats</a></li>
+                				<li><a id="exit-link" href="#fakelink">Quitter</a></li>
+               					</ul>
+            				</div>
+          			</nav>
+        		</div>
+      		</div>
 
 		<div id="main-screen">
 			<div id="auth-container">
@@ -45,13 +66,15 @@
 			</div>
 		</div>
 
-		<div id="barre-menu">
+
+
+		<!--<div id="barre-menu">
 			<div><img id="icon-map" src=""></div>
 			<div><img id="icon-alliance" src=""><div>
 			<div><img id="icon-technology" src=""></div>
 			<div><img id="icon-stats" src=""></div>
 			<div><img id="icon-exit" src=""></div>
-		</div>
+		</div>-->
 
 		<div id="description">
 	

@@ -5,38 +5,13 @@ $(function () {
 
 	function initPositions() {
 
-		$('#icon-map').height($(window).height()/12);
-		$('#icon-alliance').height($(window).height()/12);
-		$('#icon-technology').height($(window).height()/12);
-		$('#icon-stats').height($(window).height()/12);
-		$('#icon-exit').height($(window).height()/12);
-
-		var posIconMap = $('#icon-map').offset();
-		var posIconAlliance = $('#icon-alliance').offset();
-		var posIconTechnology = $('#icon-technology').offset();
-		var posIconStats = $('#icon-stats').offset();
-		var posIconExit = $('#icon-exit').offset();
-
-		posIconMap.left = 		30;
-		posIconAlliance.left = 		30 + $('#icon-map').width() + 20;
-		posIconTechnology.left = 	30 + 2 * ($('#icon-map').width() + 20);
-		posIconStats.left = 		30 + 3 * ($('#icon-map').width() + 20);
-		posIconExit.left = 		30 + 4 * ($('#icon-map').width() + 20);		
-		posIconMap.top = 		30;
-		posIconAlliance.top = 		30;
-		posIconTechnology.top = 	30;
-		posIconStats.top = 		30;
-		posIconExit.top = 		30;
-
-		$('#icon-map').offset(posIconMap);
-		$('#icon-alliance').offset(posIconAlliance);
-		$('#icon-technology').offset(posIconTechnology);
-		$('#icon-stats').offset(posIconStats);
-		$('#icon-exit').offset(posIconExit);
+		var posNav = $('#nav').offset();
+		posNav.top = 0;
+		$('#nav').offset(posNav);
 
 		var pos = 	$('#auth-container').offset();
-		pos.top = 	($(window).height() - $('#auth-container').height()) / 2;
-		pos.left = 	($(window).width() - $('#auth-container').width()) / 2;		
+		pos.top = 	($(window).height() - 65 + $('#nav').height() - $('#auth-container').height()) / 2;
+		pos.left = 	($(window).width() - 50 - $('#auth-container').width()) / 2;		
 		$('#auth-container').offset(pos);
 
 		var posMap = 	$('#map').offset();
@@ -45,26 +20,21 @@ $(function () {
 		$('#map').offset(posMap);
 
 		var posDescription = $('#description').offset();
-		posDescription.top = 0;
+		posDescription.top = $('#nav').height() - 30;
 		// TODO: replace "15" by css padding value
 		posDescription.left = $(window).width() - $('#description').width() - 15;
 		$('#description').offset(posDescription);
-		$('#description').height($(window).height());
+		$('#description').height($(window).height() - $('#nav').height() + 30);
 
 		$('#description-close').height(25).width(25);
 		var posDescClose = $('#description-close').offset();
-		posDescClose.top = 10;
+		posDescClose.top = $('#nav').height() - 30 + 10;
 		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
 		$('#description-close').offset(posDescClose);
 	}
 
 	// Init positions of elements when a user arrives on the website
 
-	$('#icon-map').hide();
-	$('#icon-alliance').hide();
-	$('#icon-technology').hide();
-	$('#icon-stats').hide();
-	$('#icon-exit').hide();
 	initPositions();
 	initPixi();
 	$('#description').hide();
@@ -78,85 +48,6 @@ $(function () {
 	$('#wallpaper').attr("src", "static/images/wallpapers/wallpaper1.jpeg");
 
 	$(window).resize(initPositions);
-
-	// Store images in cache
-	
-	var cache = [];
-
-    	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/map-light.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/map-normal.svg";
-    	cache.push(cacheImage);
-
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/alliance-light.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/alliance-normal.svg";
-    	cache.push(cacheImage);
-
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/technology-light.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/technology-normal.svg";
-    	cache.push(cacheImage);
-
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/stats-light.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/stats-normal.svg";
-    	cache.push(cacheImage);
-
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/exit-light.svg";
-    	cache.push(cacheImage);
-	var cacheImage = document.createElement('img');
-    	cacheImage.src = "static/images/exit-normal.svg";
-    	cache.push(cacheImage);
-
-	$("#icon-map").mouseover(function(){
-        	if (connectionState > 0)
-			$(this).attr("src", "static/images/map-light.svg");
-    	}).mouseout(function(){
-        	if (connectionState > 0)
-			$(this).attr("src", "static/images/map-normal.svg");
-    	});
-	
-	$("#icon-alliance").mouseover(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/alliance-light.svg");
-    	}).mouseout(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/alliance-normal.svg");
-    	});
-
-	$("#icon-technology").mouseover(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/technology-light.svg");
-    	}).mouseout(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/technology-normal.svg");
-    	});
-	
-	$("#icon-stats").mouseover(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/stats-light.svg");
-    	}).mouseout(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/stats-normal.svg");
-    	});
-	
-	$("#icon-exit").mouseover(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/exit-light.svg");
-    	}).mouseout(function(){
-		if (connectionState > 0)
-        		$(this).attr("src", "static/images/exit-normal.svg");
-    	});
 
 	// TODO: Generate dynamically list of players
 	
@@ -265,11 +156,6 @@ $(function () {
 			var authContainerPos = $('#auth-container').offset();
 
 			function buttonsAppear() {
-				$('#icon-map').attr("src", "static/images/map-normal.svg").fadeIn("slow");
-				$('#icon-alliance').attr("src", "static/images/alliance-normal.svg").fadeIn("slow");
-				$('#icon-technology').attr("src", "static/images/technology-normal.svg").fadeIn("slow");
-				$('#icon-stats').attr("src", "static/images/stats-normal.svg").fadeIn("slow");
-				$('#icon-exit').attr("src", "static/images/exit-normal.svg").fadeIn("slow");
 				$('#map').fadeIn();
 				initPositions();
 			}
@@ -390,7 +276,8 @@ $(function () {
 		}
 	}
 
-	$('#icon-map').click(function() {
+
+	$('#map-link').click(function() {
 
 		if (connectionState == 1) {
 			$.ajax({
@@ -405,7 +292,7 @@ $(function () {
 		}
 	});
 
-	$('#icon-exit').click(function() {
+	$('#exit-link').click(function() {
 
 		if (connectionState == 1) {
 			$.ajax({
@@ -427,5 +314,4 @@ $(function () {
 		}
 	});
 
-	
 });

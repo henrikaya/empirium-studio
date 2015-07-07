@@ -1,6 +1,22 @@
 body {
   overflow: hidden;
   background-color: #000000;
+  background-image:url(static/images/wallpapers/wallpaper2.jpeg);
+}
+
+.navbar-custom {
+	background-color: #ff9933;
+}
+
+#navbarInput-01 {
+	background-color: #ee8822;
+	color: white;
+}
+
+a:hover,
+a:focus {
+	background-color: #ee8822;
+	color: #ffffff;
 }
 
 #mycontainer {

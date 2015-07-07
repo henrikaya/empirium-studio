@@ -102,14 +102,14 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 
 		//TODO: replace these 10 lines by a call to initPositions()
 		var posDescription = $('#description').offset();
-		posDescription.top = 0;
+		posDescription.top = $('#nav').height() - 30;
 		posDescription.left = $(window).width() - $('#description').width() - 15;
 		$('#description').offset(posDescription);
-		$('#description').height($(window).height());
+		$('#description').height($(window).height() - $('#nav').height() + 30);
 
 		$('#description-close').height(25).width(25);
 		var posDescClose = $('#description-close').offset();
-		posDescClose.top = 10;
+		posDescClose.top = $('#nav').height() - 30 + 10;
 		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
 		$('#description-close').offset(posDescClose);
 
@@ -189,14 +189,14 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 
 		//TODO: replace these 10 lines by a call to initPositions()
 		var posDescription = $('#description').offset();
-		posDescription.top = 0;
+		posDescription.top = $('#nav').height() - 30;
 		posDescription.left = $(window).width() - $('#description').width() - 15;
 		$('#description').offset(posDescription);
-		$('#description').height($(window).height());
+		$('#description').height($(window).height() - $('#nav').height() + 30);
 
 		$('#description-close').height(25).width(25);
 		var posDescClose = $('#description-close').offset();
-		posDescClose.top = 10;
+		posDescClose.top = $('#nav').height() - 30 + 10;
 		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
 		$('#description-close').offset(posDescClose);
 
@@ -246,14 +246,14 @@ function Vortex(_id, from, id, type, destination, x, y) {
 
 		//TODO: replace these 10 lines by a call to initPositions()
 		var posDescription = $('#description').offset();
-		posDescription.top = 0;
+		posDescription.top = $('#nav').height() - 30;
 		posDescription.left = $(window).width() - $('#description').width() - 15;
 		$('#description').offset(posDescription);
-		$('#description').height($(window).height());
+		$('#description').height($(window).height() - $('#nav').height() + 30);
 
 		$('#description-close').height(25).width(25);
 		var posDescClose = $('#description-close').offset();
-		posDescClose.top = 10;
+		posDescClose.top = $('#nav').height() - 30 + 10;
 		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
 		$('#description-close').offset(posDescClose);
 
