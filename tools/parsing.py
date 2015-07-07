@@ -14,9 +14,12 @@ def getCycleNumber():
 	html = etree.HTML(f.read())
 	result = etree.tostring(html, pretty_print=True, method="html")
 
-	coord = result.find("[ Tour n") + 14;
+	coord = result.find("[ Tour n") + 14
 
-	return result[coord:coord+3]
+	if coord < 14:
+		return -1
+
+	return int(result[coord:coord+3])
 
 def getShipLinks(cookies):
 	

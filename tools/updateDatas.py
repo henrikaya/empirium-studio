@@ -7,17 +7,9 @@ import database
 import sys
 import syslog
 
-if __name__ == '__main__':
+def update(identifiant, password, name):
 
 	syslog.openlog()
-
-	if (len(sys.argv) < 4):
-		syslog.syslog("Error : 3 args needed")
-		sys.exit()
-
-	identifiant = sys.argv[1]
-	password = sys.argv[2]
-	name = sys.argv[3]
 
 	cycle = parsing.getCycleNumber()
 
@@ -28,3 +20,15 @@ if __name__ == '__main__':
 	database.insertAllDatas(datas, name, cycle)
 	database.updateCycleNumber(name, cycle)
 
+
+if __name__ == '__main__':
+
+	if (len(sys.argv) < 4):
+		syslog.syslog("Error : 3 args needed")
+		sys.exit()
+
+	identifiant = sys.argv[1]
+	password = sys.argv[2]
+	name = sys.argv[3]
+
+	update(identifiant, password, name)
