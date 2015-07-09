@@ -137,8 +137,23 @@ def get(num_tour):
 			elmt = json.dumps(value, sort_keys=True, indent=4, default=json_util.default)
 			data.append(str(elmt))
 
-		ret = "[" + ",".join(data) + "]"
+		interest = col.find_one({"from":{"$in":allies},"owner":session["name"], "model":"Commodore"})
 
+		if interest == None:
+			interest = col.find_one({"from":{"$in":allies},"owner":session["name"]})
+
+		if interest == None:
+			interest = col.find_one({"from":{"$in":allies}})
+
+		if interest != None:
+			x = int(interest['x'])
+			y = int(interest['y'])
+		else:
+			x = 285
+			y = 154
+		ret = '{ "interest" : { "x":%s, "y":%s },' % (x,y)
+		ret += '"datas" : [' + ','.join(data) + ']'
+		ret += '}'
 		syslog.syslog("%s gets map for cycle %s" % (session['id'], num_tour))
 
 		return ret

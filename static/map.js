@@ -136,9 +136,7 @@ function initPixi() {
 	texture_background = PIXI.Texture.fromImage("static/images/background.png");
 
 	view = new View();
-	view.center(285,-154);
-	//view.center(-273,198);
-	//view.center(16,-44)
+	view.center(0,0);
 }
 
 function bindMap() {

@@ -1,6 +1,0 @@
-14/02/15
-
-Séparation de la connexion et du parsing en modules et fonctions.
-
-Parsing des données plus efficace (notamment sur la séparation ID et nom du
-vaisseau.

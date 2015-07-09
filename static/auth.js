@@ -120,6 +120,21 @@ $(function () {
 		}
     	});
 
+	datasRequest = function() {
+
+		if (connectionState == 1) {
+			$.ajax({
+				type: 'GET',
+		    		url: 'getcyclenumber',
+				contentType: "application/json; charset=utf-8",
+		    		timeout: 10000,
+		    		success: function(data) { getDatas(data['num']); },
+		    		error: function() {
+		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
+			});
+		}
+	}
+
     	function processAuthResponse(data) {
 
 		if (data == "wrong password" || data =="player unknown") {
@@ -172,6 +187,7 @@ $(function () {
 			$('#auth-container').height(authContainerHeight);
 			$('#auth-container').offset(authContainerPos);
 			$("#auth-container").delay(1200).fadeOut("slow", buttonsAppear);
+			datasRequest();
 		}
 		else {
 			alert("Reponse du serveur inconnue : \"" + data + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
@@ -232,9 +248,9 @@ $(function () {
 
 		var objs = jQuery.parseJSON(data);
 
-		for (var i = 0, s = objs.length; i < s; i++) {
+		for (var i = 0, s = objs.datas.length; i < s; i++) {
     
-			o = objs[i];
+			o = objs.datas[i];
 			if (o.type == "Vaisseau") {
 				var ship = new Ship(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.type, o.x, o.y);
 				map.add(ship);
@@ -257,8 +273,9 @@ $(function () {
 
 		initPositions();
 
-		bindMap();
+		view.center(objs.interest.x, - objs.interest.y);
 
+		bindMap();
 	}
 	
 	function getDatas(cycle) {
@@ -277,20 +294,7 @@ $(function () {
 	}
 
 
-	$('#map-link').click(function() {
-
-		if (connectionState == 1) {
-			$.ajax({
-				type: 'GET',
-		    		url: 'getcyclenumber',
-				contentType: "application/json; charset=utf-8",
-		    		timeout: 10000,
-		    		success: function(data) { getDatas(data['num']); },
-		    		error: function() {
-		      		alert('Erreur : probleme disponibilite serveur. Vous pouvez reessayer ou contacter un administrateur (' + config['admin']['name'] + ' - ' + config['admin']['mail'] + ') si cela se reproduit.'); }
-			});
-		}
-	});
+	$('#map-link').click(datasRequest);
 
 	$('#exit-link').click(function() {
 
