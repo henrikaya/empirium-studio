@@ -83,11 +83,13 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 
 	mysprite.anchor.x = 0.5;
 	mysprite.anchor.y = 0.5;
-	mysprite.scale.x = 0.0012;
-	mysprite.scale.y = 0.0012;
+	mysprite.scale.x = 0.0011;
+	mysprite.scale.y = 0.0011;
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
 	mysprite.mousedown = mysprite.tap = function(data) {
+
+		console.log(window.event);
 		if (name != '' && name != "\n") {
 			$('#description-title').text(name);
 		}

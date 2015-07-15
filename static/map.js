@@ -40,6 +40,14 @@ function View() {
 		this.center(xMap - dX, yMap - dY);
 	}
 
+	this.projectOnScreen = function(xMap, yMap) {
+
+		var distanceX = ( xMap + (scrollArea.x / scrollArea.scale.x) ) * scrollArea.scale.x;
+		var distanceY = ( - yMap + (scrollArea.y / scrollArea.scale.y) ) * scrollArea.scale.y;
+
+		return [distanceX, distanceY];
+
+	}
 }
 
 function MouseWheelHandler(e) {
@@ -69,10 +77,26 @@ function MouseWheelHandler(e) {
 
 		scrollArea.scale.x = zoomList[zoomIndex];
 		scrollArea.scale.y = zoomList[zoomIndex];
-
+		
 		view.bindPoint(xMap, yMap, xAbs, yAbs)
 
 		return false;
+}
+
+function initSector(key) {
+
+	sectors[key] = new PIXI.Graphics();
+	sectors[key].beginFill(0x6666FF);
+	sectors[key].lineStyle(2, 0x0000FF);
+	sectors[key].fillAlpha = alphaSectorList[zoomIndex];
+	sectors[key].drawRect(0, 0, 800, 400);
+	stage.addChild(sectors[key]);
+
+	sectorsName[key] = new PIXI.Text(key, {fill:"#FFFFFF", font:"bold 15px Arial"});
+	sectorsName[key].anchor.x = 0.5;
+	sectorsName[key].anchor.y = 0.5;
+	sectorsName[key].alpha = alphaSectorNameList[zoomIndex];
+	stage.addChild(sectorsName[key]);
 }
 
 function initPixi() {
@@ -82,11 +106,11 @@ function initPixi() {
 
 	var x = document.getElementById("map"); 
 	x.appendChild(renderer.view);
-	 
+
 	requestAnimFrame( animate );
-	 
+
 	scrollArea = new PIXI.DisplayObjectContainer();
-			
+
 	scrollArea.interactive = true;
 	scrollArea.buttonMode = true;
 
@@ -123,7 +147,7 @@ function initPixi() {
 
 	stage.addChild(scrollArea);
 
-	zoomIndex = 5;
+	zoomIndex = 10;
 	scrollArea.scale.x = zoomList[zoomIndex];
 	scrollArea.scale.y = zoomList[zoomIndex];
 
@@ -137,6 +161,64 @@ function initPixi() {
 
 	view = new View();
 	view.center(0,0);
+
+	sectors = {};
+	sectorsName = {};
+
+	initSector("A0");
+	initSector("A1");
+	initSector("A2");
+	initSector("A3");
+	initSector("A4");
+	initSector("A5");
+	initSector("A6");
+	initSector("A7");
+
+	initSector("B0");
+	initSector("B1");
+	initSector("B2");
+	initSector("B3");
+	initSector("B4");
+	initSector("B5");
+	initSector("B6");
+	initSector("B7");
+
+	initSector("C0");
+	initSector("C1");
+	initSector("C2");
+	initSector("C3");
+	initSector("C4");
+	initSector("C5");
+	initSector("C6");
+	initSector("C7");
+
+	initSector("D0");
+	initSector("D1");
+	initSector("D2");
+	initSector("D3");
+	initSector("D4");
+	initSector("D5");
+	initSector("D6");
+	initSector("D7");
+
+	initSector("E0");
+	initSector("E1");
+	initSector("E2");
+	initSector("E3");
+	initSector("E4");
+	initSector("E5");
+	initSector("E6");
+	initSector("E7");
+
+	initSector("F0");
+	initSector("F1");
+	initSector("F2");
+	initSector("F3");
+	initSector("F4");
+	initSector("F5");
+	initSector("F6");
+	initSector("F7");
+
 }
 
 function bindMap() {
@@ -159,6 +241,32 @@ function bindMap() {
 
 }
 
+function setSectorPos(key, row, column) {
+
+	sectors[key].clear();
+	sectors[key].beginFill(0x0000FF);
+	sectors[key].lineStyle(2, 0x0000FF);
+	sectors[key].fillAlpha = alphaSectorList[zoomIndex];
+	sectorsName[key].alpha = alphaSectorNameList[zoomIndex];
+
+	// Sector and sector name positions computation
+	origin = view.projectOnScreen(-319.5 + 80*column, 240.5 - 80*row);
+	end = view.projectOnScreen(-239.5 + 80*column, 160.5 - 80*row);
+	pos = view.projectOnScreen(-279.5 + 80*column, 200.5 - 80*row);
+
+	// If mouse is on sector, don't make it blue
+	if (view.amouseAbsX >= origin[0] && view.amouseAbsX <= end[0]) {
+		if (view.amouseAbsY >= origin[1] && view.amouseAbsY <= end[1]) {
+			sectors[key].fillAlpha = 0;
+			sectorsName[key].alpha = 0;
+		}
+	}
+
+	sectorsName[key].position.x = pos[0];
+	sectorsName[key].position.y = pos[1];
+	sectors[key].drawRect(origin[0], origin[1], end[0] - origin[0], end[1] - origin[1]);
+}
+
 function animate() {
 	 
 	requestAnimFrame( animate );
@@ -167,7 +275,60 @@ function animate() {
 		map.vortex[i].anim();
 	}
 
+	setSectorPos("A0", 0, 0);
+	setSectorPos("A1", 0, 1);
+	setSectorPos("A2", 0, 2);
+	setSectorPos("A3", 0, 3);
+	setSectorPos("A4", 0, 4);
+	setSectorPos("A5", 0, 5);
+	setSectorPos("A6", 0, 6);
+	setSectorPos("A7", 0, 7);
+
+	setSectorPos("B0", 1, 0);
+	setSectorPos("B1", 1, 1);
+	setSectorPos("B2", 1, 2);
+	setSectorPos("B3", 1, 3);
+	setSectorPos("B4", 1, 4);
+	setSectorPos("B5", 1, 5);
+	setSectorPos("B6", 1, 6);
+	setSectorPos("B7", 1, 7);
+
+	setSectorPos("C0", 2, 0);
+	setSectorPos("C1", 2, 1);
+	setSectorPos("C2", 2, 2);
+	setSectorPos("C3", 2, 3);
+	setSectorPos("C4", 2, 4);
+	setSectorPos("C5", 2, 5);
+	setSectorPos("C6", 2, 6);
+	setSectorPos("C7", 2, 7);
+
+	setSectorPos("D0", 3, 0);
+	setSectorPos("D1", 3, 1);
+	setSectorPos("D2", 3, 2);
+	setSectorPos("D3", 3, 3);
+	setSectorPos("D4", 3, 4);
+	setSectorPos("D5", 3, 5);
+	setSectorPos("D6", 3, 6);
+	setSectorPos("D7", 3, 7);
+
+	setSectorPos("E0", 4, 0);
+	setSectorPos("E1", 4, 1);
+	setSectorPos("E2", 4, 2);
+	setSectorPos("E3", 4, 3);
+	setSectorPos("E4", 4, 4);
+	setSectorPos("E5", 4, 5);
+	setSectorPos("E6", 4, 6);
+	setSectorPos("E7", 4, 7);
+
+	setSectorPos("F0", 5, 0);
+	setSectorPos("F1", 5, 1);
+	setSectorPos("F2", 5, 2);
+	setSectorPos("F3", 5, 3);
+	setSectorPos("F4", 5, 4);
+	setSectorPos("F5", 5, 5);
+	setSectorPos("F6", 5, 6);
+	setSectorPos("F7", 5, 7);
+
 	renderer.render(stage);
 }
-
 

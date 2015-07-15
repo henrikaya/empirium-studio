@@ -15,7 +15,7 @@ $(function () {
 		$('#auth-container').offset(pos);
 
 		var posMap = 	$('#map').offset();
-		posMap.top = 	0;
+		posMap.top = 	$('#nav').height() - 30;
 		posMap.left = 	0;
 		$('#map').offset(posMap);
 
@@ -272,6 +272,10 @@ $(function () {
 		console.log( map.toString() );
 
 		initPositions();
+
+		zoomIndex = 10;
+		scrollArea.scale.x = zoomList[zoomIndex];
+		scrollArea.scale.y = zoomList[zoomIndex];
 
 		view.center(objs.interest.x, - objs.interest.y);
 
