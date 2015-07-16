@@ -21,6 +21,7 @@ def getCycleNumber():
 
 	return int(result[coord:coord+3])
 
+
 def getShipLinks(cookies):
 	
 	opener2 = urllib2.build_opener() 
@@ -59,6 +60,52 @@ def getPlanetLinks(cookies):
 
 	return liste_liens_radars 
 
+def getGroupDatas(cookies, link, playerName):
+
+	# Recuperation du radar
+	op3 = urllib2.build_opener() 
+	op3.addheaders.append(('Cookie', "; ".join('%s=%s' % (cookie.name,cookie.value) for cookie in cookies))) 
+	f3 = op3.open("http://v2.empirium.net" + link[1:]) 
+	d3 = f3.read()
+	h3 = etree.HTML(d3) 
+	r3 = etree.tostring(h3, pretty_print=True, method="html")
+	s3 = BeautifulSoup(r3)
+
+	out = []
+	lordName = "Propriétaire inconnu"
+
+	iCoord = link.find("&") + 1
+	coordX = link[iCoord:].split("&")[0].strip("X=")
+	coordY = link[iCoord:].split("&")[1].strip("Y=")
+
+	for element in s3.findAll("li"):
+		el = []
+		idName = element.text.split(" - ")
+		image = str(element.find("img")['src'])[2:]
+
+		if str(idName[0][1:9]) == "Seigneur":
+			iNameEnd = idName[0].find(" : ")
+			lordName = idName[0][10:iNameEnd]
+		else:
+			ident = idName[0][1:]
+			if len(idName) >= 2:
+				name = idName[1]
+			else:
+				name = ""
+
+			el.append("Vaisseau")
+			el.append(ident)
+			el.append(name)
+			el.append(image)
+			el.append(coordX)
+			el.append(coordY)
+			out.append(el)
+
+	for e in out:
+		e.append(lordName)
+
+	return out
+
 def getDatas(cookies, link, playerName):
 
 	# Recuperation du radar
@@ -71,6 +118,7 @@ def getDatas(cookies, link, playerName):
 	s3 = BeautifulSoup(r3)
 
 	out = []
+	group_links = []
 
 	# Pour chaque element visible sur le radar	
 	for element in s3.findAll('div', attrs={"class":"carte_bulle"}):
@@ -151,6 +199,12 @@ def getDatas(cookies, link, playerName):
 				el.append(coord.split("/")[1])
 				el.append(owner)
 				out.append(el)
+
+			# In case of many many elements (> 10)
+			elif type == 'E':
+				
+				iCoordEnd = element.find("</h1>")
+				group_links.append(element.find("a")['href'])
 			else:
 				indexCoord = type_complet.find("en ") + 3
 				coord = type_complet[indexCoord:].strip(" ")
@@ -220,7 +274,7 @@ def getDatas(cookies, link, playerName):
 			syslog.syslog("Error during ship radar parsing - player:%s - link:%s - element:%s - error:%s" % (playerName, link, element, e))
 			continue
 
-	return out
+	return out, group_links
 	
 def getDatasPlanets(cookies, link, playerName):
 
@@ -440,10 +494,18 @@ def getAllDatas(cookies, playerName):
 	linksPlanets = getPlanetLinks(cookies)
 	
 	datas = []
+	group_links = []
 
 	for i in range(len(linksShips)):
-		datas.extend(getDatas(cookies, linksShips[i], playerName))
+		shipDatas, group_link = getDatas(cookies, linksShips[0], playerName)
+		group_links.extend(group_link)
+		datas.extend(shipDatas)
 		print "{0:.0f}% ships's radars processed...".format(float(i+1)/len(linksShips) * 100)
+
+	group_links = list(set(group_links))
+	for i in range(len(group_links)):
+		datas.extend(getGroupDatas(cookies, group_links[i], playerName))
+		print "{0:.0f}% groups of ships processed...".format(float(i+1)/len(group_links) * 100)
 
 	for i in range(len(linksPlanets)):
 		datas.extend(getDatasPlanets(cookies, linksPlanets[i], playerName))
