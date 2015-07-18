@@ -95,6 +95,13 @@ a:focus {
 	color: white;
 }
 
+#description-section3 {
+	font-family: "Helvetica";
+	font-size: 14px;
+	text-align: center;
+	color: white;
+}
+
 #description-title {
 	font-family: "Helvetica";
 	font-size: 19px;

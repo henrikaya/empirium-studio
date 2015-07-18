@@ -8,33 +8,33 @@ EQU_MATRIX = {}
 
 def insertData(data, db, name, cycle):
 
-    if data[0] == 'Vaisseau':
+    if data["type"] == 'Vaisseau':
 
-	if data[3][11] == '/':
-		model = EQU_MATRIX[data[3][12:]]
+	if data["image"][11] == '/':
+		model = EQU_MATRIX[data["image"][12:]]
 	else:
-		model = EQU_MATRIX[data[3][14:]]
+		model = EQU_MATRIX[data["image"][14:]]
 
-    	post = {'type':data[0], 'id':data[1], 'nom':data[2], 'image':data[3], 'x':data[4], 'y':data[5], 'owner':data[6], 'from':[name], 'model':model}
+    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'from':[name], 'model':model}
 
-    elif data[0] == 'Planete':
+    elif data["type"] == 'Planete':
 
-    	post = {'type':data[0], 'id':data[1], 'nom':data[2], 'image':data[3], 'x':data[4], 'y':data[5], 'owner':data[6], 'from':[name]}
+    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'from':[name]}
 
     else:
 
-	post = {'type':data[0], 'id':data[1], 'destination':data[2], 'x':data[3], 'y':data[4], 'from':[name]}
+	post = {'type':data["type"], 'id':data["id"], 'destination':data["destination"], 'x':data["x"], 'y':data["y"], 'from':[name]}
 
     col = db['tour_%s' % cycle]
 
-    previous =  col.find_one({"type":data[0], "id":data[1]})
+    previous =  col.find_one({"type":data["type"], "id":data["id"]})
     if previous == None:
         col.insert(post)
     else:
 	# if data exists in dabase, but not from this playername, we add playername to the list "from"
 	if not name in previous['from']:
 	    previous['from'].append(name)
-	    col.update({"type":data[0], "id":data[1]}, {"$set":{"from":previous['from']}}, multi=False)
+	    col.update({"type":data["type"], "id":data["id"]}, {"$set":{"from":previous['from']}}, multi=False)
 
     return
 
@@ -61,49 +61,50 @@ def insertAllDatas(datas, name, cycle):
     EQU_MATRIX['commodore18.gif'] = "Commodore"
     EQU_MATRIX['commodore19.gif'] = "Commodore"
 
-    EQU_MATRIX['frg_1.gif'] = "Frégate"
-    EQU_MATRIX['frg_3.gif'] = "Frégate"
-    EQU_MATRIX['frg_4.gif'] = "Frégate"
-    EQU_MATRIX['frg_5.gif'] = "Frégate"
-    EQU_MATRIX['frg_6.gif'] = "Frégate"
-    EQU_MATRIX['frg_18.gif'] = "Frégate"
-    EQU_MATRIX['frg_19.gif'] = "Frégate"
-    EQU_MATRIX['frg_25.gif'] = "Frégate"
+    EQU_MATRIX['frg_1.gif'] = "Frégate minière"
+    EQU_MATRIX['frg_3.gif'] = "Frégate commerciale"
+    EQU_MATRIX['frg_4.gif'] = "Frégate d'assaut"
+    EQU_MATRIX['frg_5.gif'] = "Frégate de soutien"
+    EQU_MATRIX['frg_6.gif'] = "Frégate cargo"
+    EQU_MATRIX['frg_18.gif'] = "Frégate méca-constructeur"
+    EQU_MATRIX['frg_19.gif'] = "Frégate bio-constructeur"
+    EQU_MATRIX['frg_25.gif'] = "Frégate nexus"
 
-    EQU_MATRIX['frg_7.gif'] = "Navette"
-    EQU_MATRIX['frg_8.gif'] = "Navette"
-    EQU_MATRIX['frg_9.gif'] = "Navette"
-    EQU_MATRIX['frg_10.gif'] = "Navette"
-    EQU_MATRIX['frg_11.gif'] = "Navette"
-    EQU_MATRIX['frg_24.gif'] = "Navette"
+    EQU_MATRIX['frg_7.gif'] = "Navette commerciale"
+    EQU_MATRIX['frg_8.gif'] = "Navette minière"
+    EQU_MATRIX['frg_9.gif'] = "Navette polymod"
+    EQU_MATRIX['frg_10.gif'] = "Navette d'assaut"
+    EQU_MATRIX['frg_11.gif'] = "Navette cargo"
+    EQU_MATRIX['frg_24.gif'] = "Navette nexus"
 
-    EQU_MATRIX['frg_12.gif'] = "Croiseur"
-    EQU_MATRIX['frg_13.gif'] = "Croiseur"
-    EQU_MATRIX['frg_14.gif'] = "Croiseur"
-    EQU_MATRIX['frg_15.gif'] = "Croiseur"
-    EQU_MATRIX['frg_16.gif'] = "Croiseur"
-    EQU_MATRIX['frg_20.gif'] = "Croiseur"
-    EQU_MATRIX['frg_21.gif'] = "Croiseur"
-    EQU_MATRIX['frg_22.gif'] = "Croiseur"
-    EQU_MATRIX['frg_23.gif'] = "Croiseur"
-    EQU_MATRIX['frg_26.gif'] = "Croiseur"
-    EQU_MATRIX['frg_27.gif'] = "Croiseur"
-    EQU_MATRIX['frg_28.gif'] = "Croiseur"
-    EQU_MATRIX['frg_29.gif'] = "Croiseur"
-    EQU_MATRIX['frg_30.gif'] = "Croiseur"
-    EQU_MATRIX['frg_32.gif'] = "Croiseur"
+    EQU_MATRIX['frg_12.gif'] = "Croiseur commercial"
+    EQU_MATRIX['frg_13.gif'] = "Croiseur minier"
+    EQU_MATRIX['frg_14.gif'] = "Croiseur d'assaut"
+    EQU_MATRIX['frg_15.gif'] = "Croiseur complexe"
+    EQU_MATRIX['frg_16.gif'] = "Croiseur méca-constructeur"
+    EQU_MATRIX['frg_17.gif'] = "Croiseur bio-constructeur"
+    EQU_MATRIX['frg_20.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_21.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_22.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_23.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_26.gif'] = "Croiseur nexus"
+    EQU_MATRIX['frg_27.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_28.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_29.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_30.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_32.gif'] = "Croiseur (type inconnu)"
 
-    EQU_MATRIX['frg_32.gif'] = "Xénoforme"
-    EQU_MATRIX['frg_32.gif'] = "Xénoforme"
+    EQU_MATRIX['frg_32.gif'] = "Xénoforme alpha"
+    EQU_MATRIX['frg_32.gif'] = "Xénoforme beta"
 
     client = MongoClient('localhost', 27017)
     db = client['test']
 
     for data in datas:
-	try:
+#	try:
 		insertData(data, db, name, cycle)
-	except Exception, e:
-		syslog.syslog("Exception during data insertion : %s" % e)
+#	except Exception, e:
+#		syslog.syslog("Exception during data insertion : %s" % e)
 
     syslog.openlog()
     syslog.syslog("Datas imported from %s's radars" % name)

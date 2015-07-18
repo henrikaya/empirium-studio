@@ -79,7 +79,7 @@ def getGroupDatas(cookies, link, playerName):
 	coordY = link[iCoord:].split("&")[1].strip("Y=")
 
 	for element in s3.findAll("li"):
-		el = []
+		el = {}
 		idName = element.text.split(" - ")
 		image = str(element.find("img")['src'])[2:]
 
@@ -93,16 +93,16 @@ def getGroupDatas(cookies, link, playerName):
 			else:
 				name = ""
 
-			el.append("Vaisseau")
-			el.append(ident)
-			el.append(name)
-			el.append(image)
-			el.append(coordX)
-			el.append(coordY)
+			el["type"] = "Vaisseau"
+			el["id"] = ident
+			el["name"] = name
+			el["image"] = image
+			el["x"] = coordX
+			el["y"] = coordY
 			out.append(el)
 
 	for e in out:
-		e.append(lordName)
+		e["owner"] = lordName
 
 	return out
 
@@ -124,8 +124,8 @@ def getDatas(cookies, link, playerName):
 	for element in s3.findAll('div', attrs={"class":"carte_bulle"}):
 
 		try:
-			el = []
-			# Recuperation du type de l'element (Fregate, Navette,
+			el = {}
+			# Get element type (Fregate, Navette,
 			# Planete, Groupe, ...)
 			type_complet = element.find("h1").text
 			if type_complet[0] != '\n':
@@ -133,7 +133,7 @@ def getDatas(cookies, link, playerName):
 			else:
 				type = type_complet[1]
 
-			# TODO: il faudra gérer le cas des Leviathan
+			# TODO: process Leviathan
 			# Navette, Fregate and Croiseur processing
 			if (type == 'N' or type == 'F' or type == 'C'):
 	
@@ -146,16 +146,16 @@ def getDatas(cookies, link, playerName):
 				indexCoordEnd = indexCoordStart + str(element)[indexCoordStart:].find("<br/>") - 10
 				coord = str(element)[indexCoordStart:indexCoordEnd].strip(" ").split("/")
 	
-	 			el.append("Vaisseau")
-				el.append(idName[0])
-				el.append(idName[1])
-				el.append(element.find("img")['src'][2:])
-				el.append(coord[0].strip(" "))
-				el.append(coord[1].strip(" "))
-				el.append(element.find("a").contents[0].encode("utf8"))
+	 			el["type"] = "Vaisseau"
+				el["id"] = idName[0]
+				el["name"] = idName[1]
+				el["image"] = element.find("img")['src'][2:]
+				el["x"] = coord[0].strip(" ")
+				el["y"] = coord[1].strip(" ")
+				el["owner"] = element.find("a").contents[0].encode("utf8")
 	
-				if (el[6] == "Gérer" or el[6] == "Déplacer"):
-					el[6] = playerName
+				if (el["owner"] == "Gérer" or el["owner"] == "Déplacer"):
+					el["owner"] = playerName
 	
 				out.append(el)
 	
@@ -173,11 +173,11 @@ def getDatas(cookies, link, playerName):
 				indexCoordend = indexCoord + str(element)[indexCoord:].find("<br")
 				coord = str(element)[indexCoord:indexCoordend].strip(" ")
 	
-				el.append("Vortex")
-				el.append(ident)
-				el.append(dest)
-				el.append(coord.split("/")[0])
-				el.append(coord.split("/")[1])
+				el["type"] = "Vortex"
+				el["id"] = ident
+				el["destination"] = dest
+				el["x"] = coord.split("/")[0]
+				el["y"] = coord.split("/")[1]
 				out.append(el)
 	
 			# Planete processing
@@ -191,13 +191,13 @@ def getDatas(cookies, link, playerName):
 				indexCoordEnd = indexCoordStart + str(element)[indexCoordStart:].find("<br/>") - 10
 				coord = str(element)[indexCoordStart:indexCoordEnd] 
 	
-				el.append("Planete")			
-				el.append(idName[0])
-				el.append(idName[1])
-				el.append(element.find("h1").find("img")['src'][2:])
-				el.append(coord.split("/")[0])
-				el.append(coord.split("/")[1])
-				el.append(owner)
+				el["type"] = "Planete"			
+				el["id"] = idName[0]
+				el["name"] = idName[1]
+				el["image"] = element.find("h1").find("img")['src'][2:]
+				el["x"] = coord.split("/")[0]
+				el["y"] = coord.split("/")[1]
+				el["owner"] = owner
 				out.append(el)
 
 			# In case of many many elements (> 10)
@@ -212,7 +212,7 @@ def getDatas(cookies, link, playerName):
 				coordY = coord.split("/")[1]
 				for group in element.findAll("div", attrs={"class":"sousgroupe"}):
 					for elmt in str(group).split("<br/><br/>"):
-						el = []
+						el = {}
 						elmt = elmt.replace("\n", " ")
 						if elmt[1]=='d':
 							elmt = elmt[24:]
@@ -237,16 +237,16 @@ def getDatas(cookies, link, playerName):
 								index6 = elmt.find("\"gauche\">") + 9
 								index7 = index6 + elmt[index6:].find("</a>")
 								owner = elmt[index6:index7]
-								el.append("Vaisseau")
-								el.append(id)
-								el.append(nom)
-								el.append(type)
-								el.append(coordX)
-								el.append(coordY)
-								el.append(owner)
+								el["type"] = "Vaisseau"
+								el["id"] = id
+								el["name"] = nom
+								el["image"] = type
+								el["x"] = coordX
+								el["y"] = coordY
+								el["owner"] = owner
 	
-								if (el[6] == "Gérer" or el[6] == "Déplacer"):
-									el[6] = playerName
+								if (el["owner"] == "Gérer" or el["owner"] == "Déplacer"):
+									el["owner"] = playerName
 	
 								out.append(el)
 							elif elmt[19] == 'p':
@@ -261,13 +261,13 @@ def getDatas(cookies, link, playerName):
 								index6 = index3 + elmt[index3:].find("> de ") + 5
 								index7 = index6 + elmt[index6:].find("<")
 								owner = elmt[index6:index7]
-								el.append("Planete")
-								el.append(id)
-								el.append(nom)
-								el.append(type)
-								el.append(coordX)
-								el.append(coordY)
-								el.append(owner)
+								el["type"] = "Planete"
+								el["id"] = id
+								el["name"] = nom
+								el["image"] = type
+								el["x"] = coordX
+								el["y"] = coordY
+								el["owner"] = owner
 								out.append(el)
 
 		except Exception, e:
@@ -291,7 +291,7 @@ def getDatasPlanets(cookies, link, playerName):
 
 	# Pour chaque element visible sur le radar	
 	for element in s3.findAll('div', attrs={"class":"carte_bulle"}):
-		el = []
+		el = {}
 		# Recuperation du type de l'element (Fregate, Navette,
 		# Planete, Groupe, ...)
 
@@ -306,13 +306,13 @@ def getDatasPlanets(cookies, link, playerName):
 			coord = str(element)[iCoord:iCoordEnd]
 			owner = element.find("a").contents[0]
 
-			el.append("Vaisseau")
-			el.append(ident)
-			el.append(name)
-			el.append(image)
-			el.append(coord.split("/")[0].strip(" "))
-			el.append(coord.split("/")[1].strip(" "))
-			el.append(owner)
+			el["type"] = "Vaisseau"
+			el["id"] = ident
+			el["name"] = name
+			el["image"] = image
+			el["x"] = coord.split("/")[0].strip(" ")
+			el["y"] = coord.split("/")[1].strip(" ")
+			el["owner"] = owner
 			out.append(el)
 
 		elif typeIdName[0:2] == "Co":
@@ -324,13 +324,13 @@ def getDatasPlanets(cookies, link, playerName):
 			coord = str(element)[iCoord:iCoordEnd]
 			owner = element.find("a").contents[0]
 
-			el.append("Vaisseau")
-			el.append(ident)
-			el.append(name)
-			el.append(image)
-			el.append(coord.split("/")[0].strip(" "))
-			el.append(coord.split("/")[1].strip(" "))
-			el.append(owner)
+			el["type"] = "Vaisseau"
+			el["id"] = ident
+			el["name"] = name
+			el["image"] = image
+			el["x"] = coord.split("/")[0].strip(" ")
+			el["y"] = coord.split("/")[1].strip(" ")
+			el["owner"] = owner
 			out.append(el)
 
 		elif typeIdName[0:2] == "Cr":
@@ -342,13 +342,13 @@ def getDatasPlanets(cookies, link, playerName):
 			coord = str(element)[iCoord:iCoordEnd]
 			owner = element.find("a").contents[0]
 
-			el.append("Vaisseau")
-			el.append(ident)
-			el.append(name)
-			el.append(image)
-			el.append(coord.split("/")[0].strip(" "))
-			el.append(coord.split("/")[1].strip(" "))
-			el.append(owner)
+			el["type"] = "Vaisseau"
+			el["id"] = ident
+			el["name"] = name
+			el["image"] = image
+			el["x"] = coord.split("/")[0].strip(" ")
+			el["y"] = coord.split("/")[1].strip(" ")
+			el["owner"] = owner
 			out.append(el)
 
 		elif typeIdName[0] == "F":
@@ -360,13 +360,13 @@ def getDatasPlanets(cookies, link, playerName):
 			coord = str(element)[iCoord:iCoordEnd]
 			owner = element.find("a").contents[0]
 
-			el.append("Vaisseau")
-			el.append(ident)
-			el.append(name)
-			el.append(image)
-			el.append(coord.split("/")[0].strip(" "))
-			el.append(coord.split("/")[1].strip(" "))
-			el.append(owner)
+			el["type"] = "Vaisseau"
+			el["id"] = ident
+			el["name"] = name
+			el["image"] = image
+			el["x"] = coord.split("/")[0].strip(" ")
+			el["y"] = coord.split("/")[1].strip(" ")
+			el["owner"] = owner
 			out.append(el)
 
 		elif typeIdName[2:5] == "img":
@@ -384,13 +384,13 @@ def getDatasPlanets(cookies, link, playerName):
 			if owner.encode("utf-8") == "Gérer":
 				owner = playerName
 
-			el.append("Planete")
-			el.append(ti)
-			el.append(name)
-			el.append(image)
-			el.append(coord.split("/")[0].strip(" "))
-			el.append(coord.split("/")[1].strip(" "))
-			el.append(owner)
+			el["type"] = "Planete"
+			el["id"] = ti
+			el["name"] = name
+			el["image"] = image
+			el["x"] = coord.split("/")[0].strip(" ")
+			el["y"] = coord.split("/")[1].strip(" ")
+			el["owner"] = owner
 			out.append(el)
 
 		else:
@@ -399,7 +399,6 @@ def getDatasPlanets(cookies, link, playerName):
 			nb = data[0]
 			x = data[3]
 			y = data[5]
-
 
 			i = 0
 			for e in element.findAll("div", attrs={"class":"sousgroupe"}):
@@ -419,13 +418,13 @@ def getDatasPlanets(cookies, link, playerName):
 							iOwner = item.find("gauche\">") + 8
 							iOwnerEnd = iOwner + item[iOwner:].find("</a>")
 							owner = item[iOwner:iOwnerEnd]
-							el.append("Vaisseau")
-							el.append(idName.split("-")[0].strip(" "))
-							el.append(idName.split("-")[1].strip(" "))
-							el.append(image)
-							el.append(x)
-							el.append(y)
-							el.append(owner)
+							el["type"] = "Vaisseau"
+							el["id"] = idName.split("-")[0].strip(" ")
+							el["name"] = idName.split("-")[1].strip(" ")
+							el["image"] = image
+							el["x"] = x
+							el["y"] = y
+							el["owner"] = owner
 							out.append(el)
 
 						elif image[8] == 'p':
@@ -439,54 +438,21 @@ def getDatasPlanets(cookies, link, playerName):
 							if owner == "":
 								owner = "Rebelles"
 
-							el.append("Planete")
-							el.append(idName.split("-")[0].strip(" "))
-							el.append(idName.split("-")[1].strip(" "))
-							el.append(image)
-							el.append(x)
-							el.append(y)
-							el.append(owner)
+							el["type"] = "Planete"
+							el["id"] = idName.split("-")[0].strip(" ")
+							el["name"] = idName.split("-")[1].strip(" ")
+							el["image"] = image
+							el["x"] = x
+							el["y"] = y
+							el["owner"] = owner
 							out.append(el)
 
 						else:
 							syslog.syslog("Error: element unknown during planet radar parsing - player:%s - link:%s - item:%s" % (playerName, link, item))
 
-						el = []
+						el = {}
 
 	return out
-
-def printPlanet(planet):
-
-	print("Identifiant : %s" % planet[1])
-	print("Nom : %s" % planet[2])
-	print("Type : %s" % planet[3])	
-	print("X : %s" % planet[4])
-	print("Y : %s" % planet[5])
-	print("Propriétaire : %s" % planet[6])
-
-	return
-
-def printShip(ship):
-	
-	print("Identifiant : %s" % ship[1])
-	print("Nom : %s" % ship[2])
-	print("Type : %s" % ship[3])
-	print("X : %s" % ship[4])
-	print("Y : %s" % ship[5])
-	print("Propriétaire : %s" % ship[6])
-
-	return
-
-def printData(data):
-
-	print("Nature : %s" % data[0])
-
-	if data[0] == "Vaisseau":
-		printShip(data)
-	elif data[0] == "Planete":
-		printPlanet(data)
-
-	return
 
 def getAllDatas(cookies, playerName):
 	
@@ -497,7 +463,7 @@ def getAllDatas(cookies, playerName):
 	group_links = []
 
 	for i in range(len(linksShips)):
-		shipDatas, group_link = getDatas(cookies, linksShips[0], playerName)
+		shipDatas, group_link = getDatas(cookies, linksShips[i], playerName)
 		group_links.extend(group_link)
 		datas.extend(shipDatas)
 		print "{0:.0f}% ships's radars processed...".format(float(i+1)/len(linksShips) * 100)

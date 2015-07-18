@@ -99,6 +99,7 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 		$('#description-subtitle').text("Planète " + id);
 		$('#description-section1').text("Localisation : " + x + "/" + y);
 		$('#description-section2').text("Propriétaire : " + owner);
+		$('#description-section3').text("");
 		$('#description-image').attr("src","static/images/planete_bleue.png");
 		$('#description').show();
 
@@ -122,7 +123,7 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 	this.sprite = mysprite;
 }
 
-function Ship(_id, from, id, image, name, owner, type, x, y) {
+function Ship(_id, from, id, image, name, owner, type, model, x, y) {
 
     	this._id = _id;
 	this.from = from;
@@ -131,6 +132,7 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 	this.image = "";
 	this.owner = owner;
 	this.type = type;
+	this.model = model;
 	this.x = x;
 	this.y = y;
 
@@ -175,8 +177,9 @@ function Ship(_id, from, id, image, name, owner, type, x, y) {
 			$('#description-title').text("<Sans nom>");
 		}
 		$('#description-subtitle').text("Vaisseau " + id);
-		$('#description-section1').text("Localisation : " + x + "/" + y);
-		$('#description-section2').text("Propriétaire : " + owner);
+		$('#description-section1').text(model);
+		$('#description-section2').text("Localisation : " + x + "/" + y);
+		$('#description-section3').text("Propriétaire : " + owner);
 
 		if (image in textures) {
 			path = "static/images/ships/" + image;
@@ -243,6 +246,7 @@ function Vortex(_id, from, id, type, destination, x, y) {
 		$('#description-subtitle').text("Destination : " + destination);
 		$('#description-section1').text("Localisation : " + x + "/" + y);
 		$('#description-section2').text("");
+		$('#description-section3').text("");
 		$('#description-image').attr("src","static/images/vortex.png");
 		$('#description').show();
 

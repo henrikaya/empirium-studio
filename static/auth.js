@@ -252,7 +252,7 @@ $(function () {
     
 			o = objs.datas[i];
 			if (o.type == "Vaisseau") {
-				var ship = new Ship(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.type, o.x, o.y);
+				var ship = new Ship(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.type, o.model, o.x, o.y);
 				map.add(ship);
 			}
 			else if (o.type == "Planete") {
