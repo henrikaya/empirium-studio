@@ -1,7 +1,11 @@
 body {
   overflow: hidden;
   background-color: #000000;
-  background-image:url(static/images/wallpapers/wallpaper2.jpeg);
+  background-image:url(images/wallpapers/wallpaper5.jpg);
+}
+
+.friend {
+	float:right;
 }
 
 /* navbar */
@@ -155,6 +159,21 @@ body {
 	font-size: 15px;
 	text-align: center;
 	color: white;
+}
+
+#alliance,
+#alliance-friends,
+#alliance-requests,
+#alliance-all {
+	font-family: "Century Gothic";
+	font-size: 14px;
+	color: white;
+}
+
+#title-friends,
+#title-requests {
+	font-family: "Century Gothic";
+	font-size: 18px;
 }
 
 .ui-autocomplete {

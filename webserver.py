@@ -161,6 +161,58 @@ def get(num_tour):
 	syslog.syslog("Someone tried to get map for cycle %s without to be connected" % num_tour)
 	return "Vous n'êtes pas identifié."
 
+@app.route('/get/friendshiprequests', methods=['GET'], strict_slashes=False)
+def getfriendshiprequests():
+
+	if 'id' in session:
+
+		client = MongoClient('localhost', 27017)
+		col = client['requests']['friendship']
+		col_players = client['joueurs']['joueurs']
+
+		req = col.find({'to_name':session['name']})
+	
+		out = "["
+		data = []
+		for el in req:
+			try:
+				idPlayer = col_players.find_one({'name':el['from_name']})['id']
+			except Exception:
+				continue
+			data.append('{"name":"%s", "id":"%s"}' % (el['from_name'], idPlayer))
+		out += ",".join(data) + "]"
+
+		return out, 200
+
+@app.route('/get/friends', methods=['GET'], strict_slashes=False)
+def getfriends():
+
+	if 'id' in session:
+
+		client = MongoClient('localhost', 27017)
+		col = client['joueurs']['joueurs']
+
+		player = col.find_one({'id':session['id']})
+		data = player['allies']
+
+		out = '{ "allies" : ['
+		allies = []
+		for allie in data:
+			try:
+				idAllie = col.find_one({'name':allie})['id']
+			except Exception:
+				continue
+			allies.append('{"name":"%s", "id":"%s"}' % (allie, idAllie))
+		
+		out += ','.join(allies)
+		out += '] }'
+		
+		return out
+	else:
+
+		return "", 401
+
+
 @app.route('/request/friendship/<req>', methods=['GET'], strict_slashes=False)
 def request_friendship(req):
 

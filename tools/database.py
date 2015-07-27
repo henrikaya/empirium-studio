@@ -40,7 +40,6 @@ def insertData(data, db, name, cycle):
 
 def insertAllDatas(datas, name, cycle):
 
-    EQU_MATRIX['frg_2.gif'] = "Commodore"
     EQU_MATRIX['commodore1.gif'] = "Commodore"
     EQU_MATRIX['commodore2.gif'] = "Commodore"
     EQU_MATRIX['commodore3.gif'] = "Commodore"
@@ -62,6 +61,7 @@ def insertAllDatas(datas, name, cycle):
     EQU_MATRIX['commodore19.gif'] = "Commodore"
 
     EQU_MATRIX['frg_1.gif'] = "Frégate minière"
+    EQU_MATRIX['frg_2.gif'] = "Frégate d'invasion"
     EQU_MATRIX['frg_3.gif'] = "Frégate commerciale"
     EQU_MATRIX['frg_4.gif'] = "Frégate d'assaut"
     EQU_MATRIX['frg_5.gif'] = "Frégate de soutien"
@@ -75,6 +75,7 @@ def insertAllDatas(datas, name, cycle):
     EQU_MATRIX['frg_9.gif'] = "Navette polymod"
     EQU_MATRIX['frg_10.gif'] = "Navette d'assaut"
     EQU_MATRIX['frg_11.gif'] = "Navette cargo"
+    EQU_MATRIX['frg_21.gif'] = "Navette d'invasion"
     EQU_MATRIX['frg_24.gif'] = "Navette nexus"
 
     EQU_MATRIX['frg_12.gif'] = "Croiseur commercial"
@@ -84,7 +85,6 @@ def insertAllDatas(datas, name, cycle):
     EQU_MATRIX['frg_16.gif'] = "Croiseur méca-constructeur"
     EQU_MATRIX['frg_17.gif'] = "Croiseur bio-constructeur"
     EQU_MATRIX['frg_20.gif'] = "Croiseur (type inconnu)"
-    EQU_MATRIX['frg_21.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_22.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_23.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_26.gif'] = "Croiseur nexus"
