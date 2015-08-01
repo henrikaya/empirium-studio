@@ -1,13 +1,16 @@
 var map;
+var mapNeedToBeUpdated;
 var connectionState;
+var mode;
 var stage;
 var renderer;
 var texture_planete;
 var texture_ship;
 var texture_vortex;
 var texture_background;
-
 var textures;
+
+var playersList;
 
 var scrollArea;
 var sectors;
@@ -16,7 +19,7 @@ var view;
 
 var zoomIndex;
 var zoomList = [0.8,1.5,2.5,4,6,10,15,20,30,40,50,65,85,115]
-var alphaSectorList = [0.5, 0.5, 0.4, 0.3, 0.3, 0.2, 0.2, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+var alphaSectorList = [0.4, 0.4, 0.3, 0.2, 0.2, 0.1, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 var alphaSectorNameList = [1.0, 1.0, 1.0, 1.0, 1.0, 0.8, 0.5, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
 function initPositions() {
@@ -27,14 +30,14 @@ function initPositions() {
 	posNav.top = 0;
 	$('#nav').offset(posNav);
 
-	var pos = 	$('#auth-container').offset();
-	pos.top = 	($(window).height() - 65 + $('#nav').height() - $('#auth-container').height()) / 2;
-	pos.left = 	($(window).width() - 50 - $('#auth-container').width()) / 2;		
+	var pos = $('#auth-container').offset();
+	pos.top = ($(window).height() - 65 + $('#nav').height() - $('#auth-container').height()) / 2;
+	pos.left = ($(window).width() - 50 - $('#auth-container').width()) / 2;
 	$('#auth-container').offset(pos);
 
-	var posMap = 	$('#map').offset();
-	posMap.top = 	$('#nav').height() - 30;
-	posMap.left = 	0;
+	var posMap = $('#map').offset();
+	posMap.top = $('#nav').height() - 30;
+	posMap.left = 0;
 	$('#map').offset(posMap);
 
 	var posDescription = $('#description').offset();

@@ -52,6 +52,8 @@ function View() {
 
 function MouseWheelHandler(e) {
 
+	if (mode == "map") {
+
 		var e = window.event || e;
 		var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
 
@@ -79,15 +81,16 @@ function MouseWheelHandler(e) {
 		scrollArea.scale.y = zoomList[zoomIndex];
 		
 		view.bindPoint(xMap, yMap, xAbs, yAbs)
+	}
 
-		return false;
+	return false;
 }
 
 function initSector(key) {
 
 	sectors[key] = new PIXI.Graphics();
 	sectors[key].beginFill(0x6666FF);
-	sectors[key].lineStyle(2, 0x0000FF);
+	sectors[key].lineStyle(1, 0x0000FF);
 	sectors[key].fillAlpha = alphaSectorList[zoomIndex];
 	sectors[key].drawRect(0, 0, 800, 400);
 	stage.addChild(sectors[key]);
@@ -100,11 +103,11 @@ function initSector(key) {
 }
 
 function initPixi() {
-	
-	stage = new PIXI.Stage(0x000000);
- 	renderer = PIXI.autoDetectRenderer($(window).width(), $(window).height());
 
-	var x = document.getElementById("map"); 
+	stage = new PIXI.Stage(0x000000);
+    renderer = PIXI.autoDetectRenderer($(window).width(), $(window).height());
+
+	var x = document.getElementById("map");
 	x.appendChild(renderer.view);
 
 	requestAnimFrame( animate );
@@ -115,7 +118,7 @@ function initPixi() {
 	scrollArea.buttonMode = true;
 
 	texture_planete = PIXI.Texture.fromImage("static/images/planete_bleue.png");
-	texture_ship = PIXI.Texture.fromImage("static/images/ship.png");	
+	texture_ship = PIXI.Texture.fromImage("static/images/ship.png");
 	texture_vortex = PIXI.Texture.fromImage("static/images/vortex.png");
 
 	textures = {};
@@ -245,7 +248,7 @@ function setSectorPos(key, row, column) {
 
 	sectors[key].clear();
 	sectors[key].beginFill(0x0000FF);
-	sectors[key].lineStyle(2, 0x0000FF);
+	sectors[key].lineStyle(1, 0x0000FF);
 	sectors[key].fillAlpha = alphaSectorList[zoomIndex];
 	sectorsName[key].alpha = alphaSectorNameList[zoomIndex];
 

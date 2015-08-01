@@ -41,9 +41,9 @@ def user_connect():
 
 	name = request.form['name']
 	password = request.form['pass']
-	
+
 	client = MongoClient()
-	col = client.joueurs.joueurs
+	col = client.players.players
 	joueur = col.find_one({'name':name})
 
 	if (joueur == None):
@@ -59,6 +59,7 @@ def user_connect():
 	session['id'] = identifiant
 	session['name'] = name
 
+	return "success", 200
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
 		session['name'] = name
@@ -83,8 +84,8 @@ def user_connect():
 def getplayers():
 
 	client = MongoClient('localhost', 27017)
-	db = client['joueurs']
-	col = db['joueurs']
+	db = client['players']
+	col = db['players']
 	ret = "<?xml version='1.0' encoding='UTF-8' ?><options>"
 
 	if (request.form.has_key('pattern')):
@@ -127,7 +128,7 @@ def get(num_tour):
 
 		data = []
 
-		col_players = client['joueurs']['joueurs']
+		col_players = client['players']['players']
 		joueur = col_players.find_one({'name':session['name']})
 		allies = joueur['allies']
 
@@ -168,10 +169,13 @@ def getfriendshiprequests():
 
 		client = MongoClient('localhost', 27017)
 		col = client['requests']['friendship']
-		col_players = client['joueurs']['joueurs']
+		col_players = client['players']['players']
 
 		req = col.find({'to_name':session['name']})
 	
+		# Sort players
+		req = sorted(req, key=lambda x: x['from_name'])
+
 		out = "["
 		data = []
 		for el in req:
@@ -184,16 +188,66 @@ def getfriendshiprequests():
 
 		return out, 200
 
+@app.route('/get/externalplayers', methods=['GET'], strict_slashes=False)
+def getexternalplayers():
+
+	if 'id' in session:
+
+		client = MongoClient('localhost', 27017)
+		col = client['players']['players']
+
+		# Get myself and my allies
+		players = col.find({})
+		allies = col.find_one({'id':session['id']})['allies']
+
+		# Get requests for my friendship
+		col = client['requests']['friendship']
+		col_players = client['players']['players']
+		req = col.find({'to_name':session['name']})
+		friendship_requests = [ el['from_name'] for el in req ]
+
+		out = '{ "players" : ['
+		external_players = []
+
+		# Sort players
+		players = sorted(players, key=lambda x: x['name'])
+
+		for player in players:
+
+			# Don't return myself
+			if player['id'] == session['id']:
+				continue
+
+			# Don't return allies
+			if player['name'] in allies:
+				continue
+
+			# Don't return friendship requests
+			if player['name'] in friendship_requests:
+				continue
+
+			external_players.append('{"name":"%s", "id":"%s"}' % (player['name'], player['id']))
+		
+		out += ','.join(external_players)
+		out += '] }'
+		
+		return out
+	else:
+		return "", 401
+
 @app.route('/get/friends', methods=['GET'], strict_slashes=False)
 def getfriends():
 
 	if 'id' in session:
 
 		client = MongoClient('localhost', 27017)
-		col = client['joueurs']['joueurs']
+		col = client['players']['players']
 
 		player = col.find_one({'id':session['id']})
 		data = player['allies']
+
+		# Sort players
+		data = sorted(data)
 
 		out = '{ "allies" : ['
 		allies = []
@@ -209,9 +263,7 @@ def getfriends():
 		
 		return out
 	else:
-
 		return "", 401
-
 
 @app.route('/request/friendship/<req>', methods=['GET'], strict_slashes=False)
 def request_friendship(req):
@@ -228,7 +280,7 @@ def request_friendship(req):
 
 		client = MongoClient('localhost', 27017)
 		col = client['requests']['friendship']
-		col_players = client['joueurs']['joueurs']
+		col_players = client['players']['players']
 
 		post = {}
 		post['from_id'] = session['id']
@@ -266,7 +318,7 @@ def request_friendship(req):
 				# if player from "to" attributes exists
 				if col_players.find_one({"name":f_request['to']}) != None:
 					col.insert(post)
-					syslog.syslog("%s (%s) sends a friendship request to %s" % (session['name'], session['id'], "a"))
+					syslog.syslog("%s (%s) sends a friendship request to %s" % (session['name'], session['id'], f_request["to"]))
 					return "allies request sent", 200
 				else:
 					return "player does not exist", 200
@@ -275,6 +327,66 @@ def request_friendship(req):
 
 	syslog.syslog("Someone tried to send a friendship request to %s" % "a")
 	return "Vous n'êtes pas identifié", 300
+
+@app.route('/request/cancelfriendship/<req>', methods=['GET'], strict_slashes=False)
+def request_cancelfriendship(req):
+
+	f_request = json.loads(req)
+
+	if 'id' in session:
+
+		if not f_request.has_key('to'):
+			return "invalid request", 300
+
+		client = MongoClient('localhost', 27017)
+		col_players = client['players']['players']
+
+		allies = (col_players.find_one({"id":session['id']}))['allies']
+		remote_allies = col_players.find_one({"name":f_request['to']})['allies']
+
+		if not f_request['to'] in allies:
+			return "this player is not your allie", 200
+
+		# Delete player from his own allies
+		allies.pop(allies.index(f_request['to']))
+		col_players.update({"id":session["id"]},{"$set":{"allies":allies}})
+
+		# Delete himself from his player's allies
+		remote_allies.pop(remote_allies.index(session['name']))
+		col_players.update({"name":f_request["to"]},{"$set":{"allies":remote_allies}})
+
+		return "not allies anymore"
+
+	return "you're not connected", 200
+
+@app.route('/request/cancelfriendshiprequest/<req>', methods=['GET'], strict_slashes=False)
+def request_cancelfriendshiprequest(req):
+
+	f_request = json.loads(req)
+
+	if 'id' in session:
+
+		if not f_request.has_key('to'):
+			return "invalid request", 400
+
+		client = MongoClient('localhost', 27017)
+		col_players = client['players']['players']
+		col_requests = client['requests']['friendship']
+
+		requestA = col_requests.find_one({'from_name':session['name'], 'to_name':f_request['to']})
+		requestB = col_requests.find_one({'to_name':session['name'], 'from_name':f_request['to']})
+
+		if requestA != None:
+			col_requests.remove({'from_name':session['name'], 'to_name':f_request['to']})
+			return "request cancelled", 200
+		else:
+			if requestB != None:
+				col_requests.remove({'to_name':session['name'], 'from_name':f_request['to']})
+				return "request cancelled", 200
+			else:
+				return "request doesn't exist", 200
+
+	return "you're not connected", 200
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():

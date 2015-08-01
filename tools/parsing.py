@@ -21,6 +21,22 @@ def getCycleNumber():
 
 	return int(result[coord:coord+3])
 
+def getPlayersList():
+
+	opener = urllib2.build_opener()
+	f = opener.open("http://v2.empirium.net")
+	html = etree.HTML(f.read())
+	result = etree.tostring(html, pretty_print=True, method="html")
+	soup = BeautifulSoup(result)
+
+	for selector in soup.findAll("select", attrs={'name':'joueur'}):
+		out = []
+		for option in selector.findAll("option"):
+			player = {}
+			player['id'] = option['value']
+			player['name'] = option.contents[0].encode("utf8").strip("\t").strip("\n")
+			out.append(player)
+	return out
 
 def getShipLinks(cookies):
 	
@@ -479,5 +495,6 @@ def getAllDatas(cookies, playerName):
 
 	return datas
 
+if __name__ == "__main__":
 
-
+	print getPlayersList()

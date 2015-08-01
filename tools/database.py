@@ -114,6 +114,6 @@ def insertAllDatas(datas, name, cycle):
 def updateCycleNumber(name, cycle):
 
 	client = MongoClient('localhost', 27017)
-	col = client['joueurs']['joueurs']
+	col = client['players']['players']
 
 	col.update({"name":name}, {"$set":{"last_update":cycle}}, multi=False)
