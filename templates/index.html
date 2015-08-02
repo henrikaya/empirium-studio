@@ -31,8 +31,8 @@
               					<ul class="nav navbar-nav navbar-left">
                 				<li><a id="map-link" href="#fakelink">Carte<!--<span class="navbar-unread">1</span>--></a></li>
                 				<li><a id="alliance-link" href="#fakelink">Amis</a></li>
-                				<li><a href="#fakelink">Technologies</a></li>
-                				<li><a href="#fakelink">Stats</a></li>
+                				<li class="disabled"><a href="#fakelink">Technologies</a></li>
+                				<li class="disabled"><a href="#fakelink">Stats</a></li>
                 				<li><a id="exit-link" href="#fakelink">Quitter</a></li>
                					</ul>
             				</div>
@@ -57,15 +57,12 @@
 					  	<button id="button-connection" class="btn btn-block btn-default">Connexion</a>
 					</div>
 				</div>
-				<div>
-					<img id="loading" src="{{ url_for('static', filename='images/loading.gif') }}">
-					<img id="success" src="{{ url_for('static', filename='images/success.gif') }}">
-					<img id="fail"	  src="{{ url_for('static', filename='images/fail.png') }}">
+				<div id='images-loading'>
 				</div>
 			</div>
 		</div>
 
-		<div id="description">
+		<div id="description" style="display:none;">
 	
 			<!-- TODO: replace "18" par percentage of window size -->	
 			<img id="description-close" src="{{ url_for('static', filename='images/close.png') }}" width=18 height=18>
@@ -87,11 +84,12 @@
 			<p id="description-section3"></p>
 
 		</div>
-	
+
 	</div>
 
     <script src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery-scrollpanel/jquery.scrollpanel-0.5.0.min.js') }}"></script>
     <script src="{{ url_for('static', filename='pixi.js') }}"></script>
     <script src="{{ url_for('static', filename='Flat-UI/dist/js/flat-ui.min.js') }}"></script>
     <script src="{{ url_for('static', filename='Flat-UI/docs/assets/js/application.js') }}"></script>

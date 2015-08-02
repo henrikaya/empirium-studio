@@ -89,7 +89,7 @@ def insertAllDatas(datas, name, cycle):
     EQU_MATRIX['frg_23.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_26.gif'] = "Croiseur nexus"
     EQU_MATRIX['frg_27.gif'] = "Croiseur (type inconnu)"
-    EQU_MATRIX['frg_28.gif'] = "Croiseur (type inconnu)"
+    EQU_MATRIX['frg_28.gif'] = "Croiseur de soutien"
     EQU_MATRIX['frg_29.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_30.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_32.gif'] = "Croiseur (type inconnu)"
@@ -101,10 +101,10 @@ def insertAllDatas(datas, name, cycle):
     db = client['test']
 
     for data in datas:
-#	try:
+	try:
 		insertData(data, db, name, cycle)
-#	except Exception, e:
-#		syslog.syslog("Exception during data insertion : %s" % e)
+	except Exception, e:
+		syslog.syslog("Exception during data insertion : %s" % e)
 
     syslog.openlog()
     syslog.syslog("Datas imported from %s's radars" % name)

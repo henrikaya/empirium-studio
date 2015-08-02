@@ -34,6 +34,8 @@ def updatePlayersAvatars():
 		if not os.path.isfile("%s.jpg" % player["id"]):
 			os.system("cp unknown.jpg %s.jpg" % player["id"])
 
+	os.chdir("../../..")
+
 	return
 
 def writeJSplayersList(playersList):
@@ -59,6 +61,7 @@ def writeJSplayersList(playersList):
     f.write("]\n")
     f.write("});\n")
     f.close()
+    os.chdir("..")
 
     syslog.syslog("JS players list updated")
 

@@ -59,7 +59,6 @@ def user_connect():
 	session['id'] = identifiant
 	session['name'] = name
 
-	return "success", 200
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
 		session['name'] = name
@@ -194,17 +193,20 @@ def getexternalplayers():
 	if 'id' in session:
 
 		client = MongoClient('localhost', 27017)
-		col = client['players']['players']
+		col_players = client['players']['players']
+		col_requests = client['requests']['friendship']
 
 		# Get myself and my allies
-		players = col.find({})
-		allies = col.find_one({'id':session['id']})['allies']
+		players = col_players.find({})
+		allies = col_players.find_one({'id':session['id']})['allies']
 
 		# Get requests for my friendship
-		col = client['requests']['friendship']
-		col_players = client['players']['players']
-		req = col.find({'to_name':session['name']})
+		req = col_requests.find({'to_name':session['name']})
 		friendship_requests = [ el['from_name'] for el in req ]
+
+		# Get requests from me
+		req = col_requests.find({'from_name':session['name']})
+		friendship_requests_from_me = [ el['to_name'] for el in req ]
 
 		out = '{ "players" : ['
 		external_players = []
@@ -226,7 +228,10 @@ def getexternalplayers():
 			if player['name'] in friendship_requests:
 				continue
 
-			external_players.append('{"name":"%s", "id":"%s"}' % (player['name'], player['id']))
+			if player['name'] in friendship_requests_from_me:
+				external_players.append('{"name":"%s", "id":"%s", "requested":"yes"}' % (player['name'], player['id']))
+			else:
+				external_players.append('{"name":"%s", "id":"%s", "requested":"no"}' % (player['name'], player['id']))
 		
 		out += ','.join(external_players)
 		out += '] }'

@@ -12,9 +12,15 @@ $(function () {
     initPixi();
     initAllianceMenu();
     $('#description').hide();
+
+    // Init loading, success and fail images
+    $('#images-loading').append("<img id='loading' src='static/images/loading.gif'>");
+    $('#images-loading').append("<img id='success' src='static/images/success.gif'>");
+    $('#images-loading').append("<img id='fail' src='static/images/fail.gif'>");
     $('#loading').hide();
     $('#success').hide();
     $('#fail').hide();
+
     $('#map').hide();
     $('#loading').attr("src", "static/images/loading.gif");
     $('#fail').attr("src", "static/images/fail.png");

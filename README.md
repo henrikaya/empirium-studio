@@ -11,10 +11,20 @@ To install and launch web-server, please :
 
 2. Configure server with webserver.conf file
 
-3. Run: ```python webserver.py &```
+3. Run: ```python worker.py``` (as a service)
+
+4. Run: ```python webserver.py``` (as a service)
 
 # Compatibilities
 
-| Empirium Studio   | Empirium Game   | MongoDB   | Rsyslog   |
-|-------------------|-----------------|-----------|-----------|
-|master             | 2               | 2.1.1     | 5.8.11    |
+| Software          | Version           |
+|-------------------|-------------------|
+| Empirium Studio   | master            |
+| Empirium Game     | 2                 |
+| MongoDB           | 2.4.10            |
+| Rsyslog           | 8.4.2             |
+| Python            | 2.7               |
+| pymongo           | 2.7.2             |
+| bs4               | 4.3.2             |
+| flask             | 0.10.1            |
+
