@@ -19,7 +19,7 @@ sys.setdefaultencoding('utf-8')
 
 def updatePlayersAvatars():
 
-	client = MongoClient('localhost', 27017)
+    	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 	col = client['players']['players']
 
 	#TODO: replace all system directives by python directives
@@ -71,7 +71,7 @@ def updatePlayersList():
 
 	playersList = tools.parsing.getPlayersList()
 
-	client = MongoClient('localhost', 27017)
+    	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 	col = client['players']['players']
 
 	oldPlayersListId = []
@@ -115,7 +115,7 @@ def updatePlayersList():
 
 def process():
 
-	client = MongoClient()
+    	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 	col = client.players.players
 
 	while True:

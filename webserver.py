@@ -42,7 +42,7 @@ def user_connect():
 	name = request.form['name']
 	password = request.form['pass']
 
-	client = MongoClient()
+	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 	col = client.players.players
 	joueur = col.find_one({'name':name})
 
@@ -82,7 +82,7 @@ def user_connect():
 @app.route('/getplayers', methods=['GET', 'POST'], strict_slashes=False)
 def getplayers():
 
-	client = MongoClient('localhost', 27017)
+	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 	db = client['players']
 	col = db['players']
 	ret = "<?xml version='1.0' encoding='UTF-8' ?><options>"
@@ -121,7 +121,7 @@ def get(num_tour):
 
 	if 'id' in session:
 
-		client = MongoClient('localhost', 27017)
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 		db = client['test']
 		col = db["tour_%s" % num_tour]
 
@@ -166,7 +166,7 @@ def getfriendshiprequests():
 
 	if 'id' in session:
 
-		client = MongoClient('localhost', 27017)
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 		col = client['requests']['friendship']
 		col_players = client['players']['players']
 
@@ -192,7 +192,7 @@ def getexternalplayers():
 
 	if 'id' in session:
 
-		client = MongoClient('localhost', 27017)
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 		col_players = client['players']['players']
 		col_requests = client['requests']['friendship']
 
@@ -245,7 +245,7 @@ def getfriends():
 
 	if 'id' in session:
 
-		client = MongoClient('localhost', 27017)
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 		col = client['players']['players']
 
 		player = col.find_one({'id':session['id']})
@@ -283,7 +283,7 @@ def request_friendship(req):
 		if session['name'] == f_request['to']:
 			return "you cannot be allie to yourself", 200
 
-		client = MongoClient('localhost', 27017)
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 		col = client['requests']['friendship']
 		col_players = client['players']['players']
 
@@ -343,7 +343,7 @@ def request_cancelfriendship(req):
 		if not f_request.has_key('to'):
 			return "invalid request", 300
 
-		client = MongoClient('localhost', 27017)
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 		col_players = client['players']['players']
 
 		allies = (col_players.find_one({"id":session['id']}))['allies']
@@ -374,7 +374,7 @@ def request_cancelfriendshiprequest(req):
 		if not f_request.has_key('to'):
 			return "invalid request", 400
 
-		client = MongoClient('localhost', 27017)
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 		col_players = client['players']['players']
 		col_requests = client['requests']['friendship']
 

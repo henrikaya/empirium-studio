@@ -97,8 +97,8 @@ def insertAllDatas(datas, name, cycle):
     EQU_MATRIX['frg_32.gif'] = "Xénoforme alpha"
     EQU_MATRIX['frg_32.gif'] = "Xénoforme beta"
 
-    client = MongoClient('localhost', 27017)
-    db = client['test']
+    client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
+    db = client['radars']
 
     for data in datas:
 	try:
@@ -113,7 +113,7 @@ def insertAllDatas(datas, name, cycle):
 
 def updateCycleNumber(name, cycle):
 
-	client = MongoClient('localhost', 27017)
+    	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
 	col = client['players']['players']
 
 	col.update({"name":name}, {"$set":{"last_update":cycle}}, multi=False)
