@@ -61,7 +61,6 @@ def user_connect():
 	session['id'] = identifiant
 	session['name'] = name
 
-	return "success", 200
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
 		session['name'] = name

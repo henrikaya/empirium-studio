@@ -1,18 +1,21 @@
 function initAllianceMenu() {
 
-	$('#main-screen').append("<div id='alliance' class='row'></div>");
+	$('#main-screen').append("<div id='alliance'></div>");
 
-	$('#alliance').append("<div id='alliance-friends' class='col-md-4'></div>");
-	$('#alliance-friends').append("<p id='title-alliance-friends'><center style='font-size:24px;'>AMIS</center></p>");
-	$('#alliance-friends').append("<div id='alliance-friends-content' style='height:" + ($(window).height() - $('#nav').height() - 60) + "px; line-height:3em; overflow:auto; padding:5px;'></div>");
+	$('#alliance').append("<div id='alliance-friends'></div>");
+	$('#alliance-friends').append("<center id='title-alliance-friends'><center>AMIS</center>");
+	$('#alliance-friends').append("<div id='alliance-friends-content'></div>");
+	$('#alliance-friends').height($(window).height() - $('#nav').height());
 
-	$('#alliance').append("<div id='alliance-requests' class='col-md-4'></div>");
-	$('#alliance-requests').append("<p id='title-alliance-requests'><center style='font-size:24px;'>DEMANDES D'AMITIE</center></p>");
-	$('#alliance-requests').append("<div id='alliance-requests-content' style='height:" + ($(window).height() - $('#nav').height() - 60) + "px; line-height:3em; overflow:auto; padding:5px;'></div>");
+	$('#alliance').append("<div id='alliance-requests'></div>");
+	$('#alliance-requests').append("<center id='title-alliance-requests'>DEMANDES EN ATTENTE</center>");
+	$('#alliance-requests').append("<div id='alliance-requests-content'></div>");
+	$('#alliance-requests').height($(window).height() - $('#nav').height());
 
-	$('#alliance').append("<div id='alliance-all' class='col-md-4'></div>");
-	$('#alliance-all').append("<p id='title-alliance-all'><center style='font-size:24px;'>SEIGNEURS DE L'EMPIRIUM</center></p>");
-	$('#alliance-all').append("<div id='alliance-all-content' style='height:" + ($(window).height() - $('#nav').height() - 60) + "px; line-height:3em; overflow:auto; padding:5px;'></div>");
+	$('#alliance').append("<div id='alliance-all'></div>");
+	$('#alliance-all').append("<center id='title-alliance-all'>SEIGNEURS DE L'EMPIRIUM</center>");
+	$('#alliance-all').append("<div id='alliance-all-content'></div>");
+	$('#alliance-all').height($(window).height() - $('#nav').height());
 
 	$('#alliance').hide();
 
@@ -61,7 +64,9 @@ function printFriends(data) {
 
         	// Clear friends
 	    	$('#alliance-friends-content').remove();
-		$('#alliance-friends').append("<div id='alliance-friends-content' style='height:" + ($(window).height() - $('#nav').height() - 60) + "px; line-height:3em; overflow:auto; padding:5px;'></div>");
+		$('#alliance-friends').append("<div id='alliance-friends-content'></div>");
+		var height = $(window).height() - $('#nav').height() - $('#title-alliance-friends');
+		$('#alliance-friends-content').height(height);
 
 		if (objs.allies.length <= 0) {
 			$('#alliance-friends-content').append("<div id='alliance-friends-empty'></div>");
@@ -71,8 +76,15 @@ function printFriends(data) {
 		// Friends
 		for (var i = 0, s = objs.allies.length; i < s; i++) {
 			o = objs.allies[i];
-			$('#alliance-friends-content').append("<div id='" + o.id + "'></div>");
-			$('#' + o.id).append("<img src='static/images/players/" + o.id + ".jpg' width=42px height=42px style='float:left;'>");
+			var player_class = "friend-";
+			if (i % 2 == 0) {
+				player_class += "even";
+			}
+			else {
+				player_class += "odd";
+			}
+			$('#alliance-friends-content').append("<div id='" + o.id + "' class='" + player_class + "'></div>");
+			$('#' + o.id).append("<img src='static/images/players/" + o.id + ".jpg' width=50px height=50px style='float:left;'>");
 			$('#' + o.id).append(o.name);
 			$('#' + o.id).append("<button type='button' onclick='cancelFriendship(\"" + o.name + "\")' class='btn btn-default' style='float:right;'>Ne plus etre ami</button>");
 		}
@@ -85,7 +97,9 @@ function printFriendshipRequests(data) {
 
         	// Clear requests
 	    	$('#alliance-requests-content').remove();
-		$('#alliance-requests').append("<div id='alliance-requests-content' style='height:" + ($(window).height() - $('#nav').height() - 60) + "px; line-height:3em; overflow:auto; padding:5px;'></div>");
+		$('#alliance-requests').append("<div id='alliance-requests-content'></div>");
+		var height = $(window).height() - $('#nav').height() - $('#title-alliance-requests');
+		$('#alliance-requests-content').height(height);
 
 		if (objs.length <= 0) {
 			$('#alliance-requests-content').append("<div id='alliance-requests-empty'></div>");
@@ -95,8 +109,15 @@ function printFriendshipRequests(data) {
 		// Requests
 		for (var i = 0, s = objs.length; i < s; i++) {
 			o = objs[i];
-			$('#alliance-requests-content').append("<div id='" + o.id + "'></div>");
-			$('#' + o.id).append("<img src='static/images/players/" + o.id + ".jpg' width=42px height=42px style='float:left;'>");
+			var player_class = "friend-";
+			if (i % 2 == 0) {
+				player_class += "even";
+			}
+			else {
+				player_class += "odd";
+			}
+			$('#alliance-requests-content').append("<div id='" + o.id + "' class='" + player_class + "'></div>");
+			$('#' + o.id).append("<img src='static/images/players/" + o.id + ".jpg' width=50px height=50px style='float:left;'>");
 			$('#' + o.id).append(o.name);
 			$('#' + o.id).append("<div id='" + o.id + "-btn-group' class='btn-group' style='float:right;'></div>");
 			$('#' + o.id + '-btn-group').append("<button type='button' onclick='askFriendship(\"" + o.name + "\")' class='btn btn-warning'>Accepter</button>");
@@ -111,13 +132,22 @@ function printExternalPlayers(data) {
 
         	// Clear external players
 	    	$('#alliance-all-content').remove();
-		$('#alliance-all').append("<div id='alliance-all-content' style='height:" + ($(window).height() - $('#nav').height() - 60) + "px; line-height:3em; overflow:auto; padding:5px;'></div>");
+		$('#alliance-all').append("<div id='alliance-all-content'></div>");
+		var height_all = $(window).height() - $('#nav').height() - $('#title-alliance-all').height();
+		$('#alliance-all-content').height(height_all);
 
 		// External players
 		for (var i = 0, s = objs.players.length; i < s; i++) {
 			o = objs.players[i];
-			$('#alliance-all-content').append("<div id='" + o.id + "'></div>");
-			$('#' + o.id).append("<img src='static/images/players/" + o.id + ".jpg' width=42px height=42px style='float:left;'>");
+			var player_class = "friend-";
+			if (i % 2 == 0) {
+				player_class += "even";
+			}
+			else {
+				player_class += "odd";
+			}
+			$('#alliance-all-content').append("<div id='" + o.id + "' class='" + player_class + "'></div>");
+			$('#' + o.id).append("<img src='static/images/players/" + o.id + ".jpg' width=50px height=50px style='float:left;'>");
 			$('#' + o.id).append(o.name);
 			if (o.requested == "no") {
 				$('#' + o.id).append("<button type='button' onclick='askFriendship(\"" + o.name + "\")' class='btn btn-warning' style='float:right;'>Demander</button>");

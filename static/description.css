@@ -1,0 +1,58 @@
+#description-close:hover {
+  cursor: pointer;
+}
+
+#indication {
+	font-family: "Century Gothic";
+	font-size: 14px;
+}
+
+#indication-title {
+	font-family: "Century Gothic";
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#description {
+  padding: 12px;
+  background-color: #333333;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  width: 250px;
+}
+
+#description-section1 {
+	font-family: "Helvetica";
+	font-size: 14px;
+	text-align: center;
+	color: white;
+}
+
+#description-section2 {
+	font-family: "Helvetica";
+	font-size: 14px;
+	text-align: center;
+	color: white;
+}
+
+#description-section3 {
+	font-family: "Helvetica";
+	font-size: 14px;
+	text-align: center;
+	color: white;
+}
+
+#description-title {
+	font-family: "Helvetica";
+	font-size: 19px;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+}
+
+#description-subtitle {
+	font-family: "Helvetica";
+	font-size: 15px;
+	text-align: center;
+	color: white;
+}
+

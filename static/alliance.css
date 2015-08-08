@@ -1,0 +1,64 @@
+#alliance {
+	height: 100%;
+}
+
+.friend {
+	float:right;
+}
+
+.friend-even {
+    background-color:#f5f7fa;
+    color: black;
+}
+
+.friend-odd {
+    background-color: #e6e9ed;
+    color: black;
+}
+
+.friend-even button,
+.friend-odd button {
+	display: inline-block;
+	height: 50px;
+	vertical-align: middle;
+}
+
+#alliance-friends,
+#alliance-requests,
+#alliance-all {
+	font-family: "Century Gothic";
+	font-size: 14px;
+	color: white;
+	width: 33%;
+	float: left;
+	border-right: 1px solid white;
+	background-color: #e4e6e9;
+}
+
+#alliance-requests {
+	width: 34%;
+}
+
+#alliance-friends-content,
+#alliance-requests-content,
+#alliance-all-content {
+	//height: 67%;
+	line-height: 50px;
+	overflow: auto;
+	//padding: 5px;
+}
+
+#title-alliance-friends,
+#title-alliance-requests,
+#title-alliance-all {
+	font-family: "Century Gothic";
+	font-size: 18px;
+	line-height: 50px;
+	height: 50px;
+	background-color: #ee8822;
+}
+
+#alliance-requests-empty,
+#alliance-friends-empty {
+	color: black;
+}

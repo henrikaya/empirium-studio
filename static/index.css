@@ -1,11 +1,12 @@
+html {
+  height: 100%;
+}
+
 body {
+  height: 100%;
   overflow: hidden;
   background-color: #000000;
   background-image:url(images/wallpapers/wallpaper5.jpg);
-}
-
-.friend {
-	float:right;
 }
 
 /* navbar */
@@ -64,22 +65,11 @@ body {
 }
 
 #mycontainer {
-	
+  height: 100%;	
 }
 
-#player:focus,
-#password:focus {
-	box-shadow: 0 0 5px rgba(255, 153, 51, 1);
-  	padding: 3px 0px 3px 12px;
-  	margin: 5px 1px 3px 0px;
-  	border: 1px solid rgba(255, 153, 51, 1);
-}
-
-#button-connection {
-	background-color: #ff9933;
-	color: white;
-	font-size: 15px;
-	font-weight: bold;
+#main-screen {
+  height: 100%;
 }
 
 #bare-menu {
@@ -90,130 +80,11 @@ body {
 	display:inline-block;
 }
 
-#auth-container{
-  padding: 25px;
-  border-radius: 2px;
-  background-color: #ffffff;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  width: 300px;
-}
-
 #icon-map:hover,
 #icon-alliance:hover,
 #icon-technology:hover,
 #icon-stats:hover,
-#icon-exit:hover,
-#description-close:hover {
+#icon-exit:hover {
   cursor: pointer;
 }
 
-#indication {
-	font-family: "Century Gothic";
-	font-size: 14px;
-}
-
-#indication-title {
-	font-family: "Century Gothic";
-	font-size: 18px;
-	font-weight: bold;
-}
-
-#description {
-  padding: 12px;
-  background-color: #333333;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  width: 250px;
-}
-
-#description-section1 {
-	font-family: "Helvetica";
-	font-size: 14px;
-	text-align: center;
-	color: white;
-}
-
-#description-section2 {
-	font-family: "Helvetica";
-	font-size: 14px;
-	text-align: center;
-	color: white;
-}
-
-#description-section3 {
-	font-family: "Helvetica";
-	font-size: 14px;
-	text-align: center;
-	color: white;
-}
-
-#description-title {
-	font-family: "Helvetica";
-	font-size: 19px;
-	font-weight: bold;
-	text-align: center;
-	color: white;
-}
-
-#description-subtitle {
-	font-family: "Helvetica";
-	font-size: 15px;
-	text-align: center;
-	color: white;
-}
-
-#alliance,
-#alliance-friends,
-#alliance-requests,
-#alliance-all {
-	font-family: "Century Gothic";
-	font-size: 14px;
-	color: white;
-}
-
-#title-friends,
-#title-requests {
-	font-family: "Century Gothic";
-	font-size: 18px;
-}
-
-.ui-autocomplete {
-
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1000;
-  float: left;
-  display: none;
-  min-width: 160px;
-  padding: 4px 0;
-  margin: 2px 0 0 0;
-  list-style: none;
-  background-color: #ffffff;
-  border-color: #ccc;
-  border-color: rgba(0, 0, 0, 0.2);
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 5px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  background-clip: padding-box;
- 
-  .ui-menu-item > a.ui-corner-all {
-    display: block;
-    padding: 3px 15px;
-    clear: both;
-    font-weight: normal;
-    line-height: 18px;
-    color: #555555;
-    white-space: nowrap;
- 
-    &.ui-state-hover, &.ui-state-active {
-      color: #ffffff;
-      text-decoration: none;
-      background-color: #0088cc;
-      border-radius: 0px;
-      background-image: none;
-    }
-  }
-}
-
-.ui-helper-hidden-accessible { display:none; }
