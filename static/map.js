@@ -150,7 +150,7 @@ function initPixi() {
 
 	stage.addChild(scrollArea);
 
-	zoomIndex = 10;
+	zoomIndex = 20;
 	scrollArea.scale.x = zoomList[zoomIndex];
 	scrollArea.scale.y = zoomList[zoomIndex];
 
