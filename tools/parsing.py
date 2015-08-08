@@ -149,22 +149,20 @@ def getDatas(cookies, link, playerName):
 			else:
 				type = type_complet[1]
 
-			# TODO: process Leviathan
 			# Navette, Fregate and Croiseur processing
-			if (type == 'N' or type == 'F' or type == 'C'):
-	
-				idName =  str(element.find("h1")).strip("<h1>").strip("</h1")
-				iId = idName.find(" ")
-				idName = idName[iId+1:].split("<br/>")
-	
+			if (type == 'N' or type == 'F' or type == 'C' or type == 'L'):
+
+				ident = element.find("h1").contents[0].encode("utf8").split(" ")[1]
+				name = element.find("h1").contents[2].encode("utf8")
+
 				indexCoordStart = str(element).find("<img")
 				indexCoordStart += str(element)[indexCoordStart:].find(">") + 1
 				indexCoordEnd = indexCoordStart + str(element)[indexCoordStart:].find("<br/>") - 10
 				coord = str(element)[indexCoordStart:indexCoordEnd].strip(" ").split("/")
 	
 	 			el["type"] = "Vaisseau"
-				el["id"] = idName[0]
-				el["name"] = idName[1]
+				el["id"] = ident
+				el["name"] = name
 				el["image"] = element.find("img")['src'][2:]
 				el["x"] = coord[0].strip(" ")
 				el["y"] = coord[1].strip(" ")
@@ -199,7 +197,7 @@ def getDatas(cookies, link, playerName):
 			# Planete processing
 			elif type == 'P':
 				index = str(element.find("h1")).find("Planète")
-				idName = str(element.find("h1"))[index:].strip("Planète ").strip("</h1>").strip("\n").split("<br/>")
+				idName = str(element.find("h1"))[index:].strip("Planète ")[:-5].strip("\n").split("<br/>")
 				owner = element.find("a").contents[0].encode('utf8')
 				if (owner == "Gérer"):
 					owner = playerName
@@ -214,6 +212,7 @@ def getDatas(cookies, link, playerName):
 				el["x"] = coord.split("/")[0]
 				el["y"] = coord.split("/")[1]
 				el["owner"] = owner
+
 				out.append(el)
 
 			# In case of many many elements (> 10)

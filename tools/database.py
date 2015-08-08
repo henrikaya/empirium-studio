@@ -91,8 +91,9 @@ def insertAllDatas(datas, name, cycle, db_host, db_port):
     EQU_MATRIX['frg_27.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_28.gif'] = "Croiseur de soutien"
     EQU_MATRIX['frg_29.gif'] = "Croiseur (type inconnu)"
-    EQU_MATRIX['frg_30.gif'] = "Croiseur (type inconnu)"
     EQU_MATRIX['frg_32.gif'] = "Croiseur (type inconnu)"
+
+    EQU_MATRIX['frg_30.gif'] = "Leviathan"
 
     EQU_MATRIX['frg_32.gif'] = "Xénoforme alpha"
     EQU_MATRIX['frg_32.gif'] = "Xénoforme beta"
