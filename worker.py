@@ -115,7 +115,9 @@ def updatePlayersList():
 
 def process():
 
-    	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
+	db_host = config.get("MongoDB", "Host")
+	db_port = config.getint("MongoDB", "Port")
+    	client = MongoClient(db_host, db_port)
 	col = client.players.players
 
 	while True:
@@ -124,7 +126,7 @@ def process():
 		players = col.find({'last_update':{'$lte':nb-1}})
 
 		for j in players:
-			tools.updateDatas.update(j['id'], j['password'], j['name'])
+			tools.updateDatas.update(j['id'], j['password'], j['name'], db_host, db_port)
 
 		cycle_processing = False
 		while nb == -1:

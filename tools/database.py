@@ -25,7 +25,7 @@ def insertData(data, db, name, cycle):
 
 	post = {'type':data["type"], 'id':data["id"], 'destination':data["destination"], 'x':data["x"], 'y':data["y"], 'from':[name]}
 
-    col = db['tour_%s' % cycle]
+    col = db['cycle_%s' % cycle]
 
     previous =  col.find_one({"type":data["type"], "id":data["id"]})
     if previous == None:
@@ -38,7 +38,7 @@ def insertData(data, db, name, cycle):
 
     return
 
-def insertAllDatas(datas, name, cycle):
+def insertAllDatas(datas, name, cycle, db_host, db_port):
 
     EQU_MATRIX['commodore1.gif'] = "Commodore"
     EQU_MATRIX['commodore2.gif'] = "Commodore"
@@ -97,7 +97,7 @@ def insertAllDatas(datas, name, cycle):
     EQU_MATRIX['frg_32.gif'] = "Xénoforme alpha"
     EQU_MATRIX['frg_32.gif'] = "Xénoforme beta"
 
-    client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
+    client = MongoClient(db_host, db_port)
     db = client['radars']
 
     for data in datas:
@@ -111,9 +111,9 @@ def insertAllDatas(datas, name, cycle):
     
     return
 
-def updateCycleNumber(name, cycle):
+def updateCycleNumber(name, cycle, db_host, db_port):
 
-    	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
+    	client = MongoClient(db_host, db_port)
 	col = client['players']['players']
 
 	col.update({"name":name}, {"$set":{"last_update":cycle}}, multi=False)

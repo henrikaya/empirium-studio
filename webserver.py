@@ -42,7 +42,9 @@ def user_connect():
 	name = request.form['name']
 	password = request.form['pass']
 
-	client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
+	db_host = config.get("MongoDB", "Host")
+	db_port = config.getint("MongoDB", "Port")
+	client = MongoClient(db_host, db_port)
 	col = client.players.players
 	joueur = col.find_one({'name':name})
 
@@ -59,13 +61,14 @@ def user_connect():
 	session['id'] = identifiant
 	session['name'] = name
 
+	return "success", 200
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
 		session['name'] = name
 
 		if (joueur['password'] != password or joueur['last_update'] != tools.parsing.getCycleNumber()):
 			syslog.syslog("Update password of player %s" % identifiant)
-			os.system("%s %s %s \"%s\" &" % (config.get("Tools", "Update"), identifiant, password, name))
+			os.system("%s %s %s \"%s\" %s %s &" % (config.get("Tools", "Update"), identifiant, password, name, db_host, db_port))
 
 		col.update({"id":identifiant},{"$set":{"password":password}})
 		col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
@@ -116,14 +119,14 @@ def getcyclenumber():
 	
 	return Response(json.dumps(data, default=json_util.default), mimetype='application/json')
 
-@app.route('/get/<num_tour>', methods=['GET'], strict_slashes=False)
-def get(num_tour):
+@app.route('/get/<num_cycle>', methods=['GET'], strict_slashes=False)
+def get(num_cycle):
 
 	if 'id' in session:
 
 		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
-		db = client['test']
-		col = db["tour_%s" % num_tour]
+		db = client['radars']
+		col = db["cycle_%s" % num_cycle]
 
 		data = []
 
@@ -154,11 +157,11 @@ def get(num_tour):
 		ret = '{ "interest" : { "x":%s, "y":%s },' % (x,y)
 		ret += '"datas" : [' + ','.join(data) + ']'
 		ret += '}'
-		syslog.syslog("%s gets map for cycle %s" % (session['id'], num_tour))
+		syslog.syslog("%s gets map for cycle %s" % (session['id'], num_cycle))
 
 		return ret
 
-	syslog.syslog("Someone tried to get map for cycle %s without to be connected" % num_tour)
+	syslog.syslog("Someone tried to get map for cycle %s without to be connected" % num_cycle)
 	return "Vous n'êtes pas identifié."
 
 @app.route('/get/friendshiprequests', methods=['GET'], strict_slashes=False)

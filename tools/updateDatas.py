@@ -6,8 +6,9 @@ import parsing
 import database
 import sys
 import syslog
+import ConfigParser
 
-def update(identifiant, password, name):
+def update(identifiant, password, name, db_host, db_port):
 
 	syslog.openlog()
 
@@ -17,8 +18,8 @@ def update(identifiant, password, name):
 	
 	cookies = connection.connect(identifiant, password)
 	datas = parsing.getAllDatas(cookies, name)
-	database.insertAllDatas(datas, name, cycle)
-	database.updateCycleNumber(name, cycle)
+	database.insertAllDatas(datas, name, cycle, db_host, db_port)
+	database.updateCycleNumber(name, cycle, db_host, db_port)
 
 
 if __name__ == '__main__':
@@ -31,4 +32,9 @@ if __name__ == '__main__':
 	password = sys.argv[2]
 	name = sys.argv[3]
 
-	update(identifiant, password, name)
+    	config = ConfigParser.ConfigParser()
+    	config.read("webserver.conf")
+    	db_host = config.get("MongoDB", "Host")
+	db_port = config.getint("MongoDB", "Port")
+
+	update(identifiant, password, name, db_host, db_port)
