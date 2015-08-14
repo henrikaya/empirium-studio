@@ -49,13 +49,13 @@ def user_connect():
 	joueur = col.find_one({'name':name})
 
 	if (joueur == None):
-		syslog.syslog("Someone tried to connect as %s, but this name is unknown" % name)
+		syslog.syslog("Someone tried to connect as %s, but this name is unknown (IP : %s)" % (name, request.remote_addr))
 		return "player unknown"
 
 	if (joueur.has_key("id")):
 		identifiant = joueur['id']
 	else:
-		syslog.syslog("Someone tried to connect as %s - this name is known but there is no id associated" % name)
+		syslog.syslog("Someone tried to connect as %s - this name is known but there is no id associated (IP : %s)" % (name, request.remote_addr))
 		return "player known but id unknown"
 
 	session['id'] = identifiant
@@ -71,14 +71,14 @@ def user_connect():
 
 		col.update({"id":identifiant},{"$set":{"password":password}})
 		col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
-		syslog.syslog("%s (%s) connected" % (name, identifiant))
+		syslog.syslog("%s (%s) connected (IP : %s)" % (name, identifiant, request.remote_addr))
 		return "success"
 	else:
-		syslog.syslog("%s (%s) tried to connect - wrong password or cycle processing" % (name, identifiant))
+		syslog.syslog("%s (%s) tried to connect - wrong password or cycle processing (IP : %s)" % (name, identifiant, request.remote_addr))
 		session.pop('id', None)
 		return "wrong password"
 
-	syslog.syslog("Internal error during connection of %s" % name)
+	syslog.syslog("Internal error during connection of %s (IP : %s)" % (name, request.remote_addr))
 	return "Erreur interne du serveur. Contactez un administrateur (LG)."
 
 @app.route('/getplayers', methods=['GET', 'POST'], strict_slashes=False)
@@ -104,18 +104,23 @@ def getplayers():
 	
 	ret += "</options>"
 
-	syslog.syslog("Someone gets players XML")
+	syslog.syslog("Someone gets players XML (IP : %s)" % request.remote_addr)
 
 	return Response(ret, mimetype='text/xml');
 
 @app.route('/getcyclenumber', methods=['GET'], strict_slashes=False)
 def getcyclenumber():
 
-	syslog.syslog("Someone gets cycle number")
+	syslog.syslog("Someone gets cycle number (IP : %s)" % request.remote_addr)
 
 	data = {}
 	data['num'] = tools.parsing.getCycleNumber()
-	
+
+	if data['num'] == -1:
+		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
+		cycles = client['radars'].collection_names(include_system_collections=False)
+		data['num'] = int( max(cycles)[6:])
+
 	return Response(json.dumps(data, default=json_util.default), mimetype='application/json')
 
 @app.route('/get/<num_cycle>', methods=['GET'], strict_slashes=False)
@@ -156,11 +161,11 @@ def get(num_cycle):
 		ret = '{ "interest" : { "x":%s, "y":%s },' % (x,y)
 		ret += '"datas" : [' + ','.join(data) + ']'
 		ret += '}'
-		syslog.syslog("%s gets map for cycle %s" % (session['id'], num_cycle))
+		syslog.syslog("%s gets map for cycle %s (IP : %s)" % (session['id'], num_cycle, request.remote_addr))
 
 		return ret
 
-	syslog.syslog("Someone tried to get map for cycle %s without to be connected" % num_cycle)
+	syslog.syslog("Someone tried to get map for cycle %s without to be connected (IP : %s)" % (num_cycle, request.remote_addr))
 	return "Vous n'êtes pas identifié."
 
 @app.route('/get/friendshiprequests', methods=['GET'], strict_slashes=False)
@@ -325,14 +330,14 @@ def request_friendship(req):
 				# if player from "to" attributes exists
 				if col_players.find_one({"name":f_request['to']}) != None:
 					col.insert(post)
-					syslog.syslog("%s (%s) sends a friendship request to %s" % (session['name'], session['id'], f_request["to"]))
+					syslog.syslog("%s (%s) sends a friendship request to %s (IP : %s)" % (session['name'], session['id'], f_request["to"], request.remote_addr))
 					return "allies request sent", 200
 				else:
 					return "player does not exist", 200
 
 		return "", 200
 
-	syslog.syslog("Someone tried to send a friendship request to %s" % "a")
+	syslog.syslog("Someone tried to send a friendship request (IP : %s)" % request.remote_addr)
 	return "Vous n'êtes pas identifié", 300
 
 @app.route('/request/cancelfriendship/<req>', methods=['GET'], strict_slashes=False)
@@ -397,7 +402,7 @@ def request_cancelfriendshiprequest(req):
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
-    syslog.syslog("Someone gets index.html")
+    syslog.syslog("Someone gets index.html (IP : %s)" % request.remote_addr)
     return render_template('index.html')
 
 if __name__ == '__main__':

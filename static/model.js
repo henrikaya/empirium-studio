@@ -58,7 +58,7 @@ function Background(x, y) {
 
 }
 
-function Planet(_id, from, id, image, name, owner, type, x, y) {
+function Planet(_id, from, id, image, name, owner, owner_id, type, x, y) {
 
     	this._id = _id;
 	this.from = from;
@@ -66,6 +66,7 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 	this.image = image;
 	this.name = name;
 	this.owner = owner;
+	this.owner_id = owner_id;
 	this.type = type;
 	this.x = x;
 	this.y = y;
@@ -75,7 +76,7 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 	this.toString = function() {
 		ret = "Planète " + this.id + " - " + this.name + "\n";
 		ret += "MongoDB ID : " + this._id + "\n";
-		ret += "Propriétaire : " + this.owner + "\n";
+		ret += "Propriétaire : " + this.owner_id + "\n";
 		ret += "Position : " + this.x + "/" + this.y;
 
 		return ret;
@@ -97,25 +98,23 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 			$('#description-title').text("<Sans nom>");
 		}
 		$('#description-subtitle').text("Planète " + id);
-		$('#description-section1').text("Localisation : " + x + "/" + y);
-		$('#description-section2').text("Propriétaire : " + owner);
-		$('#description-section3').text("");
+		$('#title-description-section1').text("Coordonnées :");
+		$('#description-section1').text(x + " / " + y);
+		$('#title-description-section3').text("Propriétaire :");
+		$('#description-section3').text(owner);
+		$('#description-section3-image').attr("src", "static/images/players/" + owner_id + ".jpg");
+		$('#title-description-section2').hide();
+		$('#description-section2').hide();
+		$('#description-section2-image').hide();
 		$('#description-image').attr("src","static/images/planete_bleue.png");
 		$('#description').show();
 
 		//TODO: replace these 10 lines by a call to initPositions()
 		var posDescription = $('#description').offset();
-		posDescription.top = $('#nav').height();
-		posDescription.left = $(window).width() - $('#description').width() - 15;
+		posDescription.top = $('#nav').height() + 20;
+		posDescription.left = $(window).width() - $('#description').width() - 20;
 		$('#description').offset(posDescription);
-		$('#description').height($(window).height() - $('#nav').height());
-
-		$('#description-close').height(25).width(25);
-		var posDescClose = $('#description-close').offset();
-		posDescClose.top = $('#nav').height() + 10;
-		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
-		$('#description-close').offset(posDescClose);
-
+		$('#description').height($(window).height() - $('#nav').height() - 40);
 	}
 	mysprite.interactive = true;
 	mysprite.buttonMode = true;
@@ -123,7 +122,7 @@ function Planet(_id, from, id, image, name, owner, type, x, y) {
 	this.sprite = mysprite;
 }
 
-function Ship(_id, from, id, image, name, owner, type, model, x, y) {
+function Ship(_id, from, id, image, name, owner, owner_id, type, model, x, y) {
 
     	this._id = _id;
 	this.from = from;
@@ -131,6 +130,7 @@ function Ship(_id, from, id, image, name, owner, type, model, x, y) {
 	this.name = name;
 	this.image = "";
 	this.owner = owner;
+	this.owner_id = owner_id;
 	this.type = type;
 	this.model = model;
 	this.x = x;
@@ -160,7 +160,7 @@ function Ship(_id, from, id, image, name, owner, type, model, x, y) {
 		ret = "Vaisseau " + this.id + " - " + this.name + "\n";
 		ret += "MongoDB ID : " + this._id + "\n";
 		ret += "Type : " + this.image + "\n";
-		ret += "Propriétaire : " + this.owner + "\n";
+		ret += "Propriétaire : " + this.owner_id + "\n";
 		ret += "Position : " + this.x + "/" + this.y;
 		return ret;
 	}
@@ -177,9 +177,15 @@ function Ship(_id, from, id, image, name, owner, type, model, x, y) {
 			$('#description-title').text("<Sans nom>");
 		}
 		$('#description-subtitle').text("Vaisseau " + id);
+		$('#title-description-section1').text("Modèle :");
 		$('#description-section1').text(model);
-		$('#description-section2').text("Localisation : " + x + "/" + y);
-		$('#description-section3').text("Propriétaire : " + owner);
+		$('#title-description-section2').text("Coordonnées :");
+		$('#description-section2').text(x + " / " + y);
+		$('#title-description-section2').show();
+		$('#description-section2').show();
+		$('#title-description-section3').text("Propriétaire :");
+		$('#description-section3').text(owner);
+		$('#description-section3-image').attr("src", "static/images/players/" + owner_id + ".jpg");
 
 		if (image in textures) {
 			path = "static/images/ships/" + image;
@@ -194,16 +200,10 @@ function Ship(_id, from, id, image, name, owner, type, model, x, y) {
 
 		//TODO: replace these 10 lines by a call to initPositions()
 		var posDescription = $('#description').offset();
-		posDescription.top = $('#nav').height();
-		posDescription.left = $(window).width() - $('#description').width() - 15;
+		posDescription.top = $('#nav').height() + 20;
+		posDescription.left = $(window).width() - $('#description').width() - 20;
 		$('#description').offset(posDescription);
-		$('#description').height($(window).height() - $('#nav').height());
-
-		$('#description-close').height(25).width(25);
-		var posDescClose = $('#description-close').offset();
-		posDescClose.top = $('#nav').height() + 10;
-		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
-		$('#description-close').offset(posDescClose);
+		$('#description').height($(window).height() - $('#nav').height() - 40);
 
 	}
 	mysprite.interactive = true;
@@ -243,25 +243,22 @@ function Vortex(_id, from, id, type, destination, x, y) {
 	mysprite.position.y = -y;
 	mysprite.mousedown = mysprite.tap = function(data) {
 		$('#description-title').text("Vortex " + id);
-		$('#description-subtitle').text("Destination : " + destination);
-		$('#description-section1').text("Localisation : " + x + "/" + y);
+		$('#description-subtitle').text(destination);
+		$('#title-description-section1').text("Coordonnées :");
+		$('#description-section1').text(x + " / " + y);
+		$('#title-description-section2').text("");
 		$('#description-section2').text("");
+		$('#title-description-section3').text("");
 		$('#description-section3').text("");
 		$('#description-image').attr("src","static/images/vortex.png");
 		$('#description').show();
 
-		//TODO: replace these 10 lines by a call to initPositions()
+		//TODO: replace these lines by a call to initPositions()
 		var posDescription = $('#description').offset();
-		posDescription.top = $('#nav').height();
-		posDescription.left = $(window).width() - $('#description').width() - 15;
+		posDescription.top = $('#nav').height() + 20;
+		posDescription.left = $(window).width() - $('#description').width() - 20;
 		$('#description').offset(posDescription);
-		$('#description').height($(window).height() - $('#nav').height());
-
-		$('#description-close').height(25).width(25);
-		var posDescClose = $('#description-close').offset();
-		posDescClose.top = $('#nav').height() + 10;
-		posDescClose.left = $(window).width() - $('#description-close').width() - 10;
-		$('#description-close').offset(posDescClose);
+		$('#description').height($(window).height() - $('#nav').height() - 40);
 
 	}
 	mysprite.interactive = true;

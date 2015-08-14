@@ -172,11 +172,11 @@ $(function () {
 
             o = objs.datas[i];
             if (o.type == "Vaisseau") {
-                var ship = new Ship(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.type, o.model, o.x, o.y);
+                var ship = new Ship(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.owner_id, o.type, o.model, o.x, o.y);
                 map.add(ship);
             }
             else if (o.type == "Planete") {
-                var planet = new Planet(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.type, o.x, o.y);
+                var planet = new Planet(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.owner_id, o.type, o.x, o.y);
                 map.add(planet);
             }
             else if (o.type == "Vortex") {
@@ -199,7 +199,7 @@ $(function () {
 
         initPositions();
 
-        zoomIndex = 10;
+        zoomIndex = 21;
         scrollArea.scale.x = zoomList[zoomIndex];
         scrollArea.scale.y = zoomList[zoomIndex];
 

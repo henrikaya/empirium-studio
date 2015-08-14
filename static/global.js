@@ -40,16 +40,4 @@ function initPositions() {
 	posMap.left = 0;
 	$('#map').offset(posMap);
 
-	var posDescription = $('#description').offset();
-	posDescription.top = $('#nav').height();
-	// TODO: replace "15" by css padding value
-	posDescription.left = $(window).width() - $('#description').width() - 15;
-	$('#description').offset(posDescription);
-	$('#description').height($(window).height() - $('#nav').height());
-
-	$('#description-close').height(25).width(25);
-	var posDescClose = $('#description-close').offset();
-	posDescClose.top = $('#nav').height() + 10;
-	posDescClose.left = $(window).width() - $('#description-close').width() - 10;
-	$('#description-close').offset(posDescClose);
 }

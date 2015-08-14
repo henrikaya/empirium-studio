@@ -14,45 +14,101 @@
 }
 
 #description {
-  padding: 12px;
-  background-color: #333333;
+  background-color: white;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  width: 250px;
+  width: 270px;
+}
+
+#title-description-section1 {
+	margin: 10px;
+	font-family: "Century Gothic";
+	font-size: 13px;
+	color: #ff9933;
+	float: left;
+	font-weight: bold;
 }
 
 #description-section1 {
-	font-family: "Helvetica";
-	font-size: 14px;
-	text-align: center;
-	color: white;
+	margin: 10px;
+	font-family: "Century Gothic";
+	font-size: 13px;
+	color: black;
+	float: right;
+}
+
+#title-description-section2 {
+	margin: 10px;
+	font-family: "Century Gothic";
+	font-size: 13px;
+	color: #ff9933;
+	float: left;
+	font-weight: bold;
 }
 
 #description-section2 {
-	font-family: "Helvetica";
-	font-size: 14px;
+	margin: 10px;
+	font-family: "Century Gothic";
+	font-size: 13px;
 	text-align: center;
-	color: white;
+	color: black;
+	float: right;
+}
+
+#title-description-section3 {
+	margin: 10px;
+	font-family: "Century Gothic";
+	font-size: 13px;
+	color: #ff9933;
+	float: left;
+	font-weight: bold;
+	line-height: 68px;
+}
+
+#description-section3-container {
+	text-align: right;
+	float: right;
 }
 
 #description-section3 {
-	font-family: "Helvetica";
-	font-size: 14px;
+	margin: 10px;
+	font-family: "Century Gothic";
+	font-size: 13px;
 	text-align: center;
-	color: white;
+	color: black;
+}
+
+#description-section3-image {
+	margin: 10px;
+	width: 60px;
+	height: 60px;
+	margin-bottom: -8px;
+}
+
+#description-zone-title {
+	
+	background-color: #ee8822;
+	height: 40px;
+	line-height: 40px;
+}
+
+#description-zone-title img {
+	width: 40px;
+	height: 40px;
+	float: right;
 }
 
 #description-title {
-	font-family: "Helvetica";
-	font-size: 19px;
-	font-weight: bold;
+	font-family: "Century Gothic";
+	font-size: 18px;
 	text-align: center;
 	color: white;
 }
 
 #description-subtitle {
-	font-family: "Helvetica";
+	margin: 10px;
+	font-family: "Century Gothic";
 	font-size: 15px;
 	text-align: center;
-	color: white;
+	color: black;
 }
 

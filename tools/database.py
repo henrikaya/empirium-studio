@@ -3,10 +3,27 @@
 
 from pymongo import MongoClient
 import syslog
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 EQU_MATRIX = {}
 
-def insertData(data, db, name, cycle):
+def getPlayersList(db_host, db_port):
+
+    	client = MongoClient(db_host, db_port)
+	col = client['players']['players']
+
+	out = {}
+	for player in col.find():
+		out[str(player['name']).encode("utf8")] = player['id']
+
+	out['Rebelles'] = 0
+
+	return out
+
+def insertData(data, db, name, cycle, playersList):
 
     if data["type"] == 'Vaisseau':
 
@@ -15,11 +32,11 @@ def insertData(data, db, name, cycle):
 	else:
 		model = EQU_MATRIX[data["image"][14:]]
 
-    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'from':[name], 'model':model}
+    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name], 'model':model}
 
     elif data["type"] == 'Planete':
 
-    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'from':[name]}
+    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name]}
 
     else:
 
@@ -101,9 +118,11 @@ def insertAllDatas(datas, name, cycle, db_host, db_port):
     client = MongoClient(db_host, db_port)
     db = client['radars']
 
+    playersList = getPlayersList(db_host, db_port)
+
     for data in datas:
 	try:
-		insertData(data, db, name, cycle)
+		insertData(data, db, name, cycle, playersList)
 	except Exception, e:
 		syslog.syslog("Exception during data insertion : %s" % e)
 
