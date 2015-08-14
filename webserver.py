@@ -58,9 +58,6 @@ def user_connect():
 		syslog.syslog("Someone tried to connect as %s - this name is known but there is no id associated (IP : %s)" % (name, request.remote_addr))
 		return "player known but id unknown"
 
-	session['id'] = identifiant
-	session['name'] = name
-
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
 		session['name'] = name
@@ -73,8 +70,18 @@ def user_connect():
 		col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
 		syslog.syslog("%s (%s) connected (IP : %s)" % (name, identifiant, request.remote_addr))
 		return "success"
+	# If game status is "cycle processing"
+	elif tools.parsing.getCycleNumber() == -1:
+		if joueur['password'] == password:
+			session['id'] = identifiant
+			session['name'] = name
+			return "success"
+		else:
+			syslog.syslog("%s (%s) tried to connect - wrong password (IP : %s)" % (name, identifiant, request.remote_addr))
+			session.pop('id', None)
+			return "wrong password"
 	else:
-		syslog.syslog("%s (%s) tried to connect - wrong password or cycle processing (IP : %s)" % (name, identifiant, request.remote_addr))
+		syslog.syslog("%s (%s) tried to connect - wrong password (IP : %s)" % (name, identifiant, request.remote_addr))
 		session.pop('id', None)
 		return "wrong password"
 
