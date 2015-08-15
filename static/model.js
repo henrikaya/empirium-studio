@@ -90,7 +90,6 @@ function Planet(_id, from, id, image, name, owner, owner_id, type, x, y) {
 	mysprite.position.y = -y;
 	mysprite.mousedown = mysprite.tap = function(data) {
 
-		console.log(window.event);
 		if (name != '' && name != "\n") {
 			$('#description-title').text(name);
 		}
@@ -115,6 +114,10 @@ function Planet(_id, from, id, image, name, owner, owner_id, type, x, y) {
 		posDescription.left = $(window).width() - $('#description').width() - 20;
 		$('#description').offset(posDescription);
 		$('#description').height($(window).height() - $('#nav').height() - 40);
+
+		// Defines "hit circle"
+		view.selectionX = this.position.x;
+		view.selectionY = this.position.y;
 	}
 	mysprite.interactive = true;
 	mysprite.buttonMode = true;
@@ -169,6 +172,7 @@ function Ship(_id, from, id, image, name, owner, owner_id, type, model, x, y) {
 	mysprite.anchor.y = 0.5;
 	mysprite.position.x = x;
 	mysprite.position.y = -y;
+
 	mysprite.mousedown = mysprite.tap = function(data) {
 		if (name != '' && name != "\n") {
 			$('#description-title').text(name);
@@ -205,6 +209,9 @@ function Ship(_id, from, id, image, name, owner, owner_id, type, model, x, y) {
 		$('#description').offset(posDescription);
 		$('#description').height($(window).height() - $('#nav').height() - 40);
 
+		// Defines "hit circle"
+		view.selectionX = this.position.x;
+		view.selectionY = this.position.y;
 	}
 	mysprite.interactive = true;
 	mysprite.buttonMode = true;
@@ -260,6 +267,9 @@ function Vortex(_id, from, id, type, destination, x, y) {
 		$('#description').offset(posDescription);
 		$('#description').height($(window).height() - $('#nav').height() - 40);
 
+		// Defines "hit circle"
+		view.selectionX = this.position.x;
+		view.selectionY = this.position.y;
 	}
 	mysprite.interactive = true;
 	mysprite.buttonMode = true;

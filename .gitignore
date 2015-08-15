@@ -2,3 +2,4 @@
 *~
 static/images/players/*.jpg
 data
+static/playersList.js

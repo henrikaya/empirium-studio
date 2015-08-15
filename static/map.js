@@ -14,9 +14,18 @@ function View() {
 	this.amouseX = 0;
 	this.amouseY = 0;
 
-	// Sore mouse coordonates (current, and absolute (relative to window))
+	// Store mouse coordonates (current, and absolute (relative to window))
 	this.amouseAbsX = 0;
 	this.amouseAbsY = 0;
+
+	// Store selected element position
+	this.selectionX = 0;
+	this.selectionY = 0;
+	this.selectionAlpha = 1.0;
+	this.selectionAlphaStep = 0.01;
+	this.selectionAlphaMin = 0.2;
+	this.selectionAlphaMax = 1.0;
+	this.selectionAlphaDirection = -1;
 
 	// Center map on x,y
 	this.center = function(x,y) {
@@ -105,7 +114,7 @@ function initSector(key) {
 function initPixi() {
 
 	stage = new PIXI.Stage(0x000000);
-    renderer = PIXI.autoDetectRenderer($(window).width(), $(window).height());
+    	renderer = PIXI.autoDetectRenderer($(window).width(), $(window).height(), {antialias: true});
 
 	var x = document.getElementById("map");
 	x.appendChild(renderer.view);
@@ -222,6 +231,7 @@ function initPixi() {
 	initSector("F6");
 	initSector("F7");
 
+	hitCircle = new PIXI.Graphics();
 }
 
 function bindMap() {
@@ -242,6 +252,7 @@ function bindMap() {
 		scrollArea.addChild(map.ships[i].sprite);
 	}
 
+	scrollArea.addChild(hitCircle);
 }
 
 function setSectorPos(key, row, column) {
@@ -331,6 +342,17 @@ function animate() {
 	setSectorPos("F5", 5, 5);
 	setSectorPos("F6", 5, 6);
 	setSectorPos("F7", 5, 7);
+
+	// Draw "hit circle"
+	view.selectionAlpha += view.selectionAlphaDirection * view.selectionAlphaStep;
+	if (view.selectionAlpha < view.selectionAlphaMin || view.selectionAlpha > view.selectionAlphaMax) {
+		view.selectionAlphaDirection *= -1;
+	}
+
+	hitCircle.clear();
+	hitCircle.lineStyle(0.04, 0xFF9933, view.selectionAlpha);
+	hitCircle.fillAlpha = 0;
+	hitCircle.drawCircle(view.selectionX - 0.5, view.selectionY - 0.5, 0.8);
 
 	renderer.render(stage);
 }

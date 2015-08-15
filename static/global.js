@@ -16,6 +16,7 @@ var scrollArea;
 var sectors;
 var sectorsName;
 var view;
+var hitCircle;
 
 var zoomIndex;
 var zoomList = [0.8,1.1,1.5,1.9,2.5,3.2,4,4.8,6,7.5,10,12,15,17.5,20,25,30,35,40,45,50,57,65,74,85,97,115]
