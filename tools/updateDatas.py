@@ -17,6 +17,7 @@ def update(identifiant, password, name, db_host, db_port):
 	syslog.syslog("Update datas for %s (%s)" % (name, identifiant))
 	
 	cookies = connection.connect(identifiant, password)
+	connection.loadGalaxy(cookies, "Aon")
 	datas = parsing.getAllDatas(cookies, name)
 	database.insertAllDatas(datas, name, cycle, db_host, db_port)
 	database.updateCycleNumber(name, cycle, db_host, db_port)

@@ -3,6 +3,8 @@
 
 import urllib, urllib2
 import cookielib
+from bs4 import BeautifulSoup
+from lxml import etree
 
 def connect(id,password):
 	cookies = cookielib.LWPCookieJar() 
@@ -39,3 +41,20 @@ def isPasswordCorrect(identifiant, password):
 		return True
 	else:
 		return False
+
+def loadGalaxy(cookies, name):
+
+	url = ""
+	if name == "Aon":
+		url = "http://v2.empirium.net/console.php?ChargerGalaxie=3"
+	elif name == "Academia":
+		url = "http://v2.empirium.net/console.php?ChargerGalaxie=4"
+	else:
+		return
+
+	opener = urllib2.build_opener() 
+	opener.addheaders.append(('Cookie', "; ".join('%s=%s' % (cookie.name,cookie.value) for cookie in cookies))) 
+	f = opener.open(url) 
+
+	return
+

@@ -42,7 +42,7 @@ def getShipLinks(cookies):
 	
 	opener2 = urllib2.build_opener() 
 	opener2.addheaders.append(('Cookie', "; ".join('%s=%s' % (cookie.name,cookie.value) for cookie in cookies))) 
-	f = opener2.open("http://v2.empirium.net/pan.php3") 
+	f = opener2.open("http://v2.empirium.net/pan.php3?th=com") 
 	data = f.read() 
 	html = etree.HTML(data) 
 	result = etree.tostring(html, pretty_print=True, method="html") 
@@ -473,7 +473,7 @@ def getAllDatas(cookies, playerName):
 	
 	linksShips = getShipLinks(cookies)
 	linksPlanets = getPlanetLinks(cookies)
-	
+
 	datas = []
 	group_links = []
 
