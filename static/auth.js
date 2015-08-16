@@ -172,18 +172,22 @@ $(function () {
 
             o = objs.datas[i];
             if (o.type == "Vaisseau") {
-                var ship = new Ship(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.owner_id, o.type, o.model, parseInt(o.x), parseInt(o.y));
+                var ship = new Ship(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.owner_id, o.type, o.model, parseInt(o.x), parseInt(o.y), o.neighbors);
                 map.add(ship);
             }
             else if (o.type == "Planete") {
-                var planet = new Planet(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.owner_id, o.type, parseInt(o.x), parseInt(o.y));
+                var planet = new Planet(o._id.$oid, o.from, o.id, o.image, o.nom, o.owner, o.owner_id, o.type, parseInt(o.x), parseInt(o.y), o.neighbors);
                 map.add(planet);
             }
             else if (o.type == "Vortex") {
-                var vortex = new Vortex(o._id.$oid, o.from, o.id, o.type, o.destination, parseInt(o.x), parseInt(o.y));
+                var vortex = new Vortex(o._id.$oid, o.from, o.id, o.type, o.destination, parseInt(o.x), parseInt(o.y), o.neighbors);
                 map.add(vortex);
             }
-
+            else if (o.type == "Group") {
+                var group = new Group(o.from, parseInt(o.x), parseInt(o.y), o.quantity, o.composition);
+                map.add(group);
+            }
+	    
         }
 
         var background = new Background(80,80);

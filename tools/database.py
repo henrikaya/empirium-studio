@@ -10,6 +10,66 @@ sys.setdefaultencoding('utf-8')
 
 EQU_MATRIX = {}
 
+def computeNumberNeighbors(cycle, db_host, db_port, name, playersList):
+
+    	client = MongoClient(db_host, db_port)
+	col = client['radars']['cycle_%s' % cycle]
+
+	for element in col.find({"neighbors":0}):
+		# Update number of neighbors
+		x = element['x']
+		y = element['y']
+		neighbors = col.find({'x':x, 'y':y, 'type':{'$ne':'Group'}})
+		n = neighbors.count() - 1
+	    	col.update({"id":element["id"]}, {"$set":{"neighbors":n}}, multi=False)
+
+		# Create group if it doesn't exist
+		if n > 0:
+		    if col.find({'x':x, 'y':y, 'type':'Group'}).count() == 0:
+
+			# Count number of elements for each owner
+			owners = {}
+			for neighbor in neighbors:
+				if owners.has_key(neighbor['owner']):
+					if owners[neighbor['owner']].has_key(neighbor['model']):
+						if neighbor.has_key('model'):
+							owners[neighbor['owner']][neighbor['model']]['quantity'] += 1
+						else:
+							owners[neighbor['owner']][neighbor['type']]['quantity'] += 1
+					else:
+						if neighbor.has_key('model'):
+							owners[neighbor['owner']][neighbor['model']] = {}
+							owners[neighbor['owner']][neighbor['model']]['quantity'] = 1
+							image = neighbor['image'].split("/")[3]
+							owners[neighbor['owner']][neighbor['model']]['image'] = image
+						else:
+							owners[neighbor['owner']][neighbor['type']] = {}
+							owners[neighbor['owner']][neighbor['type']]['quantity'] = 1
+							image = neighbor['image'].split("/")[3]
+							owners[neighbor['owner']][neighbor['type']]['image'] = image
+				else:
+					owners[neighbor['owner']] = {}
+					if neighbor.has_key('model'):
+						owners[neighbor['owner']][neighbor['model']] = {}
+						owners[neighbor['owner']][neighbor['model']]['quantity'] = 1
+						image = neighbor['image'].split("/")[3]
+						owners[neighbor['owner']][neighbor['model']]['image'] = image
+					else:
+						owners[neighbor['owner']][neighbor['type']] = {}
+						owners[neighbor['owner']][neighbor['type']]['quantity'] = 1
+						image = neighbor['image'].split("/")[3]
+						owners[neighbor['owner']][neighbor['type']]['image'] = image
+
+			# Format elements and insert it
+			elements = []
+			for owner in owners:
+				element = []
+				for model in owners[owner]:
+					element.append( {"model":model, "quantity":owners[owner][model]['quantity'], "image":owners[owner][model]['image']} )
+				player_id = playersList[owner.encode("utf8")]
+				elements.append( {"elements":element, "name":owner, "id":player_id} ) 
+			col.insert({'x':x, 'y':y, 'type':'Group', 'from':[name], 'quantity':n+1, 'composition':elements})
+
 def getPlayersList(db_host, db_port):
 
     	client = MongoClient(db_host, db_port)
@@ -32,15 +92,15 @@ def insertData(data, db, name, cycle, playersList):
 	else:
 		model = EQU_MATRIX[data["image"][14:]]
 
-    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name], 'model':model}
+    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name], 'model':model, 'neighbors':0}
 
     elif data["type"] == 'Planete':
 
-    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name]}
+    	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name], 'neighbors':0}
 
     else:
 
-	post = {'type':data["type"], 'id':data["id"], 'destination':data["destination"], 'x':data["x"], 'y':data["y"], 'from':[name]}
+	post = {'type':data["type"], 'id':data["id"], 'destination':data["destination"], 'x':data["x"], 'y':data["y"], 'from':[name], 'neighbors':0}
 
     col = db['cycle_%s' % cycle]
 
@@ -125,6 +185,11 @@ def insertAllDatas(datas, name, cycle, db_host, db_port):
 		insertData(data, db, name, cycle, playersList)
 	except Exception, e:
 		syslog.syslog("Exception during data insertion : %s" % e)
+
+    try:
+    	computeNumberNeighbors(cycle, db_host, db_port, name, playersList)
+    except Exception, e:
+	syslog.syslog("Exception during number of neighbors computation : %s" % e)
 
     syslog.openlog()
     syslog.syslog("Datas imported from %s's radars" % name)

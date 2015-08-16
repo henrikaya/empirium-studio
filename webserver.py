@@ -147,7 +147,7 @@ def get(num_cycle):
 
 		allies.append(session["name"])
 
-		for value in col.find({"from":{"$in":allies}}):
+		for value in col.find({ "$and":[ {"from":{"$in":allies}}, {"$or":[{"neighbors":0},{"type":"Group"}]} ]}):
 			elmt = json.dumps(value, sort_keys=True, indent=4, default=json_util.default)
 			data.append(str(elmt))
 

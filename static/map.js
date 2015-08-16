@@ -157,6 +157,29 @@ function initPixi() {
 	textures["frg_28.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_28.gif");
 	textures["frg_29.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_29.gif");
 
+	textures_groups = {};
+	textures_groups["2"] = PIXI.Texture.fromImage("static/images/groups/2.png");
+	textures_groups["3"] = PIXI.Texture.fromImage("static/images/groups/3.png");
+	textures_groups["4"] = PIXI.Texture.fromImage("static/images/groups/4.png");
+	textures_groups["5"] = PIXI.Texture.fromImage("static/images/groups/5.png");
+	textures_groups["6"] = PIXI.Texture.fromImage("static/images/groups/6.png");
+	textures_groups["7"] = PIXI.Texture.fromImage("static/images/groups/7.png");
+	textures_groups["8"] = PIXI.Texture.fromImage("static/images/groups/8.png");
+	textures_groups["9"] = PIXI.Texture.fromImage("static/images/groups/9.png");
+	textures_groups["1X"] = PIXI.Texture.fromImage("static/images/groups/1X.png");
+	textures_groups["2X"] = PIXI.Texture.fromImage("static/images/groups/2X.png");
+	textures_groups["3X"] = PIXI.Texture.fromImage("static/images/groups/3X.png");
+	textures_groups["4X"] = PIXI.Texture.fromImage("static/images/groups/4X.png");
+	textures_groups["5X"] = PIXI.Texture.fromImage("static/images/groups/5X.png");
+	textures_groups["6X"] = PIXI.Texture.fromImage("static/images/groups/6X.png");
+	textures_groups["7X"] = PIXI.Texture.fromImage("static/images/groups/7X.png");
+	textures_groups["8X"] = PIXI.Texture.fromImage("static/images/groups/8X.png");
+	textures_groups["9X"] = PIXI.Texture.fromImage("static/images/groups/9X.png");
+	textures_groups["1XX"] = PIXI.Texture.fromImage("static/images/groups/1XX.png");
+	textures_groups["2XX"] = PIXI.Texture.fromImage("static/images/groups/2XX.png");
+	textures_groups["3XX"] = PIXI.Texture.fromImage("static/images/groups/3XX.png");
+	textures_groups["4XX"] = PIXI.Texture.fromImage("static/images/groups/4XX.png");
+
 	stage.addChild(scrollArea);
 
 	zoomIndex = 23;
@@ -241,15 +264,25 @@ function bindMap() {
 	}
 
 	for (i = 0; i < map.planets.length; i++) {
-		scrollArea.addChild(map.planets[i].sprite);
+		if (map.planets[i].neighbors == 0) {
+			scrollArea.addChild(map.planets[i].sprite);
+		}
 	}
 
 	for (i = 0; i < map.vortex.length; i++) {
-		scrollArea.addChild(map.vortex[i].sprite);
+		if (map.vortex[i].neighbors == 0) {
+			scrollArea.addChild(map.vortex[i].sprite);
+		}
 	}
 
 	for (i = 0; i < map.ships.length; i++) {
-		scrollArea.addChild(map.ships[i].sprite);
+		if (map.ships[i].neighbors == 0) {
+			scrollArea.addChild(map.ships[i].sprite);
+		}
+	}
+
+	for (i = 0; i < map.groups.length; i++) {
+		scrollArea.addChild(map.groups[i].sprite);
 	}
 
 	scrollArea.addChild(hitCircle);

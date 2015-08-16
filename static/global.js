@@ -9,6 +9,7 @@ var texture_ship;
 var texture_vortex;
 var texture_background;
 var textures;
+var textures_groups;
 
 var playersList;
 
