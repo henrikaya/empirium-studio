@@ -144,8 +144,10 @@ function initPixi() {
 	textures["frg_12.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_12.gif");
 	textures["frg_14.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_14.gif");
 	textures["frg_15.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_15.gif");
+	textures["frg_16.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_16.gif");
 	textures["frg_17.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_17.gif");
 	textures["frg_18.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_18.gif");
+	textures["frg_19.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_19.gif");
 	textures["frg_20.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_20.gif");
 	textures["frg_21.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_21.gif");
 	textures["frg_22.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_22.gif");
@@ -156,6 +158,7 @@ function initPixi() {
 	textures["frg_27.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_27.gif");
 	textures["frg_28.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_28.gif");
 	textures["frg_29.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_29.gif");
+	textures["frg_30.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_30.gif");
 
 	textures_groups = {};
 	textures_groups["2"] = PIXI.Texture.fromImage("static/images/groups/2.png");
