@@ -6,6 +6,8 @@ import cookielib
 from bs4 import BeautifulSoup
 from lxml import etree
 import syslog
+from pymongo import MongoClient
+import time
 
 def getCycleNumber():
 
@@ -81,7 +83,10 @@ def getGroupDatas(cookies, link, playerName):
 	# Recuperation du radar
 	op3 = urllib2.build_opener() 
 	op3.addheaders.append(('Cookie', "; ".join('%s=%s' % (cookie.name,cookie.value) for cookie in cookies))) 
-	f3 = op3.open("http://v2.empirium.net" + link[1:]) 
+	try:
+		f3 = op3.open("http://v2.empirium.net" + link[1:]) 
+	except Exception, e:
+		syslog.syslog("Error during getGroupDatas - player:%s - link:%s - error:%s" % (playerName, link, e))
 	d3 = f3.read()
 	h3 = etree.HTML(d3) 
 	r3 = etree.tostring(h3, pretty_print=True, method="html")
@@ -469,29 +474,47 @@ def getDatasPlanets(cookies, link, playerName):
 
 	return out
 
-def getAllDatas(cookies, playerName):
-	
+def getAllDatas(cookies, playerName, id_request, db_host, db_port):
+
+	client = MongoClient(db_host, db_port)
+	col_update = client['requests']['update']
+
+	cycle = getCycleNumber()
+
+	post = {}
+	post['player'] = playerName
+	post['status'] = 'processing'
+	post['analyze'] = 0
+	post['base'] = 0
+	post['groups'] = 0
+	post['cycle'] = cycle
+
 	linksShips = getShipLinks(cookies)
 	linksPlanets = getPlanetLinks(cookies)
 
 	datas = []
 	group_links = []
 
+	total_count = len(linksShips)
+	total_count += len(linksPlanets)
+
 	for i in range(len(linksShips)):
 		shipDatas, group_link = getDatas(cookies, linksShips[i], playerName)
 		group_links.extend(group_link)
 		datas.extend(shipDatas)
-		print "{0:.0f}% ships's radars processed...".format(float(i+1)/len(linksShips) * 100)
+		percent = float(i+1)/total_count
+		col_update.update({'id':id_request,'status':'processing', 'cycle':cycle},{'$set':{'analyze':percent}})
 
 	group_links = list(set(group_links))
 	for i in range(len(group_links)):
 		datas.extend(getGroupDatas(cookies, group_links[i], playerName))
-		print "{0:.0f}% groups of ships processed...".format(float(i+1)/len(group_links) * 100)
 
 	for i in range(len(linksPlanets)):
 		datas.extend(getDatasPlanets(cookies, linksPlanets[i], playerName))
-		print "{0:.0f}% planets's radars processed...".format(float(i+1)/len(linksPlanets) * 100)
+		percent = float(i+1 + len(linksShips))/total_count
+		col_update.update({'id':id_request,'status':'processing', 'cycle':cycle},{'$set':{'analyze':percent}})
 
+	
 	return datas
 
 if __name__ == "__main__":

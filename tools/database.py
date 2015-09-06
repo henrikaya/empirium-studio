@@ -10,12 +10,16 @@ sys.setdefaultencoding('utf-8')
 
 EQU_MATRIX = {}
 
-def computeNumberNeighbors(cycle, db_host, db_port, name, playersList):
+def computeNumberNeighbors(cycle, db_host, db_port, name, playersList, id_request):
 
     	client = MongoClient(db_host, db_port)
 	col = client['radars']['cycle_%s' % cycle]
+    	col_update = client['requests']['update']
 
-	for element in col.find({"neighbors":0}):
+	i = 1
+	elements = col.find({"neighbors":0})
+	elements_size = elements.count()
+	for element in elements:
 		# Update number of neighbors
 		x = element['x']
 		y = element['y']
@@ -70,6 +74,10 @@ def computeNumberNeighbors(cycle, db_host, db_port, name, playersList):
 				elements.append( {"elements":element, "name":owner, "id":player_id} ) 
 			col.insert({'x':x, 'y':y, 'type':'Group', 'from':[name], 'quantity':n+1, 'composition':elements})
 
+		percent = float(i) / elements_size
+		col_update.update({'id':id_request,'status':'processing', 'cycle':cycle},{'$set':{'groups':percent}})
+		i += 1
+
 def getPlayersList(db_host, db_port):
 
     	client = MongoClient(db_host, db_port)
@@ -115,7 +123,7 @@ def insertData(data, db, name, cycle, playersList):
 
     return
 
-def insertAllDatas(datas, name, cycle, db_host, db_port):
+def insertAllDatas(datas, name, cycle, id_request, db_host, db_port):
 
     EQU_MATRIX['commodore1.gif'] = "Commodore"
     EQU_MATRIX['commodore2.gif'] = "Commodore"
@@ -177,20 +185,25 @@ def insertAllDatas(datas, name, cycle, db_host, db_port):
 
     client = MongoClient(db_host, db_port)
     db = client['radars']
+    col_update = client['requests']['update']
 
     playersList = getPlayersList(db_host, db_port)
 
+    i = 1
     for data in datas:
 	try:
 		insertData(data, db, name, cycle, playersList)
+		percent = float(i) / len(datas)
+		col_update.update({'id':id_request,'status':'processing', 'cycle':cycle},{'$set':{'base':percent}})
 	except Exception, e:
 		syslog.syslog("Exception during data insertion : %s" % e)
-
+	i += 1
     try:
-    	computeNumberNeighbors(cycle, db_host, db_port, name, playersList)
+    	computeNumberNeighbors(cycle, db_host, db_port, name, playersList, id_request)
     except Exception, e:
 	syslog.syslog("Exception during number of neighbors computation : %s" % e)
 
+    col_update.update({'id':id_request,'status':'processing', 'cycle':cycle},{'$set':{'status':'done'}})
     syslog.openlog()
     syslog.syslog("Datas imported from %s's radars" % name)
     

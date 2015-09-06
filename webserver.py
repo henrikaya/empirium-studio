@@ -16,6 +16,7 @@ import json
 import syslog
 import sys
 import ConfigParser
+from uuid import uuid4
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -50,13 +51,13 @@ def user_connect():
 
 	if (joueur == None):
 		syslog.syslog("Someone tried to connect as %s, but this name is unknown (IP : %s)" % (name, request.remote_addr))
-		return "player unknown"
+		return '{"status":"player unknown"}', 200
 
 	if (joueur.has_key("id")):
 		identifiant = joueur['id']
 	else:
 		syslog.syslog("Someone tried to connect as %s - this name is known but there is no id associated (IP : %s)" % (name, request.remote_addr))
-		return "player known but id unknown"
+		return '{"status":"player known but id unknown"}', 200
 
 	if (tools.connection.isPasswordCorrect(identifiant, password)):
 		session['id'] = identifiant
@@ -64,29 +65,54 @@ def user_connect():
 
 		if (joueur['password'] != password or joueur['last_update'] != tools.parsing.getCycleNumber()):
 			syslog.syslog("Update password of player %s" % identifiant)
-			os.system("%s %s %s \"%s\" %s %s &" % (config.get("Tools", "Update"), identifiant, password, name, db_host, db_port))
+			
+			id_request = str(uuid4())
 
-		col.update({"id":identifiant},{"$set":{"password":password}})
-		col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
-		syslog.syslog("%s (%s) connected (IP : %s)" % (name, identifiant, request.remote_addr))
-		return "success"
+
+
+			col_update = client['requests']['update']
+
+			cycle = tools.parsing.getCycleNumber()
+			
+			post = {}
+			post['id'] = id_request
+			post['player'] = name
+			post['status'] = 'processing'
+			post['analyze'] = 0
+			post['base'] = 0
+			post['groups'] = 0
+			post['cycle'] = cycle
+			col_update.insert(post)
+
+
+
+			os.system("%s %s %s \"%s\" %s %s %s &" % (config.get("Tools", "Update"), identifiant, password, name, id_request, db_host, db_port))
+			col.update({"id":identifiant},{"$set":{"password":password}})
+			col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
+			syslog.syslog("%s (%s) connected (IP : %s)" % (name, identifiant, request.remote_addr))
+			return '{"status":"success and update", "id":"%s"}' % id_request, 200
+		else:
+			col.update({"id":identifiant},{"$set":{"password":password}})
+			col.update({"id":identifiant},{"$set":{"last_connection":time.asctime()}})
+			syslog.syslog("%s (%s) connected (IP : %s)" % (name, identifiant, request.remote_addr))
+			return '{"status":"success"}', 200
 	# If game status is "cycle processing"
 	elif tools.parsing.getCycleNumber() == -1:
 		if joueur['password'] == password:
 			session['id'] = identifiant
 			session['name'] = name
-			return "success"
+			return '{"status":"success"}', 200
 		else:
 			syslog.syslog("%s (%s) tried to connect - wrong password (IP : %s)" % (name, identifiant, request.remote_addr))
 			session.pop('id', None)
-			return "wrong password"
+			return '{"status":"wrong password"}'
 	else:
 		syslog.syslog("%s (%s) tried to connect - wrong password (IP : %s)" % (name, identifiant, request.remote_addr))
 		session.pop('id', None)
-		return "wrong password"
+		return '{"status":"wrong password"}'
 
 	syslog.syslog("Internal error during connection of %s (IP : %s)" % (name, request.remote_addr))
-	return "Erreur interne du serveur. Contactez un administrateur (LG)."
+	return '{"status":"Erreur interne du serveur. Contactez un administrateur (LG)."}', 200
 
 @app.route('/getplayers', methods=['GET', 'POST'], strict_slashes=False)
 def getplayers():
@@ -406,6 +432,25 @@ def request_cancelfriendshiprequest(req):
 				return "request doesn't exist", 200
 
 	return "you're not connected", 200
+
+@app.route('/request/getupdatestatus/<id_request>', methods=['GET'], strict_slashes=False)
+def getUpdateStatus(id_request):
+
+	if 'id' in session:
+    		client = MongoClient(config.get("MongoDB", "Host"), config.getint("MongoDB", "Port"))
+    		col_requests = client['requests']['update']
+
+		el = col_requests.find_one({'id':id_request})
+		out = ""
+		out += '{"analyze":%s,' % el['analyze']
+		out += '"base":%s,' % el['base']
+		out += '"groups":%s,' % el['groups']
+		out += '"status":"%s"}' % el['status']
+
+		return out
+
+	syslog.syslog("Someone tries to get update status (IP : %s)" % request.remote_addr)
+	return "", 200
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():

@@ -55,7 +55,9 @@ $(function () {
 
     function processAuthResponse(data) {
 
-        if (data == "wrong password" || data =="player unknown") {
+        var rstatus = jQuery.parseJSON(data).status;
+
+        if (rstatus == "wrong password" || rstatus =="player unknown") {
 
             var authContainerHeight = $('#auth-container').height();
             var authContainerWidth = $('#auth-container').width();
@@ -81,7 +83,7 @@ $(function () {
             $('#auth-container').offset(authContainerPos);
 
         }
-        else if (data == "success") {
+        else if (rstatus == "success") {
             connectionState = 1;
 
             var authContainerHeight = $('#auth-container').height();
@@ -109,8 +111,12 @@ $(function () {
             updateAllianceMenu();
             datasRequest();
         }
+	else if (rstatus == "success and update") {
+        	var id_request = jQuery.parseJSON(data).id;
+		synchro_main(id_request);
+	}
         else {
-            alert("Reponse du serveur inconnue : \"" + data + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
+            alert("Reponse du serveur inconnue : \"" + rstatus + "\". Vous pouvez reessayer ou contacter un administrateur (L.G) si cela se reproduit.");
             $('#loading').hide();
             $('#auth-container').show();
             initPositions();
@@ -158,6 +164,35 @@ $(function () {
         if (e.which == 13) {
             connect();
         }
+    });
+
+    $('#synchro-finished-button').click(function() {
+	connectionState = 1;
+
+        var authContainerHeight = $('#auth-container').height();
+        var authContainerWidth = $('#auth-container').width();
+        var authContainerPos = $('#auth-container').offset();
+
+        function buttonsAppear() {
+            $('#map').fadeIn();
+            initPositions();
+        }
+
+        var topLoading = $('#loading').offset().top;
+        var hLoading = $('#loading').height();
+        $('#loading').hide();
+        $('#success').show();
+        pos = $('#success').offset();
+        pos.top = topLoading + (hLoading - $('#success').height()) / 2;
+        // TODO: correct following line (all positions have to be relative...)
+        pos.left = authContainerPos.left + (authContainerWidth - $('#success').width()) / 2 + 20;
+        $('#success').offset(pos);
+        $('#auth-container').height(authContainerHeight);
+        $('#auth-container').offset(authContainerPos);
+        $("#auth-container").delay(1200).fadeOut("slow", buttonsAppear);
+        mode = "map";
+        updateAllianceMenu();
+        datasRequest();
     });
 
     // Print informations about datas (ships and planets) received
