@@ -26,12 +26,18 @@ def updatePlayersAvatars():
 	os.chdir("./static/images/players")
 	for player in col.find():
 
-		os.system("rm %s.jpg" % player["id"])
-		os.system("wget http://www.empirium.net/~ftp_avatar/%s.jpg" % player["id"])
-		time.sleep(5)
+		os.system("rm %s.*" % player["id"])
+		ret = os.system("wget http://www.empirium.net/~ftp_avatar/v2_%s.jpg" % player["id"])
+		os.system("mv v2_%s.jpg %s.jpg" % (player["id"], player["id"])) 
+		if ret != 0:
+			ret = os.system("wget http://www.empirium.net/~ftp_avatar/v2_%s.png" % player["id"])
+			os.system("mv v2_%s.png %s.jpg" % (player["id"], player["id"])) 
+			if ret != 0:
+				ret = os.system("wget http://www.empirium.net/~ftp_avatar/v2_%s.gif" % player["id"])
+				os.system("mv v2_%s.gif %s.jpg" % (player["id"], player["id"])) 
 
 		# If downlad failed, add "unknown" image
-		if not os.path.isfile("%s.jpg" % player["id"]):
+		if ret != 0:
 			os.system("cp unknown.jpg %s.jpg" % player["id"])
 
 	os.chdir("../../..")
