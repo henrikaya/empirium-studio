@@ -93,6 +93,10 @@ def getPlayersList(db_host, db_port):
 
 def insertData(data, db, name, cycle, playersList):
 
+
+    if data["owner"] == "":
+	data["owner"] = name
+
     if data["type"] == 'Vaisseau':
 
 	if data["image"][11] == '/':
@@ -101,11 +105,9 @@ def insertData(data, db, name, cycle, playersList):
 		model = EQU_MATRIX[data["image"][14:]]
 
     	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name], 'model':model, 'neighbors':0}
-
     elif data["type"] == 'Planete':
 
     	post = {'type':data["type"], 'id':data["id"], 'nom':data["name"], 'image':data["image"], 'x':data["x"], 'y':data["y"], 'owner':data["owner"], 'owner_id':playersList[str(data["owner"]).encode("utf8")], 'from':[name], 'neighbors':0}
-
     else:
 
 	post = {'type':data["type"], 'id':data["id"], 'destination':data["destination"], 'x':data["x"], 'y':data["y"], 'from':[name], 'neighbors':0}
@@ -180,8 +182,8 @@ def insertAllDatas(datas, name, cycle, id_request, db_host, db_port):
 
     EQU_MATRIX['frg_30.gif'] = "Leviathan"
 
-    EQU_MATRIX['frg_32.gif'] = "Xénoforme alpha"
-    EQU_MATRIX['frg_32.gif'] = "Xénoforme beta"
+    EQU_MATRIX['frg_33.gif'] = "Xénoforme alpha"
+    EQU_MATRIX['frg_34.gif'] = "Xénoforme beta"
 
     client = MongoClient(db_host, db_port)
     db = client['radars']
@@ -196,7 +198,7 @@ def insertAllDatas(datas, name, cycle, id_request, db_host, db_port):
 		percent = float(i) / len(datas)
 		col_update.update({'id':id_request,'status':'processing', 'cycle':cycle},{'$set':{'base':percent}})
 	except Exception, e:
-		syslog.syslog("Exception during data insertion : %s" % e)
+		syslog.syslog("Exception during data insertion : (%s) %s" % (type(e),e))
 	i += 1
     try:
     	computeNumberNeighbors(cycle, db_host, db_port, name, playersList, id_request)

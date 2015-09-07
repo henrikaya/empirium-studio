@@ -175,7 +175,7 @@ def getDatas(cookies, link, playerName):
 	
 				if (el["owner"] == "Gérer" or el["owner"] == "Déplacer"):
 					el["owner"] = playerName
-	
+
 				out.append(el)
 	
 			# Vortex processing
@@ -241,7 +241,7 @@ def getDatas(cookies, link, playerName):
 								continue
 							if elmt[19] == 'v':
 								elmt = elmt[1:]
-							if elmt[18] == 'v':
+							if elmt[18:20] == 'vsx':
 								index1 = elmt.find(">")
 								index2 = index1 + elmt[index1:].find(" - ")
 								id = elmt[index1+1:index2]
@@ -269,6 +269,29 @@ def getDatas(cookies, link, playerName):
 									el["owner"] = playerName
 	
 								out.append(el)
+							elif elmt[18:20] == "vor":
+								index1 = elmt.find(">")
+								index2 = index1 + elmt[index1:].find(" - ")
+								id = elmt[index1+1:index2]
+								index3 = index2 + elmt[index2:].find(" de <")
+	
+								if index3 < index2:
+									index3 = index2 + elmt[index2:].find("<br/><a")
+	
+								nom = elmt[index2+3:index3]
+								index4 = elmt.find("/")
+								index5 = index4 + elmt[index4:].find("\"")
+								type = elmt[index4:index5]
+								index6 = elmt.find("\"gauche\">") + 9
+								index7 = index6 + elmt[index6:].find("</a>")
+								owner = elmt[index6:index7]
+								el["type"] = "Vortex"
+								el["id"] = id
+								el["destination"] = ""
+								el["x"] = coordX
+								el["y"] = coordY
+								out.append(el)
+
 							elif elmt[19] == 'p':
 								index1 = elmt.find(">")
 								index2 = index1 + elmt[index1:].find(" ")
