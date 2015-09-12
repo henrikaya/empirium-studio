@@ -22,6 +22,7 @@ $(function () {
     $('#fail').hide();
 
     $('#map').hide();
+    $('#zoom').hide();
     $('#loading').attr("src", "static/images/loading.gif");
     $('#fail').attr("src", "static/images/fail.png");
     $('#success').attr("src", "static/images/success.gif");
@@ -92,6 +93,7 @@ $(function () {
 
             function buttonsAppear() {
                 $('#map').fadeIn();
+		$('#zoom').fadeIn();
                 initPositions();
             }
 
@@ -175,6 +177,7 @@ $(function () {
 
         function buttonsAppear() {
             $('#map').fadeIn();
+	    $('#zoom').fadeIn();
             initPositions();
         }
 
@@ -233,6 +236,7 @@ $(function () {
         if (mode == "alliance") {
             $('#alliance').hide();
             $('#map').show();
+	    $('#zoom').show();
             mode = "map";
         }
 
@@ -268,6 +272,7 @@ $(function () {
 
             $('#alliance').fadeOut();
             $('#map').fadeIn();
+	    $('#zoom').fadeIn();
             mode = "map";
 
             if (mapNeedToBeUpdated == true) {

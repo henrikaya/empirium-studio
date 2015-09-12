@@ -42,4 +42,9 @@ function initPositions() {
 	posMap.left = 0;
 	$('#map').offset(posMap);
 
+	var posZoom = posMap;
+	posZoom.top += 10 + $("#nav").height();
+	posZoom.left += 20;
+	$('#zoom').offset(posZoom);
+	$('#zoom').width($('#zoom-plus-button').width());
 }

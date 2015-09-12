@@ -207,6 +207,7 @@ function allianceMenu() {
 	mode = "alliance";
 
 	$('#description').fadeOut();
+	$('#zoom').hide();
 	$('#map').fadeOut();
 	$('#alliance').fadeIn(initPositions);
 }

@@ -59,37 +59,66 @@ function View() {
 	}
 }
 
+function zoom(increment, actionButton) {
+
+	if (increment >= 0) {
+		if (zoomIndex + increment >= zoomList.length) {
+			return;
+		}
+	}
+	else {
+		if (zoomIndex + increment < 0) {
+			return;
+		}
+	}
+
+	zoomIndex += increment;
+
+	var xMap = 0;
+	var yMap = 0;
+
+	if (actionButton) {
+		xMap = view.acenterX;
+		yMap = view.acenterY;
+
+		scrollArea.scale.x = zoomList[zoomIndex];
+		scrollArea.scale.y = zoomList[zoomIndex];
+
+		view.center(xMap, yMap);
+	}
+	else {
+		var xAbs = view.amouseAbsX;
+		var yAbs = view.amouseAbsY;
+		xMap = view.amouseX;
+		yMap = view.amouseY;
+
+		scrollArea.scale.x = zoomList[zoomIndex];
+		scrollArea.scale.y = zoomList[zoomIndex];
+	
+		view.bindPoint(xMap, yMap, xAbs, yAbs)
+	}
+
+}
+
+$('#zoom-plus-button').click(function() {
+	if (mode == "map") {
+		zoom(2, true);
+	}
+});
+
+$('#zoom-minus-button').click(function() {
+	if (mode == "map") {
+		zoom(-2, true);
+	}
+});
+
 function MouseWheelHandler(e) {
 
 	if (mode == "map") {
 
 		var e = window.event || e;
 		var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-
-		if (delta == 1) {
-			zoomIndex += 1;
-			if (zoomIndex >= zoomList.length) {
-				zoomIndex = zoomList.length - 1;
-			}
-		}
-		else {
-			zoomIndex -= 1;
-			if (zoomIndex < 0) {
-				zoomIndex = 0;
-			}
-		}
-
-		var centerX = view.acenterX;
-		var centerY = view.acenterY;
-		var xMap = view.amouseX;
-		var yMap = view.amouseY;
-		var xAbs = view.amouseAbsX;
-		var yAbs = view.amouseAbsY;
-
-		scrollArea.scale.x = zoomList[zoomIndex];
-		scrollArea.scale.y = zoomList[zoomIndex];
-		
-		view.bindPoint(xMap, yMap, xAbs, yAbs)
+		zoom(delta, false);
 	}
 
 	return false;
