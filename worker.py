@@ -132,7 +132,7 @@ def process():
 		players = col.find({'last_update':{'$lte':nb-1}})
 
 		for j in players:
-			tools.updateDatas.update(j['id'], j['password'], j['name'], db_host, db_port)
+			tools.updateDatas.update(j['id'], j['password'], j['name'], 1, db_host, db_port)
 
 		cycle_processing = False
 		while nb == -1:
