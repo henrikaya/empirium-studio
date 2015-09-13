@@ -188,6 +188,8 @@ function initPixi() {
 	textures["frg_28.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_28.gif");
 	textures["frg_29.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_29.gif");
 	textures["frg_30.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_30.gif");
+	textures["frg_33.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_33.gif");
+	textures["frg_34.gif"] = PIXI.Texture.fromImage("static/images/ships/frg_34.gif");
 
 	textures_groups = {};
 	textures_groups["2"] = PIXI.Texture.fromImage("static/images/groups/2.png");
