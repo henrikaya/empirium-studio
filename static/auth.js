@@ -171,6 +171,9 @@ $(function () {
     $('#synchro-finished-button').click(function() {
 	connectionState = 1;
 
+	$('#main-screen').show();
+	$('#synchro').hide();
+
         var authContainerHeight = $('#auth-container').height();
         var authContainerWidth = $('#auth-container').width();
         var authContainerPos = $('#auth-container').offset();
