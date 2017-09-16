@@ -3,3 +3,4 @@
 static/images/players/*.jpg
 data
 static/playersList.js
+node_modules

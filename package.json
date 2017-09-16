@@ -1,0 +1,29 @@
+{
+  "name": "empirium-studio",
+  "version": "0.1.0",
+  "description": "Unofficial navigation and visualization tool for Empirium Game",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Coucou!!\""
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "engines": {
+    "node": "4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/henrikaya/empirium-studio.git"
+  },
+  "keywords": [
+    "node",
+    "empirium"
+  ],
+  "author": "Léo Girault",
+  "contributors": [
+    "Léo Girautl <girault.leo@gmail.com.com>"
+  ],
+  "license": "MIT"
+}
