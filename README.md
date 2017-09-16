@@ -1,5 +1,7 @@
 # Empirium Studio
 
+[![Build Status](https://travis-ci.org/henrikaya/empirium-studio.svg?branch=master)](https://travis-ci.org/henrikaya/empirium-studio)
+
 This web application is an unofficial navigation and visualization tool for [Empirium Game] (http://v2.empirium.net).
 
 It offers a user-friendly map for ships and planets visualization, a simple tool to share datas and maps between allies and a set of informations about technologies.
