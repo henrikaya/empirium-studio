@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Coucou!!\""
+    "test": "mocha"
   },
   "dependencies": {
     "express": "^4.13.3"
@@ -25,5 +25,8 @@
   "contributors": [
     "Léo Girautl <girault.leo@gmail.com.com>"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^3.5.3"
+  }
 }
