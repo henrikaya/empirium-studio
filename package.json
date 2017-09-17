@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "cover": "mocha",
-    "test": "istanbul cover _mocha && istanbul-coveralls"
+    "test": "mocha"
   },
   "dependencies": {
     "express": "^4.13.3"
