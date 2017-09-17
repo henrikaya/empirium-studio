@@ -1,6 +1,7 @@
 # Empirium Studio
 
 [![Build Status](https://travis-ci.org/henrikaya/empirium-studio.svg?branch=master)](https://travis-ci.org/henrikaya/empirium-studio)
+[![Coverage Status](https://coveralls.io/repos/github/henrikaya/empirium-studio/badge.svg)](https://coveralls.io/github/henrikaya/empirium-studio)
 
 This web application is an unofficial navigation and visualization tool for [Empirium Game] (http://v2.empirium.net).
 
